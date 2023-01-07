@@ -1,0 +1,6 @@
+node_modules
+dist
+nodeScripts
+webpack
+
+src/@types/globals.d.ts

@@ -1,0 +1,50 @@
+{
+    "name": "phaser3-staring-template",
+    "version": "1.0.0",
+    "description": "Phaser3 template with typescript, automatic spriteSheet generation and ninepatch",
+    "main": "src/app.js",
+    "scripts": {
+        "generateAssets": "node nodeScripts/GenerateAssets.js",
+        "start": "webpack serve --config webpack/webpack.dev.js",
+        "build": "webpack --config webpack/webpack.prod.js",
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "lint": "eslint . --ext .ts",
+        "format": "prettier --check src/app/**",
+        "format:write": "prettier --write src/app/**"
+    },
+    "author": "",
+    "license": "ISC",
+    "engines": {
+        "node": ">=12"
+    },
+    "dependencies": {
+        "@koreez/phaser3-ninepatch": "^2.0.2",
+        "is-mobile": "^3.1.1",
+        "phaser": "^3.55.2",
+        "uuid": "^8.3.2"
+    },
+    "devDependencies": {
+        "@typescript-eslint/eslint-plugin": "^5.26.0",
+        "@typescript-eslint/parser": "^5.26.0",
+        "clean-webpack-plugin": "^4.0.0",
+        "copy-webpack-plugin": "^11.0.0",
+        "css-loader": "^6.7.1",
+        "eslint": "^8.16.0",
+        "eslint-config-prettier": "^8.5.0",
+        "eslint-plugin-prettier": "^4.0.0",
+        "fork-ts-checker-webpack-plugin": "^6.5.2",
+        "free-tex-packer-core": "^0.3.4",
+        "html-webpack-plugin": "^5.5.0",
+        "power-di": "^2.4.18",
+        "prettier": "^2.6.2",
+        "stats.js": "^0.17.0",
+        "style-loader": "^3.3.1",
+        "ts-loader": "^9.3.0",
+        "typescript": "^4.7.2",
+        "webpack": "^5.72.1",
+        "webpack-cli": "^4.9.2",
+        "webpack-dev-server": "^4.9.0",
+        "webpack-merge": "^5.8.0",
+        "webpack-obfuscator": "^3.5.1"
+    }
+}
