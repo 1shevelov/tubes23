@@ -63,6 +63,9 @@ export class GameView extends Phaser.GameObjects.Container {
                 this.drawTube(i * tubeGap, (row + 1) * rowGap, volume);
             }
         });
+        this.tubes.forEach((tube, index) => {
+            tube.setName(index.toString());
+        });
     }
 
     private drawTube(centerX: number, centerY: number, volume: number): void {
@@ -77,6 +80,16 @@ export class GameView extends Phaser.GameObjects.Container {
         tube.add(tubeOutline);
         this.fillTube(tubeOutline.x, tubeOutline.y, volume, tube);
 
+        tube.setInteractive(
+            new Phaser.Geom.Rectangle(
+                centerX - tubeOutlineWi / 2,
+                centerY - tubeOutlineHe / 2,
+                tubeOutlineWi,
+                tubeOutlineHe,
+            ),
+            Phaser.Geom.Rectangle.Contains,
+        );
+        tube.on(Phaser.Input.Events.POINTER_UP, this.handleTubeClick, this);
         this.scene.add.existing(tube);
         this.tubes.push(tube);
     }
@@ -128,11 +141,17 @@ export class GameView extends Phaser.GameObjects.Container {
         });
     }
 
-    // private handleBkgClick(): void {
-    //     this.bkg.disableInteractive();
-    //     this.popupService.showCounterPopup();
-    //     setTimeout(() => {
-    //         this.bkg.setInteractive();
-    //     }, 2000);
-    // }
+    private handleTubeClick(gameObject: Phaser.GameObjects.GameObject): void {
+        // this.bkg.disableInteractive();
+        // setTimeout(() => {
+        //     this.bkg.setInteractive();
+        // }, 2000);
+        // TODO: get clicked container
+        this.tubes.forEach((tube, index) => {
+            if (tube === gameObject) {
+                console.log(index);
+            }
+        });
+        console.log("Click on ", gameObject.parentContainer);
+    }
 }
