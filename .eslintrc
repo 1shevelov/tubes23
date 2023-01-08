@@ -33,7 +33,7 @@
             {
                 "selector": "memberLike",
                 "modifiers": ["private"],
-                "format": ["camelCase"],
+                "format": ["camelCase", "UPPER_CASE"],
                 "leadingUnderscore": "allow"
             },
 
