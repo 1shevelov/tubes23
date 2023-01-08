@@ -18,7 +18,7 @@ export class GameView extends Phaser.GameObjects.Container {
     private portionSquareSize: number;
 
     // all tubes in the scene
-    private tubes: Array<Phaser.GameObjects.Graphics> = [];
+    private tubes: Array<Phaser.GameObjects.Container> = [];
 
     public constructor(public scene: Phaser.Scene) {
         super(scene);
@@ -66,29 +66,32 @@ export class GameView extends Phaser.GameObjects.Container {
     }
 
     private drawTube(centerX: number, centerY: number, volume: number): void {
-        // const portionSquareSize = this.wi > this.he ? Math.round(this.he / 20) : Math.round(this.he / 20);
+        const tubeOutline = new Phaser.GameObjects.Graphics(this.scene);
+        tubeOutline.setDefaultStyles(COLORS.TubesStyle);
+        const tubeOutlineWi = this.portionSquareSize;
+        const tubeOutlineHe = this.portionSquareSize * volume;
+        tubeOutline.strokeRoundedRect(0, 0, tubeOutlineWi, tubeOutlineHe, this.portionSquareSize / 5);
+        tubeOutline.setPosition(centerX - tubeOutlineWi / 2, centerY - tubeOutlineHe / 2);
 
-        const tube = this.scene.add.graphics();
-        tube.setDefaultStyles(COLORS.TubesStyle);
-        const tubeWi = this.portionSquareSize;
-        const tubeHe = this.portionSquareSize * volume;
-        tube.strokeRoundedRect(0, 0, tubeWi, tubeHe, this.portionSquareSize / 5);
-        tube.setPosition(centerX - tubeWi / 2, centerY - tubeHe / 2);
-        this.fillTube(tube, volume);
+        const tube = new Phaser.GameObjects.Container(this.scene);
+        tube.add(tubeOutline);
+        this.fillTube(tubeOutline.x, tubeOutline.y, volume, tube);
 
+        this.scene.add.existing(tube);
         this.tubes.push(tube);
     }
 
-    private fillTube(tube: Phaser.GameObjects.Graphics, volume: number): void {
+    private fillTube(tubeX: number, tubeY: number, volume: number, tube: Phaser.GameObjects.Container): void {
         let portion: Phaser.GameObjects.Graphics;
         let randomColor: number;
         for (let i = 0; i < volume; i++) {
-            portion = this.scene.add.graphics();
+            portion = new Phaser.GameObjects.Graphics(this.scene);
             portion.setDefaultStyles(COLORS.PortionsStyle);
             randomColor = COLORS.AoccPalette[Math.floor(Math.random() * COLORS.AoccPalette.length)];
             portion.fillStyle(randomColor, 1);
-            // this.drawPortionRoundedRect(portion, tube.x, tube.y, i);
-            this.drawPortionCircle(portion, tube.x, tube.y, i);
+            this.drawPortionRoundedRect(portion, tubeX, tubeY, i);
+            // this.drawPortionCircle(portion, tube.x, tube.y, i);
+            tube.add(portion);
         }
     }
 
