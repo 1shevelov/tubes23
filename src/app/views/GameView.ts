@@ -20,11 +20,14 @@ export class GameView extends Phaser.GameObjects.Container {
     // all tubes in the scene
     private tubes: Array<Phaser.GameObjects.Container> = [];
 
+    // to prevent a dozen of the same event
+    private readonly justClickedTubeDelay = 100;
+
     public constructor(public scene: Phaser.Scene) {
         super(scene);
         this.init();
 
-        this.drawTubes(10, 5);
+        this.drawTubes(19, 5);
     }
 
     private init(): void {
@@ -66,6 +69,12 @@ export class GameView extends Phaser.GameObjects.Container {
         this.tubes.forEach((tube, index) => {
             tube.setName(index.toString());
         });
+        this.scene.input.on(
+            "gameobjectup",
+            (_pointer: Phaser.Input.Pointer, gameObject: Phaser.GameObjects.GameObject, _event) => {
+                this.handleTubeClick(gameObject.name);
+            },
+        );
     }
 
     private drawTube(centerX: number, centerY: number, volume: number): void {
@@ -89,7 +98,7 @@ export class GameView extends Phaser.GameObjects.Container {
             ),
             Phaser.Geom.Rectangle.Contains,
         );
-        tube.on(Phaser.Input.Events.POINTER_UP, this.handleTubeClick, this);
+        // tube.on("clicked", this.handleTubeClick, this);
         this.scene.add.existing(tube);
         this.tubes.push(tube);
     }
@@ -141,17 +150,16 @@ export class GameView extends Phaser.GameObjects.Container {
         });
     }
 
-    private handleTubeClick(gameObject: Phaser.GameObjects.GameObject): void {
-        // this.bkg.disableInteractive();
-        // setTimeout(() => {
-        //     this.bkg.setInteractive();
-        // }, 2000);
-        // TODO: get clicked container
-        this.tubes.forEach((tube, index) => {
-            if (tube === gameObject) {
-                console.log(index);
-            }
-        });
-        console.log("Click on ", gameObject.parentContainer);
+    private handleTubeClick(tubeName: string): void {
+        // this.tubes.forEach((tube, index) => {
+        //     if (tube === gameObject) {
+        //         tube.disableInteractive();
+        //         console.log(index);
+        //         setTimeout(() => {
+        //             tube.setInteractive();
+        //         }, this.justClickedTubeDelay);
+        //     }
+        // });
+        console.log(tubeName);
     }
 }
