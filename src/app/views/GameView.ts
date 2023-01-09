@@ -19,6 +19,7 @@ export class GameView extends Phaser.GameObjects.Container {
 
     // all tubes in the scene
     private tubes: Array<Phaser.GameObjects.Container> = [];
+    private activatedTube = "";
 
     // to prevent a dozen of the same event
     private readonly justClickedTubeDelay = 100;
@@ -57,13 +58,14 @@ export class GameView extends Phaser.GameObjects.Container {
         }
         // console.log(tubesInRows);
         const rowGap = this.he / (rows + 1);
-        this.portionSquareSize = rowGap / (volume + 1.5);
+        this.portionSquareSize = rowGap / (volume + 1.7);
 
         let tubeGap = 0;
+        const rowLower = this.he * 0.05; // shift rows a bit lower
         tubesInRows.forEach((tubesInThisRow, row) => {
             tubeGap = this.wi / (tubesInThisRow + 1);
             for (let i = 1; i <= tubesInThisRow; i++) {
-                this.drawTube(i * tubeGap, (row + 1) * rowGap, volume);
+                this.drawTube(i * tubeGap, (row + 1) * rowGap + rowLower, volume);
             }
         });
         this.tubes.forEach((tube, index) => {
@@ -71,8 +73,8 @@ export class GameView extends Phaser.GameObjects.Container {
         });
         this.scene.input.on(
             "gameobjectup",
-            (_pointer: Phaser.Input.Pointer, gameObject: Phaser.GameObjects.GameObject, _event) => {
-                this.handleTubeClick(gameObject.name);
+            (_pointer: Phaser.Input.Pointer, gameObject: Phaser.GameObjects.Container, _event) => {
+                this.handleTubeClick(gameObject);
             },
         );
     }
@@ -106,14 +108,21 @@ export class GameView extends Phaser.GameObjects.Container {
     private fillTube(tubeX: number, tubeY: number, volume: number, tube: Phaser.GameObjects.Container): void {
         let portion: Phaser.GameObjects.Graphics;
         let randomColor: number;
-        for (let i = 0; i < volume; i++) {
+        // for (let i = 0; i < volume - 1; i++) {
+        let portionNumber = volume - 1;
+        for (let i = volume - 1; i >= 0; i--) {
             portion = new Phaser.GameObjects.Graphics(this.scene);
             portion.setDefaultStyles(COLORS.PortionsStyle);
             randomColor = COLORS.AoccPalette[Math.floor(Math.random() * COLORS.AoccPalette.length)];
             portion.fillStyle(randomColor, 1);
-            this.drawPortionRoundedRect(portion, tubeX, tubeY, i);
-            // this.drawPortionCircle(portion, tube.x, tube.y, i);
+            // this.drawPortionRoundedRect(portion, tubeX, tubeY, i);
+            this.drawPortionCircle(portion, tubeX, tubeY, i);
             tube.add(portion);
+            portionNumber--;
+            if (portionNumber === 0) {
+                portion.setName("top");
+                break;
+            }
         }
     }
 
@@ -150,7 +159,7 @@ export class GameView extends Phaser.GameObjects.Container {
         });
     }
 
-    private handleTubeClick(tubeName: string): void {
+    private handleTubeClick(tube: Phaser.GameObjects.Container): void {
         // this.tubes.forEach((tube, index) => {
         //     if (tube === gameObject) {
         //         tube.disableInteractive();
@@ -160,6 +169,22 @@ export class GameView extends Phaser.GameObjects.Container {
         //         }, this.justClickedTubeDelay);
         //     }
         // });
-        console.log(tubeName);
+        const topPortion = tube.getByName("top") as Phaser.GameObjects.Graphics;
+        //topPortion.setY(topPortion.y - 60);
+        let moveUp = true;
+        if (this.activatedTube == tube.name) {
+            moveUp = false;
+        }
+        this.scene.tweens.add({
+            targets: topPortion,
+            y: moveUp ? tube.y - this.portionSquareSize * 2 : tube.y,
+            ease: "Linear",
+            duration: 500,
+            repeat: 0,
+            yoyo: false,
+        });
+        if (moveUp) this.activatedTube = tube.name;
+        else this.activatedTube = "";
+        // console.log(tube.name);
     }
 }
