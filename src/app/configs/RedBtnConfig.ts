@@ -3,7 +3,10 @@ import { ButtonStateNames } from "../enums/ButtonStateNames";
 import { getColoredBtnPatchesConfig } from "./NinePatchConfig";
 import { getRedBtnTextConfig } from "./TextConfig";
 
-export const getRedBtnNinePatchConfig = (state: string, key = "red"): INinePatchConfig => {
+export const getRedBtnNinePatchConfig = (
+    state: string,
+    key = "red",
+): INinePatchConfig => {
     return {
         x: 0,
         y: 0,

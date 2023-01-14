@@ -22,7 +22,10 @@ export const getSellBtnPatchesConfig = (state: string): AssetPatchesConfig => {
     };
 };
 
-export const getColoredBtnPatchesConfig = (color: string, state: string): AssetPatchesConfig => {
+export const getColoredBtnPatchesConfig = (
+    color: string,
+    state: string,
+): AssetPatchesConfig => {
     return {
         key: "buttons",
         frame: `${color}/${state}.png`,

@@ -26,7 +26,9 @@ export abstract class ButtonBase extends Phaser.GameObjects.Container {
         if (!this.isDisabled) {
             return this.states.up.getBounds();
         }
-        return this.states.disabled ? this.states.disabled.getBounds() : this.states.up.getBounds();
+        return this.states.disabled
+            ? this.states.disabled.getBounds()
+            : this.states.up.getBounds();
     }
 
     public updateLabel(label: string | number): void {
@@ -95,7 +97,8 @@ export abstract class ButtonBase extends Phaser.GameObjects.Container {
     }
 
     private disableInputs(disableOnlyVisually = false): void {
-        !disableOnlyVisually && this.off(Phaser.Input.Events.POINTER_UP, this.onPointerUpActions, this);
+        !disableOnlyVisually &&
+            this.off(Phaser.Input.Events.POINTER_UP, this.onPointerUpActions, this);
         this.off(Phaser.Input.Events.POINTER_DOWN, this.onPointerDownActions, this);
         this.off(Phaser.Input.Events.POINTER_OVER, this.onPointerOverActions, this);
         this.off(Phaser.Input.Events.POINTER_OUT, this.onPointerOutActions, this);

@@ -73,7 +73,11 @@ export class GameView extends Phaser.GameObjects.Container {
         });
         this.scene.input.on(
             "gameobjectup",
-            (_pointer: Phaser.Input.Pointer, gameObject: Phaser.GameObjects.Container, _event) => {
+            (
+                _pointer: Phaser.Input.Pointer,
+                gameObject: Phaser.GameObjects.Container,
+                _event,
+            ) => {
                 this.handleTubeClick(gameObject);
             },
         );
@@ -84,7 +88,13 @@ export class GameView extends Phaser.GameObjects.Container {
         tubeOutline.setDefaultStyles(COLORS.TubesStyle);
         const tubeOutlineWi = this.portionSquareSize;
         const tubeOutlineHe = this.portionSquareSize * volume;
-        tubeOutline.strokeRoundedRect(0, 0, tubeOutlineWi, tubeOutlineHe, this.portionSquareSize / 5);
+        tubeOutline.strokeRoundedRect(
+            0,
+            0,
+            tubeOutlineWi,
+            tubeOutlineHe,
+            this.portionSquareSize / 5,
+        );
         tubeOutline.setPosition(centerX - tubeOutlineWi / 2, centerY - tubeOutlineHe / 2);
 
         const tube = new Phaser.GameObjects.Container(this.scene);
@@ -105,7 +115,12 @@ export class GameView extends Phaser.GameObjects.Container {
         this.tubes.push(tube);
     }
 
-    private fillTube(tubeX: number, tubeY: number, volume: number, tube: Phaser.GameObjects.Container): void {
+    private fillTube(
+        tubeX: number,
+        tubeY: number,
+        volume: number,
+        tube: Phaser.GameObjects.Container,
+    ): void {
         let portion: Phaser.GameObjects.Graphics;
         let randomColor: number;
         // for (let i = 0; i < volume - 1; i++) {
@@ -113,7 +128,8 @@ export class GameView extends Phaser.GameObjects.Container {
         for (let i = volume - 1; i >= 0; i--) {
             portion = new Phaser.GameObjects.Graphics(this.scene);
             portion.setDefaultStyles(COLORS.PortionsStyle);
-            randomColor = COLORS.AoccPalette[Math.floor(Math.random() * COLORS.AoccPalette.length)];
+            randomColor =
+                COLORS.AoccPalette[Math.floor(Math.random() * COLORS.AoccPalette.length)];
             portion.fillStyle(randomColor, 1);
             // this.drawPortionRoundedRect(portion, tubeX, tubeY, i);
             this.drawPortionCircle(portion, tubeX, tubeY, i);
@@ -126,7 +142,12 @@ export class GameView extends Phaser.GameObjects.Container {
         }
     }
 
-    private drawPortionRoundedRect(figure: Phaser.GameObjects.Graphics, x: number, y: number, num: number): void {
+    private drawPortionRoundedRect(
+        figure: Phaser.GameObjects.Graphics,
+        x: number,
+        y: number,
+        num: number,
+    ): void {
         figure.fillRoundedRect(
             x + this.portionSquareSize * 0.1,
             y + this.portionSquareSize * 0.1 + this.portionSquareSize * num,
@@ -136,7 +157,12 @@ export class GameView extends Phaser.GameObjects.Container {
         );
     }
 
-    private drawPortionCircle(figure: Phaser.GameObjects.Graphics, x: number, y: number, num: number): void {
+    private drawPortionCircle(
+        figure: Phaser.GameObjects.Graphics,
+        x: number,
+        y: number,
+        num: number,
+    ): void {
         figure.fillCircle(
             x + this.portionSquareSize * 0.5,
             y + this.portionSquareSize * (num + 0.5),
@@ -170,7 +196,6 @@ export class GameView extends Phaser.GameObjects.Container {
         //     }
         // });
         const topPortion = tube.getByName("top") as Phaser.GameObjects.Graphics;
-        //topPortion.setY(topPortion.y - 60);
         let moveUp = true;
         if (this.activatedTube == tube.name) {
             moveUp = false;

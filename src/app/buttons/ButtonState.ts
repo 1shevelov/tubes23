@@ -7,7 +7,11 @@ export class ButtonState extends Phaser.GameObjects.Container {
     private text?: Phaser.GameObjects.Text;
     private icon?: Phaser.GameObjects.Sprite;
 
-    public constructor(public readonly scene: Phaser.Scene, config: StateConfig, public stateName: ButtonStateNames) {
+    public constructor(
+        public readonly scene: Phaser.Scene,
+        config: StateConfig,
+        public stateName: ButtonStateNames,
+    ) {
         super(scene);
         this.initialize(config);
     }

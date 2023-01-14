@@ -4,19 +4,32 @@ import Text = Phaser.GameObjects.Text;
 import TextStyle = Phaser.Types.GameObjects.Text.TextStyle;
 
 export class UIService {
-    public static makeNinePatch = (scene: Phaser.Scene, config: INinePatchConfig): NinePatch => {
+    public static makeNinePatch = (
+        scene: Phaser.Scene,
+        config: INinePatchConfig,
+    ): NinePatch => {
         const { x = 0, y = 0, width, height, key, frame, patchesConfig } = config;
         return new NinePatch(scene, x, y, width, height, key, frame, patchesConfig);
     };
 
-    public static createText(scene: Phaser.Scene, x: number, y: number, content: string, style: TextStyle): Text {
+    public static createText(
+        scene: Phaser.Scene,
+        x: number,
+        y: number,
+        content: string,
+        style: TextStyle,
+    ): Text {
         const text = scene.add.text(x, y, content, style);
         text.setOrigin(0.5, 0.5);
         text.setPadding(10, 10, 10, 10);
         return text;
     }
 
-    public static createSprite(scene: Phaser.Scene, texture: string, frame?: string): Sprite {
+    public static createSprite(
+        scene: Phaser.Scene,
+        texture: string,
+        frame?: string,
+    ): Sprite {
         const sprite = scene.add.sprite(0, 0, texture);
         frame && sprite.setFrame(frame);
         return sprite;

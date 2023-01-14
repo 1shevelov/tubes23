@@ -39,6 +39,9 @@ export function getSellButtonConfig(): ButtonConfig {
                 text: disabledText,
             },
         },
-        hitArea: { area: new Phaser.Geom.Circle(270, 72, 144), callback: ButtonCallback.Circle },
+        hitArea: {
+            area: new Phaser.Geom.Circle(270, 72, 144),
+            callback: ButtonCallback.Circle,
+        },
     };
 }
