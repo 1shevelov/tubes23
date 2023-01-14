@@ -16,13 +16,13 @@ export const TubesStyle = {
 
 export const PortionsStyle = {
     lineStyle: {
-        width: 1,
+        width: 1.5,
         color: 0xffffff,
         alpha: 1,
     },
     fillStyle: {
         color: 0xffffff,
-        alpha: 0,
+        alpha: 1,
     },
 }
 

@@ -121,18 +121,17 @@ export class GameView extends Phaser.GameObjects.Container {
         volume: number,
         tube: Phaser.GameObjects.Container,
     ): void {
-        let portion: Phaser.GameObjects.Graphics;
+        let portion: Phaser.GameObjects.Container;
         let randomColor: number;
         // for (let i = 0; i < volume - 1; i++) {
         let portionNumber = volume - 1;
         for (let i = volume - 1; i >= 0; i--) {
-            portion = new Phaser.GameObjects.Graphics(this.scene);
-            portion.setDefaultStyles(COLORS.PortionsStyle);
+            portion = new Phaser.GameObjects.Container(this.scene);
+            // portion.setDefaultStyles(COLORS.PortionsStyle);
             randomColor =
                 COLORS.AoccPalette[Math.floor(Math.random() * COLORS.AoccPalette.length)];
-            portion.fillStyle(randomColor, 1);
             // this.drawPortionRoundedRect(portion, tubeX, tubeY, i);
-            this.drawPortionCircle(portion, tubeX, tubeY, i);
+            this.drawPortionCircle(portion, tubeX, tubeY, i, randomColor);
             tube.add(portion);
             portionNumber--;
             if (portionNumber === 0) {
@@ -158,16 +157,30 @@ export class GameView extends Phaser.GameObjects.Container {
     }
 
     private drawPortionCircle(
-        figure: Phaser.GameObjects.Graphics,
+        portionContainer: Phaser.GameObjects.Container,
         x: number,
         y: number,
         num: number,
+        color: number,
     ): void {
-        figure.fillCircle(
+        const filling = new Phaser.GameObjects.Graphics(this.scene);
+        filling.setDefaultStyles(COLORS.PortionsStyle);
+        filling.fillStyle(color, 1);
+        filling.fillCircle(
             x + this.portionSquareSize * 0.5,
             y + this.portionSquareSize * (num + 0.5),
             (this.portionSquareSize * this.portionSizeCoeff) / 2,
         );
+        portionContainer.add(filling);
+
+        const stroking = new Phaser.GameObjects.Graphics(this.scene);
+        stroking.setDefaultStyles(COLORS.PortionsStyle);
+        stroking.strokeCircle(
+            x + this.portionSquareSize * 0.5,
+            y + this.portionSquareSize * (num + 0.5),
+            (this.portionSquareSize * this.portionSizeCoeff) / 2,
+        );
+        portionContainer.add(stroking);
     }
 
     private resize(): void {
@@ -204,7 +217,7 @@ export class GameView extends Phaser.GameObjects.Container {
             targets: topPortion,
             y: moveUp ? tube.y - this.portionSquareSize * 2 : tube.y,
             ease: "Linear",
-            duration: 500,
+            duration: 120,
             repeat: 0,
             yoyo: false,
         });

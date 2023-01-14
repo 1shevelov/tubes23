@@ -30,6 +30,7 @@ export default class MainScene extends Phaser.Scene {
     private initGameView(): void {
         this.gameView = new GameView(this);
         this.add.existing(this.gameView);
+        // this.cameras.main.setRoundPixels(true);
     }
 
     private initUIView(): void {
