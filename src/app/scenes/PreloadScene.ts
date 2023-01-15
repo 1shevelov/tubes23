@@ -1,8 +1,8 @@
-// import { assets } from "../../assets/assetsNames/assets";
+import { assets } from "../../assets/assetsNames/assets";
 // import { audioAssets } from "../../assets/assetsNames/audio";
 // import { shaders } from "../../assets/assetsNames/shaders";
 // import { spines } from "../../assets/assetsNames/spines";
-// import { spriteSheets } from "../../assets/assetsNames/spriteSheets";
+import { spriteSheets } from "../../assets/assetsNames/spriteSheets";
 // import { videos } from "../../assets/assetsNames/videos";
 import { SceneNames } from "../enums/Scenes";
 
@@ -13,8 +13,8 @@ export default class PreloadScene extends Phaser.Scene {
 
     private preload(): void {
         // console.log("Starting Asset loading");
-        // this.loadAssets();
-        // this.loadSpriteSheets();
+        this.loadAssets();
+        this.loadSpriteSheets();
         // this.loadAudio();
         // this.loadSpines();
         // this.loadShaders();
@@ -29,20 +29,24 @@ export default class PreloadScene extends Phaser.Scene {
         this.scene.start(SceneNames.Main);
     }
 
-    // private loadAssets(): void {
-    //     if (assets.length === 0) return;
-    //     assets.forEach((el) => {
-    //         const { name, path } = el;
-    //         this.load.image(name, path);
-    //     });
-    // }
+    private loadAssets(): void {
+        if (assets.length === 0) return;
+        assets.forEach((el) => {
+            const { name, path } = el;
+            this.load.image(name, path);
+        });
+    }
 
-    // private loadSpriteSheets(): void {
-    //     if (spriteSheets.length === 0) return;
-    //     spriteSheets.forEach((el) => {
-    //         this.load.atlas(el, `./assets/spriteSheets/${el}.png`, `./assets/spriteSheets/${el}.json`);
-    //     });
-    // }
+    private loadSpriteSheets(): void {
+        if (spriteSheets.length === 0) return;
+        spriteSheets.forEach((el) => {
+            this.load.atlas(
+                el,
+                `./assets/spriteSheets/${el}.png`,
+                `./assets/spriteSheets/${el}.json`,
+            );
+        });
+    }
 
     // private loadAudio(): void {
     //     if (audioAssets.length === 0) return;

@@ -3,11 +3,11 @@
 import * as COLORS from "../configs/Colors";
 
 export class GameView extends Phaser.GameObjects.Container {
-    // max number of tubes for each row
     private readonly MAX_TUBES = 40;
+    // max number of tubes for each row
     private readonly HOR_ROWS = [5, 16, 24, this.MAX_TUBES];
     private readonly PORT_ROWS = [4, 10, 18, 28, this.MAX_TUBES];
-    private tubeRows: Array<number>;
+    private tubeRows: Array<number>; // contains HOR or PORT
 
     private readonly portionSizeCoeff = 0.8;
 
@@ -28,7 +28,7 @@ export class GameView extends Phaser.GameObjects.Container {
         super(scene);
         this.init();
 
-        this.drawTubes(19, 5);
+        this.drawTubes(3, 4);
     }
 
     private init(): void {
@@ -48,7 +48,7 @@ export class GameView extends Phaser.GameObjects.Container {
         let rows = this.tubeRows.length;
         let i = this.tubeRows.length - 2;
         while (num < this.tubeRows[i]) {
-            rows = i;
+            rows = i + 1;
             i--;
         }
         const unevenTubes = num % rows;
@@ -58,7 +58,7 @@ export class GameView extends Phaser.GameObjects.Container {
         }
         // console.log(tubesInRows);
         const rowGap = this.he / (rows + 1);
-        this.portionSquareSize = rowGap / (volume + 1.7);
+        this.portionSquareSize = rowGap / (volume + 1.6);
 
         let tubeGap = 0;
         const rowLower = this.he * 0.05; // shift rows a bit lower
@@ -123,15 +123,14 @@ export class GameView extends Phaser.GameObjects.Container {
     ): void {
         let portion: Phaser.GameObjects.Container;
         let randomColor: number;
-        // for (let i = 0; i < volume - 1; i++) {
         let portionNumber = volume - 1;
         for (let i = volume - 1; i >= 0; i--) {
             portion = new Phaser.GameObjects.Container(this.scene);
-            // portion.setDefaultStyles(COLORS.PortionsStyle);
             randomColor =
                 COLORS.AoccPalette[Math.floor(Math.random() * COLORS.AoccPalette.length)];
             // this.drawPortionRoundedRect(portion, tubeX, tubeY, i);
-            this.drawPortionCircle(portion, tubeX, tubeY, i, randomColor);
+            // this.drawPortionCircle(portion, tubeX, tubeY, i, randomColor);
+            this.drawPortionGolfBall(portion, tubeX, tubeY, i, randomColor);
             tube.add(portion);
             portionNumber--;
             if (portionNumber === 0) {
@@ -154,6 +153,42 @@ export class GameView extends Phaser.GameObjects.Container {
             this.portionSquareSize * this.portionSizeCoeff,
             this.portionSquareSize / 6,
         );
+    }
+
+    private drawPortionGolfBall(
+        portionContainer: Phaser.GameObjects.Container,
+        x: number,
+        y: number,
+        num: number,
+        color: number,
+    ): void {
+        let golfBall;
+        if (num % 2) {
+            golfBall = new Phaser.GameObjects.Sprite(
+                this.scene,
+                0,
+                0,
+                "game-ui",
+                "ball-golf-150.png",
+            );
+        } else {
+            golfBall = new Phaser.GameObjects.Sprite(
+                this.scene,
+                0,
+                0,
+                "game-ui",
+                "ball-golf.png",
+            );
+        }
+        golfBall.setOrigin(0.5, 0.5);
+        golfBall.setPosition(
+            x + this.portionSquareSize * 0.5,
+            y + this.portionSquareSize * (num + 0.5),
+        );
+        const scale = (this.portionSquareSize * this.portionSizeCoeff) / golfBall.width;
+        golfBall.setScale(scale);
+        golfBall.setTint(color, color, color, 0xffffff);
+        portionContainer.add(golfBall);
     }
 
     private drawPortionCircle(
@@ -215,7 +250,7 @@ export class GameView extends Phaser.GameObjects.Container {
         }
         this.scene.tweens.add({
             targets: topPortion,
-            y: moveUp ? tube.y - this.portionSquareSize * 2 : tube.y,
+            y: moveUp ? tube.y - this.portionSquareSize : tube.y,
             ease: "Linear",
             duration: 120,
             repeat: 0,

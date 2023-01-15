@@ -64,12 +64,12 @@ let options = {
     filter: "none",
 };
 
-function getFileNameFromPath(path) {
-    return path.slice(path.lastIndexOf("/") + 1, path.lastIndexOf("."));
-}
+// function getFileNameFromPath(path) {
+//     return path.slice(path.lastIndexOf("/") + 1, path.lastIndexOf("."));
+// }
 
 function getFileNameWithExtension(path) {
-    return path.slice(path.lastIndexOf("/") + 1, path.length);
+    return path.slice(path.lastIndexOf("\\") + 1, path.length);
 }
 
 function getFileExtensionFromPath(path) {
@@ -81,7 +81,9 @@ function isImage(filePath) {
 }
 
 function isVideo(filePath) {
-    return /\.(webm|mpe?g|mp2|mpe|mpv|m4p|m4v|wmv|qt|flv|swf|avchd|ogg|mp4|avi|mov)$/i.test(filePath);
+    return /\.(webm|mpe?g|mp2|mpe|mpv|m4p|m4v|wmv|qt|flv|swf|avchd|ogg|mp4|avi|mov)$/i.test(
+        filePath,
+    );
 }
 
 function findFileWithExtension(files, extension) {
@@ -108,7 +110,11 @@ async function generateSpriteSheet(data, name) {
     });
 }
 
-async function getFolderContent(folderPath, shorterPath = true, shortenFromFolder = "src") {
+async function getFolderContent(
+    folderPath,
+    shorterPath = true,
+    shortenFromFolder = "src",
+) {
     let result = [];
     const getFilesRecursively = async (path) => {
         const files = await fs.readdir(path);
@@ -119,9 +125,12 @@ async function getFolderContent(folderPath, shorterPath = true, shortenFromFolde
                 await getFilesRecursively(newPath);
             } else {
                 if (shorterPath) {
-                    const dir = newPath.split("/");
-                    const fileDir = dir.slice(dir.indexOf(shortenFromFolder) + 1, dir.length);
-                    newPath = fileDir.join("/");
+                    const dir = newPath.split("\\");
+                    const fileDir = dir.slice(
+                        dir.indexOf(shortenFromFolder) + 1,
+                        dir.length,
+                    );
+                    newPath = fileDir.join("\\");
                 }
                 result.push(newPath);
             }
@@ -150,13 +159,19 @@ async function generateAtlases() {
             const folderPath = join(path, folder);
             const stat = await fs.stat(folderPath);
             if (!stat.isDirectory()) continue;
-            const folderContent = await getFolderContent(join(path, folder), true, folder);
+            const folderContent = await getFolderContent(
+                join(path, folder),
+                true,
+                folder,
+            );
             if (folderContent.length === 0) continue;
             const imageFiles = folderContent.filter((f) => isImage(f));
             spriteSheetNames.push(folder);
             await generateSpriteSheet(imageFiles, folder);
         }
-        const data = `export const spriteSheets: string[] = ${JSON.stringify(spriteSheetNames)}`;
+        const data = `export const spriteSheets: string[] = ${JSON.stringify(
+            spriteSheetNames,
+        )}`;
         const file = join(assetsPath, "assetsNames/spriteSheets.ts");
         await fs.writeFile(file, data);
         await runPrettierOn(file);
@@ -178,7 +193,9 @@ async function generateUncompressedSprites() {
             });
         }
         const file = join(assetsPath, "assetsNames/assets.ts");
-        const data = `export const assets: AssetNameAndPath[] = ${JSON.stringify(filesNamesAndPaths)}`;
+        const data = `export const assets: AssetNameAndPath[] = ${JSON.stringify(
+            filesNamesAndPaths,
+        )}`;
         await fs.writeFile(file, data);
         await runPrettierOn(file);
     } catch (e) {
@@ -198,7 +215,9 @@ async function generateAudioAssets() {
             });
         }
         const file = join(assetsPath, "assetsNames/audio.ts");
-        const data = `export const audioAssets: AssetNameAndPath[] = ${JSON.stringify(filesNamesAndPath)}`;
+        const data = `export const audioAssets: AssetNameAndPath[] = ${JSON.stringify(
+            filesNamesAndPath,
+        )}`;
         await fs.writeFile(file, data);
         await runPrettierOn(file);
     } catch (e) {
@@ -218,7 +237,9 @@ async function generateShaders() {
             });
         }
         const file = join(assetsPath, "assetsNames/shaders.ts");
-        const data = `export const shaders: AssetNameAndPath[] = ${JSON.stringify(filesNamesAndPath)}`;
+        const data = `export const shaders: AssetNameAndPath[] = ${JSON.stringify(
+            filesNamesAndPath,
+        )}`;
         await fs.writeFile(file, data);
         await runPrettierOn(file);
     } catch (e) {
@@ -239,7 +260,9 @@ async function generateVideos() {
             });
         }
         const file = join(assetsPath, "assetsNames/videos.ts");
-        const data = `export const videos: AssetNameAndPath[] = ${JSON.stringify(filesNamesAndPath)}`;
+        const data = `export const videos: AssetNameAndPath[] = ${JSON.stringify(
+            filesNamesAndPath,
+        )}`;
         await fs.writeFile(file, data);
         await runPrettierOn(file);
     } catch (e) {

@@ -1,6 +1,6 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-// const CopyWebpackPlugin = require("copy-webpack-plugin");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
 module.exports = {
@@ -45,17 +45,18 @@ module.exports = {
             template: "./index.html",
             filename: "index.html",
         }),
-        // new CopyWebpackPlugin({
-        //     patterns: [
-        //         { from: "./src/assets/assetsNames", to: "assets/assetsNames" },
-        //         { from: "./src/assets/audio", to: "assets/audio" },
-        //         { from: "./src/assets/uncompressed", to: "assets/uncompressed" },
-        //         { from: "./src/assets/spriteSheets", to: "assets/spriteSheets" },
-        //         // PLEASE UNCOMMENT THESE, IF YOU NEED THEM
-        //         // { from: "./src/assets/spines", to: "assets/spines" },
-        //         // { from: "./src/assets/shaders", to: "assets/shaders" },
-        //         // { from: "./src/assets/video", to: "assets/video" },
-        //     ],
-        // }),
+        new CopyWebpackPlugin({
+            patterns: [
+                // { from: "./src/assets/images", to: "assets/images" },
+                { from: "./src/assets/assetsNames", to: "assets/assetsNames" },
+                //         { from: "./src/assets/audio", to: "assets/audio" },
+                // { from: "./src/assets/uncompressed", to: "assets/uncompressed" },
+                { from: "./src/assets/spriteSheets", to: "assets/spriteSheets" },
+                //         // PLEASE UNCOMMENT THESE, IF YOU NEED THEM
+                //         // { from: "./src/assets/spines", to: "assets/spines" },
+                //         // { from: "./src/assets/shaders", to: "assets/shaders" },
+                //         // { from: "./src/assets/video", to: "assets/video" },
+            ],
+        }),
     ],
 };
