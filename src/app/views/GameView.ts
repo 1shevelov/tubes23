@@ -28,7 +28,7 @@ export class GameView extends Phaser.GameObjects.Container {
         super(scene);
         this.init();
 
-        this.drawTubes(3, 4);
+        this.drawTubes(13, 4);
     }
 
     private init(): void {
@@ -98,6 +98,7 @@ export class GameView extends Phaser.GameObjects.Container {
         tubeOutline.setPosition(centerX - tubeOutlineWi / 2, centerY - tubeOutlineHe / 2);
 
         const tube = new Phaser.GameObjects.Container(this.scene);
+        tubeOutline.setName("container");
         tube.add(tubeOutline);
         this.fillTube(tubeOutline.x, tubeOutline.y, volume, tube);
 
@@ -121,20 +122,19 @@ export class GameView extends Phaser.GameObjects.Container {
         volume: number,
         tube: Phaser.GameObjects.Container,
     ): void {
-        let portion: Phaser.GameObjects.Container;
+        let portion: Phaser.GameObjects.Sprite;
         let randomColor: number;
         let portionNumber = volume - 1;
         for (let i = volume - 1; i >= 0; i--) {
-            portion = new Phaser.GameObjects.Container(this.scene);
             randomColor =
                 COLORS.AoccPalette[Math.floor(Math.random() * COLORS.AoccPalette.length)];
             // this.drawPortionRoundedRect(portion, tubeX, tubeY, i);
             // this.drawPortionCircle(portion, tubeX, tubeY, i, randomColor);
-            this.drawPortionGolfBall(portion, tubeX, tubeY, i, randomColor);
+            portion = this.drawPortionGolfBall(tubeX, tubeY, i, randomColor);
             tube.add(portion);
             portionNumber--;
             if (portionNumber === 0) {
-                portion.setName("top");
+                // portion.setName("top");
                 break;
             }
         }
@@ -156,30 +156,18 @@ export class GameView extends Phaser.GameObjects.Container {
     }
 
     private drawPortionGolfBall(
-        portionContainer: Phaser.GameObjects.Container,
         x: number,
         y: number,
         num: number,
         color: number,
-    ): void {
-        let golfBall;
-        if (num % 2) {
-            golfBall = new Phaser.GameObjects.Sprite(
-                this.scene,
-                0,
-                0,
-                "game-ui",
-                "ball-golf-150.png",
-            );
-        } else {
-            golfBall = new Phaser.GameObjects.Sprite(
-                this.scene,
-                0,
-                0,
-                "game-ui",
-                "ball-golf.png",
-            );
-        }
+    ): Phaser.GameObjects.Sprite {
+        const golfBall = new Phaser.GameObjects.Sprite(
+            this.scene,
+            0,
+            0,
+            "game-ui",
+            "ball-golf-150.png",
+        );
         golfBall.setOrigin(0.5, 0.5);
         golfBall.setPosition(
             x + this.portionSquareSize * 0.5,
@@ -188,7 +176,9 @@ export class GameView extends Phaser.GameObjects.Container {
         const scale = (this.portionSquareSize * this.portionSizeCoeff) / golfBall.width;
         golfBall.setScale(scale);
         golfBall.setTint(color, color, color, 0xffffff);
-        portionContainer.add(golfBall);
+        golfBall.setName(num.toString());
+        // console.log(`${num}: ${golfBall.y}`);
+        return golfBall;
     }
 
     private drawPortionCircle(
@@ -233,6 +223,14 @@ export class GameView extends Phaser.GameObjects.Container {
         });
     }
 
+    private findTopPortion(
+        tube: Phaser.GameObjects.Container,
+    ): Phaser.GameObjects.Sprite {
+        // const allObj = tube.getAll();
+        // allObj.forEach((obj) => console.log(obj.name));
+        return tube.getByName("1") as Phaser.GameObjects.Sprite;
+    }
+
     private handleTubeClick(tube: Phaser.GameObjects.Container): void {
         // this.tubes.forEach((tube, index) => {
         //     if (tube === gameObject) {
@@ -243,14 +241,29 @@ export class GameView extends Phaser.GameObjects.Container {
         //         }, this.justClickedTubeDelay);
         //     }
         // });
-        const topPortion = tube.getByName("top") as Phaser.GameObjects.Graphics;
+        const topPortion = this.findTopPortion(tube);
+        if (topPortion === null) {
+            console.error("topPortion is not found");
+            return;
+        }
+        const container = tube.getByName("container") as Phaser.GameObjects.Graphics;
+        // console.log(topPortion.y, " / ", container.y);
+        let moveDistance = Math.abs(topPortion.y - container.y);
+        moveDistance += (this.portionSquareSize * this.portionSizeCoeff) / 1.5;
+        console.log(moveDistance);
+        let strDistance: string;
         let moveUp = true;
+        strDistance = "-=" + moveDistance.toString();
         if (this.activatedTube == tube.name) {
             moveUp = false;
+            // moveDistance = Math.abs(topPortion.y);
+            strDistance = "+=" + moveDistance.toString();
         }
+        console.log(strDistance);
         this.scene.tweens.add({
             targets: topPortion,
-            y: moveUp ? tube.y - this.portionSquareSize : tube.y,
+            //y: moveUp ? tube.y - this.portionSquareSize : tube.y,
+            y: strDistance,
             ease: "Linear",
             duration: 120,
             repeat: 0,
