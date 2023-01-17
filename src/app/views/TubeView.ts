@@ -47,19 +47,13 @@ export class TubeView extends Phaser.GameObjects.Container {
 
         let portion: Phaser.GameObjects.Sprite;
         let randomColor: number;
-        let portionNumber = fillVolume;
-        for (let i = fillVolume - 1; i >= 0; i--) {
+        for (let i = this.volume - 1; i >= this.volume - fillVolume; i--) {
             randomColor =
                 COLORS.AoccPalette[Math.floor(Math.random() * COLORS.AoccPalette.length)];
             // this.drawPortionRoundedRect(portion, tubeX, tubeY, i);
             // this.drawPortionCircle(portion, tubeX, tubeY, i, randomColor);
             portion = this.drawPortionGolfBall(this.posX, this.posY, i, randomColor);
             this.add(portion);
-            portionNumber--;
-            if (portionNumber === 0) {
-                // portion.setName("top");
-                break;
-            }
         }
     }
 
@@ -136,7 +130,7 @@ export class TubeView extends Phaser.GameObjects.Container {
         );
         const scale = (this.squareSize * this.portionSizeCoeff) / golfBall.width;
         golfBall.setScale(scale);
-        golfBall.setTint(color, color, color, 0xffffff);
+        golfBall.setTint(color, 0xffffff, color, color);
         golfBall.setName(num.toString());
         // console.log(`${num}: ${golfBall.y}`);
         return golfBall;

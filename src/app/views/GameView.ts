@@ -21,7 +21,7 @@ export class GameView extends Phaser.GameObjects.Container {
         super(scene);
         this.init();
 
-        this.drawTubes(13, 4);
+        this.drawTubes(3, 8);
     }
 
     private init(): void {
