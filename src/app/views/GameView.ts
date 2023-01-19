@@ -21,7 +21,7 @@ export class GameView extends Phaser.GameObjects.Container {
         super(scene);
         this.init();
 
-        this.drawTubes(3, 8);
+        this.drawTubes(13, 5);
     }
 
     private init(): void {
@@ -64,7 +64,9 @@ export class GameView extends Phaser.GameObjects.Container {
                     (row + 1) * rowGap + rowLower,
                     this.portionSquareSize,
                 );
-                tube.randomFill(volume - 1);
+                Math.random() < 0.5
+                    ? tube.randomFill(volume - 1)
+                    : tube.randomFill(volume - 2);
                 this.add(tube);
                 // this.scene.add.existing(tube);
                 this.tubes.push(tube);
