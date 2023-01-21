@@ -11,14 +11,14 @@ export function fixValue(val: number, MIN: number, MAX: number): number {
 
 export function checkIfFaulty(val: number, MIN: number, MAX: number): boolean {
     if (!Number.isFinite(val)) {
-        console.error(`Invalid value: \"${val}\". Aborting.`);
+        console.error(`Invalid value: \"${val}\". Aborting`);
         return true;
     } else if (val < MIN) {
-        console.error(`Invalid value: \"${val}\". It is less then \"${MIN}\". Aborting.`);
+        console.error(`Invalid value: \"${val}\". It is less then \"${MIN}\". Aborting`);
         return true;
     } else if (val > MAX) {
         console.error(
-            `Invalid value: \"${val}\". It is bigger then \"${MAX}\". Aborting.`,
+            `Invalid value: \"${val}\". It is bigger then \"${MAX}\". Aborting`,
         );
         return true;
     }

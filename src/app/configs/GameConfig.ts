@@ -6,3 +6,7 @@ export const MIN_VOLUME = 1;
 export const MAX_VOLUME = 16;
 
 export const MAX_COLORS = AoccPalette.length;
+
+export enum ErrorValues {
+    InvalidColor = -1,
+}
