@@ -8,12 +8,25 @@ enum Drains {
     None, // can't add or drain, just compare content
 }
 
+enum ColorRules {
+    Classic, // any color, added color matches topmost (last)
+    OneOnly, // accepts only one specific color, even in set content
+    AnyColorFree, // any color, free order (no match color rule)
+    ExcludeColor, // any color, except set one, color match last
+}
+
 export class Tube {
+    public rule = ColorRules.Classic;
     public drains: Drains = Drains.None;
     private _volume = GAME.MIN_VOLUME;
     private _content: Array<number> = []; // element 0 is always at the bottom
 
-    public initialize(vol: number, cont: Array<number>, drains: Drains): boolean {
+    public initialize(
+        vol: number,
+        cont: Array<number>,
+        drains: Drains,
+        rule: ColorRules = ColorRules.Classic,
+    ): boolean {
         this.volume = vol;
         this.content = cont;
         if (this._content.length === cont.length) {
@@ -25,6 +38,11 @@ export class Tube {
             }
         }
         this.drains = drains;
+        if (rule !== ColorRules.Classic) {
+            console.warn("Only Classic color rule is currently implemented. Ignoring");
+            this.rule = ColorRules.Classic;
+        }
+        this.rule = rule;
         return true;
     }
 
@@ -69,12 +87,12 @@ export class Tube {
         // }
     }
 
-    public tryToAddPortion(portion: number): boolean {
+    public tryToAdd(portion: number): boolean {
         if (checkIfFaulty(portion, 0, GAME.MAX_COLORS - 1)) {
             console.error(`Trying to add invalid color: ${portion}. Aborting`);
             return false;
         }
-        if (!this.canAddPortion()) {
+        if (!this.canAdd()) {
             console.error("This tube can't accept a portion");
             return false;
         }
@@ -86,8 +104,8 @@ export class Tube {
         return true;
     }
 
-    public drainPortion(): number {
-        if (!this.canDrainPortion()) {
+    public drain(): number {
+        if (!this.canDrain()) {
             console.error("This tube can't return a portion");
             return GAME.ErrorValues.InvalidColor;
         }
@@ -98,20 +116,20 @@ export class Tube {
         }
     }
 
-    public canAddPortion(): boolean {
+    public canAdd(): boolean {
         if (this.drains === Drains.None || this.drains === Drains.Bottom) return false;
         if (this._volume <= this._content.length) return false;
         return true;
     }
 
-    public canDrainPortion(): boolean {
+    public canDrain(): boolean {
         if (this.drains === Drains.None) return false;
         if (this._content.length === 0) return false;
         return true;
     }
 
-    public getDrainPortionColor(): number {
-        if (!this.canDrainPortion()) {
+    public getDrainColor(): number {
+        if (!this.canDrain()) {
             console.error("This tube can't return a portion");
             return GAME.ErrorValues.InvalidColor;
         }
@@ -120,5 +138,15 @@ export class Tube {
         } else {
             return this._content[0] as number;
         }
+    }
+
+    // the level is won if every tube is empty or have only one color
+    public isWin(): boolean {
+        if (this._content.length === 0) return true;
+        const firstColor = this._content[0];
+        for (let i = 0; i < this._content.length; i++) {
+            if (firstColor !== this._content[i]) return false;
+        }
+        return true;
     }
 }
