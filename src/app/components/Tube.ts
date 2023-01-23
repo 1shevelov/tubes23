@@ -1,6 +1,7 @@
 import * as GAME from "../configs/GameConfig";
 import { fixValue, checkIfFaulty } from "../services/Utilities";
 
+// TODO: separate these enums to allow setting them in Level
 enum Drains {
     Neck, // add and drain, FILO
     Both, // add and drain, FIFO, add to top, drain from bottom
@@ -19,12 +20,12 @@ export class Tube {
     public rule = ColorRules.Classic;
     public drains: Drains = Drains.None;
     private _volume = GAME.MIN_VOLUME;
-    private _content: Array<number> = []; // element 0 is always at the bottom
+    private _content: number[] = []; // element 0 is always at the bottom
 
     public initialize(
         vol: number,
-        cont: Array<number>,
-        drains: Drains,
+        cont: number[],
+        drains: Drains = Drains.Neck,
         rule: ColorRules = ColorRules.Classic,
     ): boolean {
         this.volume = vol;
