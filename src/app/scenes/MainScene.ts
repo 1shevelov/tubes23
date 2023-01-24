@@ -5,12 +5,14 @@ import { SceneNames } from "../enums/Scenes";
 import { ForegroundView } from "../views/ForegroundView";
 import { GameView } from "../views/GameView";
 import { UIView } from "../views/UIView";
+import { Level } from "../components/Level";
 
 export default class MainScene extends Phaser.Scene {
     private gameView: GameView;
     private uiView: UIView;
     private foregroundView: ForegroundView;
     // private popupService: PopupService;
+    private level: Level;
 
     public constructor() {
         super({ key: SceneNames.Main });
@@ -60,5 +62,10 @@ export default class MainScene extends Phaser.Scene {
         };
         update();
         document.body.appendChild(stats.dom);
+    }
+
+    private create(): void {
+        this.level = new Level();
+        this.level.setRandomTubes(8, 4);
     }
 }
