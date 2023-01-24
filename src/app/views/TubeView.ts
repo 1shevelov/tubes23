@@ -57,6 +57,26 @@ export class TubeView extends Phaser.GameObjects.Container {
         }
     }
 
+    public fillContent(tubeContent: number[]): void {
+        // check data?
+        let portion: Phaser.GameObjects.Sprite;
+        let j = 0;
+        for (let i = this.volume - 1; i >= 0; i--) {
+            // this.drawPortionRoundedRect(portion, tubeX, tubeY, i);
+            // this.drawPortionCircle(portion, tubeX, tubeY, i, randomColor);
+            if (tubeContent[j] !== undefined) {
+                portion = this.drawPortionGolfBall(
+                    this.posX,
+                    this.posY,
+                    i,
+                    COLORS.AoccPalette[tubeContent[j]],
+                );
+                this.add(portion);
+                j++;
+            }
+        }
+    }
+
     public handleClick(): void {
         const topPortion = this.findTopPortion();
         if (topPortion === null) {

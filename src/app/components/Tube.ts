@@ -62,7 +62,7 @@ export class Tube {
         }
     }
 
-    public get content(): Array<number> {
+    public get content(): number[] {
         return this._content;
     }
 

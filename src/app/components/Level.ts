@@ -10,7 +10,15 @@ enum WinConditions {
 export class Level {
     private winCondition: WinConditions = WinConditions.CollectAll;
 
-    private tubes: Array<Tube>;
+    private tubes: Tube[] = [];
+
+    public getTubes(): number[][] {
+        const tubes: number[][] = [];
+        this.tubes.forEach((tube) => {
+            tubes.push(tube.content);
+        });
+        return tubes;
+    }
 
     public setTubes(tubes: number[][]): boolean {
         if (tubes.length < GAME.MIN_TUBES || tubes.length > GAME.MAX_TUBES) {
@@ -44,7 +52,7 @@ export class Level {
             colors2Place.push({ color: allColors[randColorIndex], number: fillSize });
             allColors.splice(randColorIndex, 1);
         }
-        console.log(JSON.stringify(colors2Place));
+        // console.log(JSON.stringify(colors2Place));
         const randTubes: number[][] = [];
         let randTube: number[];
         let portionColorIndex: number;
@@ -59,7 +67,11 @@ export class Level {
             }
             randTubes.push(randTube);
         }
-        console.log(JSON.stringify(randTubes));
+        for (let i = 0; i < tubeNum - colors; i++) {
+            randTubes.push([]);
+        }
+        // console.log(JSON.stringify(randTubes));
+        this.setTubes(randTubes);
     }
 
     public isWin(): boolean {
