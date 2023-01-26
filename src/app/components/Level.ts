@@ -12,15 +12,25 @@ export class Level {
 
     private tubes: Tube[] = [];
 
-    public getTubes(): number[][] {
-        const tubes: number[][] = [];
+    private gameEvents: Phaser.Events.EventEmitter;
+
+    private sourceTube = -1;
+    private receiverTube = -1;
+
+    public constructor(MSEventEmitter: Phaser.Events.EventEmitter) {
+        this.gameEvents = MSEventEmitter;
+        this.init();
+    }
+
+    public getTubes(): object[] {
+        const tubes: object[] = [];
         this.tubes.forEach((tube) => {
-            tubes.push(tube.content);
+            tubes.push(tube.getTube());
         });
         return tubes;
     }
 
-    public setTubes(tubes: number[][]): boolean {
+    public setTubes(tubes: number[][], tubeVol: number): boolean {
         if (tubes.length < GAME.MIN_TUBES || tubes.length > GAME.MAX_TUBES) {
             console.error("Invalid number of tubes: ", tubes.length);
             return false;
@@ -28,7 +38,7 @@ export class Level {
         let aTube: Tube;
         for (let i = 0; i < tubes.length; i++) {
             aTube = new Tube();
-            if (!aTube.initialize(tubes[i].length, tubes[i])) return false;
+            if (!aTube.initialize(tubeVol, tubes[i])) return false;
             this.tubes.push(aTube);
         }
         return true;
@@ -71,7 +81,7 @@ export class Level {
             randTubes.push([]);
         }
         // console.log(JSON.stringify(randTubes));
-        this.setTubes(randTubes);
+        this.setTubes(randTubes, tubeVol);
     }
 
     public isWin(): boolean {
@@ -79,5 +89,13 @@ export class Level {
             if (!this.tubes[i].isWin()) return false;
         }
         return true;
+    }
+
+    private init(): void {
+        this.gameEvents.on(GAME.EventTubeClicked, this.handleClick, this);
+    }
+
+    private handleClick(tubeNum: number): void {
+        console.log(`${tubeNum} clicked`);
     }
 }

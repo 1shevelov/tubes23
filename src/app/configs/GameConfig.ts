@@ -10,3 +10,5 @@ export const MAX_COLORS = AoccPalette.length;
 export enum ErrorValues {
     InvalidColor = -1,
 }
+
+export const EventTubeClicked = "TubeClicked";

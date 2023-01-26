@@ -13,12 +13,14 @@ export default class MainScene extends Phaser.Scene {
     private foregroundView: ForegroundView;
     // private popupService: PopupService;
     private level: Level;
+    private gameEvents: Phaser.Events.EventEmitter;
 
     public constructor() {
         super({ key: SceneNames.Main });
     }
 
     private init(): void {
+        this.gameEvents = new Phaser.Events.EventEmitter();
         // this.initServices();
         this.initGameView();
         this.initUIView();
@@ -30,7 +32,7 @@ export default class MainScene extends Phaser.Scene {
     }
 
     private initGameView(): void {
-        this.gameView = new GameView(this);
+        this.gameView = new GameView(this, this.gameEvents);
         this.add.existing(this.gameView);
         // this.cameras.main.setRoundPixels(true);
     }
@@ -65,11 +67,11 @@ export default class MainScene extends Phaser.Scene {
     }
 
     private create(): void {
-        this.level = new Level();
+        this.level = new Level(this.gameEvents);
         this.level.setRandomTubes(8, 4);
 
         // this.gameView.drawRandomGenTubes(8, 4);
-        console.log(JSON.stringify(this.level.getTubes()));
+        // console.log(JSON.stringify(this.level.getTubes()));
         this.gameView.drawClassicTubes(this.level.getTubes());
     }
 }

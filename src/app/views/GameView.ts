@@ -15,12 +15,13 @@ export class GameView extends Phaser.GameObjects.Container {
 
     // all tubes in the scene
     private tubes: TubeView[] = [];
-    private activatedTube = "";
 
-    public constructor(public scene: Phaser.Scene) {
+    private gameEvents: Phaser.Events.EventEmitter;
+
+    public constructor(scene: Phaser.Scene, MSEventEmitter: Phaser.Events.EventEmitter) {
         super(scene);
         this.init();
-
+        this.gameEvents = MSEventEmitter;
         // this.drawTubes(13, 5);
     }
 
@@ -47,11 +48,12 @@ export class GameView extends Phaser.GameObjects.Container {
         let tubeGap = 0;
         const rowLower = this.he * 0.05; // shift rows a bit lower
         let tube: TubeView;
+        let tubeCounter = 0;
         tubesInRows.forEach((tubesInThisRow, row) => {
             tubeGap = this.wi / (tubesInThisRow + 1);
             for (let i = 1; i <= tubesInThisRow; i++) {
                 // this.drawTube(i * tubeGap, (row + 1) * rowGap + rowLower, volume);
-                tube = new TubeView(this.scene, volume);
+                tube = new TubeView(this.scene, volume, tubeCounter, this.gameEvents);
                 tube.draw(
                     i * tubeGap,
                     (row + 1) * rowGap + rowLower,
@@ -63,15 +65,18 @@ export class GameView extends Phaser.GameObjects.Container {
                 this.add(tube);
                 // this.scene.add.existing(tube);
                 this.tubes.push(tube);
+                tubeCounter++;
             }
         });
         this.addProps();
     }
 
-    public drawClassicTubes(tubes: number[][]): void {
+    public drawClassicTubes(tubes: object[]): void {
         // check data
         const tubeNum = tubes.length;
-        const volume = tubes[0].length; // all tubes are assumed of equal volume
+        let maxVolume = tubes[0]["volume"];
+        for (let i = 1; i < tubeNum; i++)
+            if (tubes[i]["volume"] > maxVolume) maxVolume = tubes[i]["volume"];
 
         // deciding how many rows are needed
         let rows = this.tubeRows.length;
@@ -87,7 +92,7 @@ export class GameView extends Phaser.GameObjects.Container {
         }
         // console.log(tubesInRows);
         const rowGap = this.he / (rows + 1);
-        this.portionSquareSize = rowGap / (volume + 1.6);
+        this.portionSquareSize = rowGap / (maxVolume + 1.6);
 
         let tubeGap = 0;
         const rowLower = this.he * 0.05; // shift rows a bit lower
@@ -97,15 +102,19 @@ export class GameView extends Phaser.GameObjects.Container {
             tubeGap = this.wi / (tubesInThisRow + 1);
             for (let i = 1; i <= tubesInThisRow; i++) {
                 // this.drawTube(i * tubeGap, (row + 1) * rowGap + rowLower, volume);
-                tubeView = new TubeView(this.scene, volume);
+                tubeView = new TubeView(
+                    this.scene,
+                    tubes[tubeCounter]["volume"],
+                    tubeCounter,
+                    this.gameEvents,
+                );
                 tubeView.draw(
                     i * tubeGap,
                     (row + 1) * rowGap + rowLower,
                     this.portionSquareSize,
                 );
-                tubeView.fillContent(tubes[tubeCounter]);
+                tubeView.fillContent(tubes[tubeCounter]["content"]);
                 this.add(tubeView);
-                // this.scene.add.existing(tube);
                 this.tubes.push(tubeView);
                 tubeCounter++;
             }

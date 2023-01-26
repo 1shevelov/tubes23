@@ -10,10 +10,19 @@ export class TubeView extends Phaser.GameObjects.Container {
     private posY: number;
     private squareSize: number;
 
-    public constructor(public scene: Phaser.Scene, volume: number) {
-        super(scene);
+    private tubeNumber: number;
+    private gameEvents: Phaser.Events.EventEmitter;
 
+    public constructor(
+        public scene: Phaser.Scene,
+        volume: number,
+        tubeNum: number,
+        MSEventEmitter: Phaser.Events.EventEmitter,
+    ) {
+        super(scene);
         this.init(volume);
+        this.tubeNumber = tubeNum;
+        this.gameEvents = MSEventEmitter;
     }
 
     public draw(centerX: number, centerY: number, squareSize: number): void {
@@ -109,6 +118,7 @@ export class TubeView extends Phaser.GameObjects.Container {
         // if (moveUp) this.activatedTube = tube.name;
         // else this.activatedTube = "";
         // console.log(tube.name);
+        this.gameEvents.emit(GAME.EventTubeClicked, this.tubeNumber);
     }
 
     private init(volume: number): void {

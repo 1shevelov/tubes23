@@ -150,4 +150,12 @@ export class Tube {
         }
         return true;
     }
+
+    public getTube(): object {
+        return {
+            volume: this.volume,
+            content: this.content,
+            drains: this.drains,
+        };
+    }
 }
