@@ -39,3 +39,5 @@ export const AoccPalette = [
     0x6c4675 /* blue lilac */,
     0xea899a /* light pink */,
 ]
+
+export const CurrentPalette = AoccPalette;

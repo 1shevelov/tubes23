@@ -48,12 +48,11 @@ export class GameView extends Phaser.GameObjects.Container {
         let tubeGap = 0;
         const rowLower = this.he * 0.05; // shift rows a bit lower
         let tube: TubeView;
-        let tubeCounter = 0;
         tubesInRows.forEach((tubesInThisRow, row) => {
             tubeGap = this.wi / (tubesInThisRow + 1);
             for (let i = 1; i <= tubesInThisRow; i++) {
                 // this.drawTube(i * tubeGap, (row + 1) * rowGap + rowLower, volume);
-                tube = new TubeView(this.scene, volume, tubeCounter, this.gameEvents);
+                tube = new TubeView(this.scene, volume);
                 tube.draw(
                     i * tubeGap,
                     (row + 1) * rowGap + rowLower,
@@ -65,7 +64,6 @@ export class GameView extends Phaser.GameObjects.Container {
                 this.add(tube);
                 // this.scene.add.existing(tube);
                 this.tubes.push(tube);
-                tubeCounter++;
             }
         });
         this.addProps();
@@ -102,12 +100,7 @@ export class GameView extends Phaser.GameObjects.Container {
             tubeGap = this.wi / (tubesInThisRow + 1);
             for (let i = 1; i <= tubesInThisRow; i++) {
                 // this.drawTube(i * tubeGap, (row + 1) * rowGap + rowLower, volume);
-                tubeView = new TubeView(
-                    this.scene,
-                    tubes[tubeCounter]["volume"],
-                    tubeCounter,
-                    this.gameEvents,
-                );
+                tubeView = new TubeView(this.scene, tubes[tubeCounter]["volume"]);
                 tubeView.draw(
                     i * tubeGap,
                     (row + 1) * rowGap + rowLower,
@@ -135,6 +128,7 @@ export class GameView extends Phaser.GameObjects.Container {
             ) => {
                 // this.handleTubeClick(gameObject);
                 (gameObject as TubeView).handleClick();
+                this.gameEvents.emit(GAME.EventTubeClicked, gameObject.name);
             },
         );
     }

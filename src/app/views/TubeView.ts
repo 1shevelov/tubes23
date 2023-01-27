@@ -1,3 +1,20 @@
+// posX, posY - center
+// volume
+// sizeY in px
+// positions : array of coordinates of all available positions and PortionViews that occupy them
+// portionSize - calculated
+
+// private init (posX, posY, volume, sizeY)
+// private drawClassic(posX, posY, size) - on create, classic tube (Drains.Neck)
+// public fill(number[])
+// public changeSizeY(y) - on window resize
+// public changeVolume ???
+// public changeXPos(x), changeYPos(y) - on window resize
+// public activateSource() - ready portion on click
+// public acivateRecipient() - flash on receive
+// public addPortion() - classic on topmost free position
+// public removePortion() - classic from topmost position
+
 import * as COLORS from "../configs/Colors";
 import * as GAME from "../configs/GameConfig";
 import { fixValue } from "../services/Utilities";
@@ -10,19 +27,11 @@ export class TubeView extends Phaser.GameObjects.Container {
     private posY: number;
     private squareSize: number;
 
-    private tubeNumber: number;
-    private gameEvents: Phaser.Events.EventEmitter;
+    private activated = false;
 
-    public constructor(
-        public scene: Phaser.Scene,
-        volume: number,
-        tubeNum: number,
-        MSEventEmitter: Phaser.Events.EventEmitter,
-    ) {
+    public constructor(public scene: Phaser.Scene, volume: number) {
         super(scene);
         this.init(volume);
-        this.tubeNumber = tubeNum;
-        this.gameEvents = MSEventEmitter;
     }
 
     public draw(centerX: number, centerY: number, squareSize: number): void {
@@ -88,12 +97,13 @@ export class TubeView extends Phaser.GameObjects.Container {
 
     public handleClick(): void {
         const topPortion = this.findTopPortion();
-        if (topPortion === null) {
-            console.error("topPortion is not found");
-            return;
-        }
+        if (topPortion === null) return; //{
+        //     console.error("topPortion is not found");
+        //     return;
+        // }
         // const container = this.getByName("container") as Phaser.GameObjects.Graphics;
         // console.log(topPortion.y, " / ", container.y);
+        if (!this.activated) this.activated = true;
         let moveDistance = Math.abs(topPortion.y - this.posY);
         moveDistance += (this.squareSize * this.portionSizeCoeff) / 1.5;
         console.log(moveDistance);
@@ -118,7 +128,6 @@ export class TubeView extends Phaser.GameObjects.Container {
         // if (moveUp) this.activatedTube = tube.name;
         // else this.activatedTube = "";
         // console.log(tube.name);
-        this.gameEvents.emit(GAME.EventTubeClicked, this.tubeNumber);
     }
 
     private init(volume: number): void {
@@ -162,6 +171,7 @@ export class TubeView extends Phaser.GameObjects.Container {
         golfBall.setScale(scale);
         golfBall.setTint(color, 0xffffff, color, color);
         golfBall.setName(num.toString());
+        // console.log(`${num}: ${color}`);
         // console.log(`${num}: ${golfBall.y}`);
         return golfBall;
     }
@@ -193,9 +203,14 @@ export class TubeView extends Phaser.GameObjects.Container {
     //     portionContainer.add(stroking);
     // }
 
-    private findTopPortion(): Phaser.GameObjects.Sprite {
-        // const allObj = tube.getAll();
-        // allObj.forEach((obj) => console.log(obj.name));
-        return this.getByName("1") as Phaser.GameObjects.Sprite;
+    private findTopPortion(): Phaser.GameObjects.Sprite | null {
+        let obj: Phaser.GameObjects.Sprite;
+        for (let i = 0; i < GAME.MAX_VOLUME; i++) {
+            obj = this.getByName(i.toString()) as Phaser.GameObjects.Sprite;
+            if (obj !== null) {
+                return obj;
+            }
+        }
+        return null;
     }
 }
