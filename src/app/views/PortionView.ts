@@ -10,6 +10,7 @@
 
 export class PortionView extends Phaser.GameObjects.Container {
     private portionSprite: Phaser.GameObjects.Sprite;
+    private readonly portionSizeCoeff = 0.8;
 
     public constructor(
         scene: Phaser.Scene,
@@ -20,6 +21,7 @@ export class PortionView extends Phaser.GameObjects.Container {
     ) {
         super(scene);
         this.portionSprite = this.draw(centerX, centerY, squareSize, color);
+        this.add(this.portionSprite);
     }
 
     public changeSize(squareSize: number): void {
@@ -96,7 +98,7 @@ export class PortionView extends Phaser.GameObjects.Container {
         );
         golfBall.setOrigin(0.5, 0.5);
         golfBall.setPosition(x, y);
-        golfBall.setScale(size / golfBall.width);
+        golfBall.setScale((size / golfBall.width) * this.portionSizeCoeff);
         golfBall.setTint(color, 0xffffff, color, color);
         return golfBall;
     }

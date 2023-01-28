@@ -1,6 +1,6 @@
 import { TubeView } from "./TubeView";
 import * as GAME from "../configs/GameConfig";
-import { fixValue } from "../services/Utilities";
+// import { fixValue } from "../services/Utilities";
 
 export class GameView extends Phaser.GameObjects.Container {
     // max number of tubes for each row
@@ -93,9 +93,9 @@ export class GameView extends Phaser.GameObjects.Container {
         // this.portionSquareSize = rowGap / (maxVolume + 1.6);
 
         let tubeGap = 0;
-        const rowLower = this.he * 0.05; // shift rows a bit lower
         let tubeView: TubeView;
         let tubeCounter = 0;
+        // TODO: Bug when rows > 1
         tubesInRows.forEach((tubesInThisRow, row) => {
             tubeGap = this.wi / (tubesInThisRow + 1);
             for (let i = 1; i <= tubesInThisRow; i++) {
@@ -104,9 +104,12 @@ export class GameView extends Phaser.GameObjects.Container {
                     this.scene,
                     tubes[tubeCounter]["volume"],
                     i * tubeGap,
-                    (row + 1) * rowGap + rowLower,
+                    this.he / (row + 2) + this.he * 0.05,
                     tubeSizeY,
                 );
+                // console.log(
+                //     `${this.he} / ${row} / ${this.he / (row + 1) + this.he * 0.05}`,
+                // );
                 // tubeView.draw(
                 //     i * tubeGap,
                 //     (row + 1) * rowGap + rowLower,
@@ -118,26 +121,26 @@ export class GameView extends Phaser.GameObjects.Container {
                 tubeCounter++;
             }
         });
-        this.addProps();
+        // this.addProps();
     }
 
-    private addProps(): void {
-        this.tubes.forEach((tube, index) => {
-            tube.setName(index.toString());
-        });
-        this.scene.input.on(
-            "gameobjectup",
-            (
-                _pointer: Phaser.Input.Pointer,
-                gameObject: Phaser.GameObjects.Container,
-                _event,
-            ) => {
-                // this.handleTubeClick(gameObject);
-                (gameObject as TubeView).handleClick();
-                this.gameEvents.emit(GAME.EventTubeClicked, gameObject.name);
-            },
-        );
-    }
+    // private addProps(): void {
+    //     this.tubes.forEach((tube, index) => {
+    //         tube.setName(index.toString());
+    //     });
+    //     this.scene.input.on(
+    //         "gameobjectup",
+    //         (
+    //             _pointer: Phaser.Input.Pointer,
+    //             gameObject: Phaser.GameObjects.Container,
+    //             _event: any,
+    //         ) => {
+    //             // this.handleTubeClick(gameObject);
+    //             (gameObject as TubeView).handleClick();
+    //             this.gameEvents.emit(GAME.EventTubeClicked, gameObject.name);
+    //         },
+    //     );
+    // }
 
     private init(): void {
         this.resize();
