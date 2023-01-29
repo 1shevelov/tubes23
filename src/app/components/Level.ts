@@ -30,7 +30,7 @@ export class Level {
         return tubes;
     }
 
-    public setTubes(tubes: number[][], tubeVol: number): boolean {
+    public setClassicTubes(tubes: number[][], tubeVol: number): boolean {
         if (tubes.length < GAME.MIN_TUBES || tubes.length > GAME.MAX_TUBES) {
             console.error("Invalid number of tubes: ", tubes.length);
             return false;
@@ -44,7 +44,7 @@ export class Level {
         return true;
     }
 
-    // fills tubeNum-2 tubes with tubeNum-2 colors
+    // fills tubeNum-2 tubes randomly with tubeNum-2 colors
     public setRandomTubes(tubeNum: number, tubeVol: number): void {
         // TODO: fix values
         const colors = tubeNum - 2;
@@ -81,7 +81,7 @@ export class Level {
             randTubes.push([]);
         }
         // console.log(JSON.stringify(randTubes));
-        this.setTubes(randTubes, tubeVol);
+        this.setClassicTubes(randTubes, tubeVol);
     }
 
     public isWin(): boolean {

@@ -104,11 +104,11 @@ export class GameView extends Phaser.GameObjects.Container {
                     this.scene,
                     tubes[tubeCounter]["volume"],
                     i * tubeGap,
-                    this.he / (row + 2) + this.he * 0.05,
+                    ((row + 1) * this.he) / (rows + 1), // - this.he * 0.2,
                     tubeSizeY,
                 );
                 // console.log(
-                //     `${this.he} / ${row} / ${this.he / (row + 1) + this.he * 0.05}`,
+                //     `${this.he} / ${rows} / ${((row + 1) * this.he) / (rows + 1)}`,
                 // );
                 // tubeView.draw(
                 //     i * tubeGap,

@@ -168,15 +168,15 @@ export class TubeView extends Phaser.GameObjects.Container {
     private init(volume: number, centerX: number, centerY: number, sizeY: number): void {
         this.volume = fixValue(volume, GAME.MIN_VOLUME, GAME.MAX_VOLUME);
         this.portionSize = sizeY / (this.volume + 1); // for active portion
-        this.setupPositions(centerX, centerY);
+        this.setPortionsPositions(centerX, centerY);
     }
 
-    private setupPositions(centerX: number, centerY: number): void {
-        const zeroPortionCenterY = centerY - ((this.volume - 1) * this.portionSize) / 2;
+    private setPortionsPositions(centerX: number, centerY: number): void {
+        const zeroPortionCenterY = centerY + ((this.volume - 1) * this.portionSize) / 2;
         for (let i = 0; i < this.volume + 1; i++) {
             this.positions.push([
                 centerX,
-                zeroPortionCenterY + (2 * i * this.portionSize) / 2,
+                zeroPortionCenterY - (2 * i * this.portionSize) / 2,
             ]);
         }
         // console.log(this.positions);

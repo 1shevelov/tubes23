@@ -68,7 +68,8 @@ export default class MainScene extends Phaser.Scene {
 
     private create(): void {
         this.level = new Level(this.gameEvents);
-        this.level.setRandomTubes(4, 4);
+        this.level.setRandomTubes(30, 4);
+        // this.level.setClassicTubes([[0, 1, 2], [3, 4, 5, 6], [7], []], 4);
 
         // this.gameView.drawRandomGenTubes(8, 4);
         // console.log(JSON.stringify(this.level.getTubes()));
