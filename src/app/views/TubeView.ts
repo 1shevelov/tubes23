@@ -67,16 +67,25 @@ export class TubeView extends Phaser.GameObjects.Container {
         return false;
     }
 
-    // TODO: Bug top portion is the lowest, ehile should be topmost
     private handleClick(): void {
         if (this.isEmpty()) console.log("Empty!");
         const topPortion = this.getTopPortion();
         if (!this.activated) {
             this.activated = true;
-            topPortion.changeYPos(this.positions[this.volume][1]);
+            // topPortion.changeYPos(this.positions[this.volume][1]);
+            topPortion.animateTo(
+                this.positions[this.volume][0],
+                this.positions[this.volume][1],
+                100,
+            );
         } else {
             this.activated = false;
-            topPortion.changeYPos(this.positions[this.portions.length - 1][1]);
+            // topPortion.changeYPos(this.positions[this.portions.length - 1][1]);
+            topPortion.animateTo(
+                this.positions[this.portions.length - 1][0],
+                this.positions[this.portions.length - 1][1],
+                100,
+            );
         }
     }
 

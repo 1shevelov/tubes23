@@ -1,5 +1,6 @@
 import { Tube } from "./Tube";
 import * as GAME from "../configs/GameConfig";
+import { fixValue } from "../services/Utilities";
 
 enum WinConditions {
     CollectAll, // Classic rules: collect all colors
@@ -46,7 +47,9 @@ export class Level {
 
     // fills tubeNum-2 tubes randomly with tubeNum-2 colors
     public setRandomTubes(tubeNum: number, tubeVol: number): void {
-        // TODO: fix values
+        tubeNum = fixValue(tubeNum, GAME.MIN_TUBES, GAME.MAX_TUBES);
+        tubeNum = fixValue(tubeNum, GAME.MIN_TUBES, GAME.MAX_COLORS + 2);
+        tubeVol = fixValue(tubeVol, GAME.MIN_VOLUME, GAME.MAX_VOLUME);
         const colors = tubeNum - 2;
         const fillSize = tubeVol; // can be lower
 

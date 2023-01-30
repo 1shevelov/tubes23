@@ -42,8 +42,8 @@ export class PortionView extends Phaser.GameObjects.Container {
 
     // TODO: make curve trajectory
     public animateTo(x: number, y: number, duration: number): void {
-        const distanceX = this.portionSprite.x - x;
-        const distanceY = this.portionSprite.y - y;
+        const distanceX = "+=" + (this.portionSprite.x - x).toString();
+        const distanceY = "-=" + (this.portionSprite.y - y).toString();
         this.scene.tweens.add({
             targets: this.portionSprite,
             x: distanceX,

@@ -95,7 +95,6 @@ export class GameView extends Phaser.GameObjects.Container {
         let tubeGap = 0;
         let tubeView: TubeView;
         let tubeCounter = 0;
-        // TODO: Bug when rows > 1
         tubesInRows.forEach((tubesInThisRow, row) => {
             tubeGap = this.wi / (tubesInThisRow + 1);
             for (let i = 1; i <= tubesInThisRow; i++) {
@@ -104,7 +103,7 @@ export class GameView extends Phaser.GameObjects.Container {
                     this.scene,
                     tubes[tubeCounter]["volume"],
                     i * tubeGap,
-                    ((row + 1) * this.he) / (rows + 1), // - this.he * 0.2,
+                    ((1.15 * row + 1) * this.he) / (rows + 1) + this.he * 0.02,
                     tubeSizeY,
                 );
                 // console.log(
