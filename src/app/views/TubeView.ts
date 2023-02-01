@@ -27,10 +27,11 @@ export class TubeView extends Phaser.GameObjects.Container {
     private posY: number;
     private portionSize: number;
 
-    private activated = false;
-
     private positions: number[][] = [];
     private portions: PortionView[] = [];
+
+    // is top (last) position occupied, e.g. portion is ready for move
+    private isActivated = false;
 
     public constructor(
         public scene: Phaser.Scene,
@@ -67,29 +68,38 @@ export class TubeView extends Phaser.GameObjects.Container {
         return false;
     }
 
-    private handleClick(): void {
-        if (this.isEmpty()) console.log("Empty!");
-        const topPortion = this.getTopPortion();
-        if (!this.activated) {
-            this.activated = true;
-            // topPortion.changeYPos(this.positions[this.volume][1]);
-            topPortion.animateTo(
-                this.positions[this.volume][0],
-                this.positions[this.volume][1],
-                100,
-            );
-        } else {
-            this.activated = false;
-            // topPortion.changeYPos(this.positions[this.portions.length - 1][1]);
-            topPortion.animateTo(
-                this.positions[this.portions.length - 1][0],
-                this.positions[this.portions.length - 1][1],
-                100,
-            );
-        }
+    public isFull(): boolean {
+        return this.volume === this.portions.length;
     }
 
-    private getTopPortion(): PortionView {
+    public activate(): void {
+        if (this.isActivated) return;
+        const topPortion = this.getTopPortion();
+        if (topPortion === null) return;
+        // topPortion.changeYPos(this.positions[this.volume][1]);
+        topPortion.animateTo(
+            this.positions[this.volume][0],
+            this.positions[this.volume][1],
+            100,
+        );
+        this.isActivated = true;
+    }
+
+    public disactivate(): void {
+        if (!this.isActivated) return;
+        const topPortion = this.getTopPortion();
+        if (topPortion === null) return;
+        // topPortion.changeYPos(this.positions[this.portions.length - 1][1]);
+        topPortion.animateTo(
+            this.positions[this.portions.length - 1][0],
+            this.positions[this.portions.length - 1][1],
+            100,
+        );
+        this.isActivated = false;
+    }
+
+    private getTopPortion(): PortionView | null {
+        if (this.isEmpty()) return null;
         return this.portions[this.portions.length - 1];
     }
 
@@ -121,7 +131,7 @@ export class TubeView extends Phaser.GameObjects.Container {
             ),
             Phaser.Geom.Rectangle.Contains,
         );
-        this.on("pointerup", this.handleClick, this);
+        // this.on("pointerup", this.handleClick, this);
     }
 
     // private randomFill(fillVolume: number): void {

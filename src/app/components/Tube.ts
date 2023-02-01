@@ -105,15 +105,15 @@ export class Tube {
         return true;
     }
 
-    public drain(): number {
+    public drain(): void {
         if (!this.canDrain()) {
             console.error("This tube can't return a portion");
-            return GAME.ErrorValues.InvalidColor;
+            return;
         }
         if (this.drains === Drains.Neck) {
-            return this._content.pop() as number;
+            this._content.pop();
         } else {
-            return this._content.shift() as number;
+            this._content.shift();
         }
     }
 

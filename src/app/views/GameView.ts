@@ -18,6 +18,9 @@ export class GameView extends Phaser.GameObjects.Container {
 
     private gameEvents: Phaser.Events.EventEmitter;
 
+    private readonly NO_SOURCE = -1;
+    private sourceTube = this.NO_SOURCE;
+
     public constructor(scene: Phaser.Scene, MSEventEmitter: Phaser.Events.EventEmitter) {
         super(scene);
         this.init();
@@ -120,26 +123,44 @@ export class GameView extends Phaser.GameObjects.Container {
                 tubeCounter++;
             }
         });
-        // this.addProps();
+        this.addProps();
     }
 
-    // private addProps(): void {
-    //     this.tubes.forEach((tube, index) => {
-    //         tube.setName(index.toString());
-    //     });
-    //     this.scene.input.on(
-    //         "gameobjectup",
-    //         (
-    //             _pointer: Phaser.Input.Pointer,
-    //             gameObject: Phaser.GameObjects.Container,
-    //             _event: any,
-    //         ) => {
-    //             // this.handleTubeClick(gameObject);
-    //             (gameObject as TubeView).handleClick();
-    //             this.gameEvents.emit(GAME.EventTubeClicked, gameObject.name);
-    //         },
-    //     );
-    // }
+    private addProps(): void {
+        this.tubes.forEach((tube, index) => {
+            tube.setName(index.toString());
+        });
+        this.scene.input.on(
+            "gameobjectup",
+            (
+                _pointer: Phaser.Input.Pointer,
+                gameObject: Phaser.GameObjects.Container,
+                _event: any,
+            ) => {
+                (gameObject as TubeView).activate();
+                this.handleClick(parseInt(gameObject.name));
+            },
+        );
+    }
+
+    private handleClick(tubeNum: number): void {
+        console.log(`Clicked ${tubeNum}`);
+        if (this.sourceTube === this.NO_SOURCE && !this.tubes[tubeNum].isEmpty()) {
+            this.sourceTube = tubeNum;
+            return;
+        }
+        if (this.sourceTube !== this.NO_SOURCE && this.tubes[tubeNum].isFull()) {
+            // source is full - reset activated tube
+            this.tubes[this.sourceTube].disactivate();
+            this.sourceTube = this.NO_SOURCE;
+            return;
+        }
+        if (this.sourceTube !== this.NO_SOURCE && !this.tubes[tubeNum].isFull()) {
+            // try to move
+            this.gameEvents.emit(GAME.EventTubesClicked, this.sourceTube, tubeNum);
+            this.sourceTube = this.NO_SOURCE;
+        }
+    }
 
     private init(): void {
         this.resize();

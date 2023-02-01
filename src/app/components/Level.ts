@@ -15,9 +15,6 @@ export class Level {
 
     private gameEvents: Phaser.Events.EventEmitter;
 
-    private sourceTube = -1;
-    private receiverTube = -1;
-
     public constructor(MSEventEmitter: Phaser.Events.EventEmitter) {
         this.gameEvents = MSEventEmitter;
         this.init();
@@ -95,10 +92,27 @@ export class Level {
     }
 
     private init(): void {
-        this.gameEvents.on(GAME.EventTubeClicked, this.handleClick, this);
+        this.gameEvents.on(GAME.EventTubesClicked, this.tryToMove, this);
     }
 
-    private handleClick(tubeNum: number): void {
-        console.log(`${tubeNum} clicked`);
+    private tryToMove(source: number, recepient: number): void {
+        if (!this.tubes[source].canDrain()) {
+            console.error("Can't drain from tube #", source);
+            this.gameEvents.emit(GAME.EventMoveFailed);
+            return;
+        }
+        if (!this.tubes[recepient].canAdd()) {
+            console.error("Can't add to tube #", recepient);
+            this.gameEvents.emit(GAME.EventMoveFailed);
+            return;
+        }
+        const isSuccess = this.tubes[recepient].tryToAdd(
+            this.tubes[source].getDrainColor(),
+        );
+        if (isSuccess) {
+            this.tubes[source].drain();
+            this.gameEvents.emit(GAME.EventMoveSucceeded);
+            console.log(`Moved from ${source} to ${recepient}`);
+        } else this.gameEvents.emit(GAME.EventMoveFailed);
     }
 }
