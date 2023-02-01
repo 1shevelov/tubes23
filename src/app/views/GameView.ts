@@ -1,6 +1,7 @@
 import { TubeView } from "./TubeView";
 import * as GAME from "../configs/GameConfig";
 // import { fixValue } from "../services/Utilities";
+import { PortionView } from "./PortionView";
 
 export class GameView extends Phaser.GameObjects.Container {
     // max number of tubes for each row
@@ -18,8 +19,9 @@ export class GameView extends Phaser.GameObjects.Container {
 
     private gameEvents: Phaser.Events.EventEmitter;
 
-    private readonly NO_SOURCE = -1;
-    private sourceTube = this.NO_SOURCE;
+    private readonly NO_TUBE = -1;
+    private sourceTube = this.NO_TUBE;
+    private recepientTube = this.NO_TUBE;
 
     public constructor(scene: Phaser.Scene, MSEventEmitter: Phaser.Events.EventEmitter) {
         super(scene);
@@ -137,7 +139,7 @@ export class GameView extends Phaser.GameObjects.Container {
                 gameObject: Phaser.GameObjects.Container,
                 _event: any,
             ) => {
-                (gameObject as TubeView).activate();
+                // (gameObject as TubeView).activate();
                 this.handleClick(parseInt(gameObject.name));
             },
         );
@@ -145,20 +147,29 @@ export class GameView extends Phaser.GameObjects.Container {
 
     private handleClick(tubeNum: number): void {
         console.log(`Clicked ${tubeNum}`);
-        if (this.sourceTube === this.NO_SOURCE && !this.tubes[tubeNum].isEmpty()) {
+        if (this.sourceTube === this.NO_TUBE && !this.tubes[tubeNum].isEmpty()) {
             this.sourceTube = tubeNum;
+            this.tubes[this.sourceTube].activate();
             return;
         }
-        if (this.sourceTube !== this.NO_SOURCE && this.tubes[tubeNum].isFull()) {
+        if (this.sourceTube === tubeNum) {
+            // tube clicked again - disactivate
+            this.resetSource();
+            return;
+        }
+        if (this.sourceTube !== this.NO_TUBE && this.tubes[tubeNum].isFull()) {
             // source is full - reset activated tube
-            this.tubes[this.sourceTube].disactivate();
-            this.sourceTube = this.NO_SOURCE;
+            this.resetSource();
             return;
         }
-        if (this.sourceTube !== this.NO_SOURCE && !this.tubes[tubeNum].isFull()) {
+        if (this.sourceTube !== this.NO_TUBE && !this.tubes[tubeNum].isFull()) {
             // try to move
-            this.gameEvents.emit(GAME.EventTubesClicked, this.sourceTube, tubeNum);
-            this.sourceTube = this.NO_SOURCE;
+            this.recepientTube = tubeNum;
+            this.gameEvents.emit(
+                GAME.EventTubesClicked,
+                this.sourceTube,
+                this.recepientTube,
+            );
         }
     }
 
@@ -167,6 +178,29 @@ export class GameView extends Phaser.GameObjects.Container {
         this.tubeRows = this.wi > this.he ? this.HOR_ROWS : this.PORT_ROWS;
 
         this.scene.scale.on("resize", this.resize, this);
+        this.gameEvents.on(GAME.EventMoveFailed, this.resetSource, this);
+        this.gameEvents.on(GAME.EventMoveSucceeded, this.move, this);
+    }
+
+    private resetSource(): void {
+        this.tubes[this.sourceTube].disactivate();
+        this.sourceTube = this.NO_TUBE;
+    }
+
+    private move(): void {
+        if (this.sourceTube === this.NO_TUBE || this.recepientTube === this.NO_TUBE) {
+            console.error(`Source or recepient tube is unknown`);
+            return;
+        }
+        const portion = this.tubes[this.sourceTube].drawTop();
+        if (!portion) {
+            console.error(`Was not able to dfraw a portion from tube#${this.sourceTube}`);
+            return;
+        }
+        // TODO: portion.animateTo(top position);
+        this.tubes[this.recepientTube].addToTop(portion);
+        this.resetSource();
+        this.recepientTube = this.NO_TUBE;
     }
 
     private resize(): void {

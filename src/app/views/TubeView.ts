@@ -98,6 +98,17 @@ export class TubeView extends Phaser.GameObjects.Container {
         this.isActivated = false;
     }
 
+    public drawTop(): PortionView | undefined {
+        if (this.isEmpty()) return undefined;
+        return this.portions.pop();
+    }
+
+    public addToTop(newPortion: PortionView): boolean {
+        if (this.isFull()) return false;
+        this.portions.push(newPortion);
+        // TODO: animate newPortion to the top free position
+    }
+
     private getTopPortion(): PortionView | null {
         if (this.isEmpty()) return null;
         return this.portions[this.portions.length - 1];
