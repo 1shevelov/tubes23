@@ -1,7 +1,7 @@
 import { TubeView } from "./TubeView";
 import * as GAME from "../configs/GameConfig";
 // import { fixValue } from "../services/Utilities";
-import { PortionView } from "./PortionView";
+// import { PortionView } from "./PortionView";
 
 export class GameView extends Phaser.GameObjects.Container {
     // max number of tubes for each row
@@ -21,12 +21,12 @@ export class GameView extends Phaser.GameObjects.Container {
 
     private readonly NO_TUBE = -1;
     private sourceTube = this.NO_TUBE;
-    private recepientTube = this.NO_TUBE;
+    private recipientTube = this.NO_TUBE;
 
     public constructor(scene: Phaser.Scene, MSEventEmitter: Phaser.Events.EventEmitter) {
         super(scene);
-        this.init();
         this.gameEvents = MSEventEmitter;
+        this.init();
         // this.drawTubes(13, 5);
     }
 
@@ -153,7 +153,7 @@ export class GameView extends Phaser.GameObjects.Container {
             return;
         }
         if (this.sourceTube === tubeNum) {
-            // tube clicked again - disactivate
+            // tube clicked again - deactivate
             this.resetSource();
             return;
         }
@@ -164,11 +164,11 @@ export class GameView extends Phaser.GameObjects.Container {
         }
         if (this.sourceTube !== this.NO_TUBE && !this.tubes[tubeNum].isFull()) {
             // try to move
-            this.recepientTube = tubeNum;
+            this.recipientTube = tubeNum;
             this.gameEvents.emit(
                 GAME.EventTubesClicked,
                 this.sourceTube,
-                this.recepientTube,
+                this.recipientTube,
             );
         }
     }
@@ -183,24 +183,27 @@ export class GameView extends Phaser.GameObjects.Container {
     }
 
     private resetSource(): void {
-        this.tubes[this.sourceTube].disactivate();
+        this.tubes[this.sourceTube].deactivate();
         this.sourceTube = this.NO_TUBE;
     }
 
     private move(): void {
-        if (this.sourceTube === this.NO_TUBE || this.recepientTube === this.NO_TUBE) {
-            console.error(`Source or recepient tube is unknown`);
+        if (this.sourceTube === this.NO_TUBE || this.recipientTube === this.NO_TUBE) {
+            console.error(`Source or recipient tube is unknown`);
             return;
         }
         const portion = this.tubes[this.sourceTube].drawTop();
         if (!portion) {
-            console.error(`Was not able to dfraw a portion from tube#${this.sourceTube}`);
+            console.error(`Was not able to draw a portion from tube#${this.sourceTube}`);
             return;
         }
-        // TODO: portion.animateTo(top position);
-        this.tubes[this.recepientTube].addToTop(portion);
+        const { x, y } = this.tubes[this.recipientTube].getTopPosition();
+        // portion.animateTo(x, y, 200);
+        portion.changeXPos(x);
+        portion.changeYPos(y);
+        this.tubes[this.recipientTube].addToTop(portion);
         this.resetSource();
-        this.recepientTube = this.NO_TUBE;
+        this.recipientTube = this.NO_TUBE;
     }
 
     private resize(): void {

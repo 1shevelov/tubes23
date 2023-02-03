@@ -95,24 +95,24 @@ export class Level {
         this.gameEvents.on(GAME.EventTubesClicked, this.tryToMove, this);
     }
 
-    private tryToMove(source: number, recepient: number): void {
+    private tryToMove(source: number, recipient: number): void {
         if (!this.tubes[source].canDrain()) {
             console.error("Can't drain from tube #", source);
             this.gameEvents.emit(GAME.EventMoveFailed);
             return;
         }
-        if (!this.tubes[recepient].canAdd()) {
-            console.error("Can't add to tube #", recepient);
+        if (!this.tubes[recipient].canAdd()) {
+            console.error("Can't add to tube #", recipient);
             this.gameEvents.emit(GAME.EventMoveFailed);
             return;
         }
-        const isSuccess = this.tubes[recepient].tryToAdd(
+        const isSuccess = this.tubes[recipient].tryToAdd(
             this.tubes[source].getDrainColor(),
         );
         if (isSuccess) {
             this.tubes[source].drain();
             this.gameEvents.emit(GAME.EventMoveSucceeded);
-            console.log(`Moved from ${source} to ${recepient}`);
+            console.log(`Moved from ${source} to ${recipient}`);
         } else this.gameEvents.emit(GAME.EventMoveFailed);
     }
 }

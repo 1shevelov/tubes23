@@ -64,8 +64,7 @@ export class TubeView extends Phaser.GameObjects.Container {
     }
 
     public isEmpty(): boolean {
-        if (this.portions.length === 0) return true;
-        return false;
+        return this.portions.length === 0;
     }
 
     public isFull(): boolean {
@@ -85,7 +84,11 @@ export class TubeView extends Phaser.GameObjects.Container {
         this.isActivated = true;
     }
 
-    public disactivate(): void {
+    public getTopPosition(): { x: number; y: number } {
+        return { x: this.positions[this.volume][0], y: this.positions[this.volume][1] };
+    }
+
+    public deactivate(): void {
         if (!this.isActivated) return;
         const topPortion = this.getTopPortion();
         if (topPortion === null) return;
@@ -103,10 +106,14 @@ export class TubeView extends Phaser.GameObjects.Container {
         return this.portions.pop();
     }
 
-    public addToTop(newPortion: PortionView): boolean {
-        if (this.isFull()) return false;
+    public addToTop(newPortion: PortionView): void {
+        if (this.isFull()) return;
         this.portions.push(newPortion);
-        // TODO: animate newPortion to the top free position
+        newPortion.animateTo(
+            this.positions[this.portions.length - 1][0],
+            this.positions[this.portions.length - 1][1],
+            100,
+        );
     }
 
     private getTopPortion(): PortionView | null {
