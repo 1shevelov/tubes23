@@ -142,7 +142,7 @@ export class Tube {
     }
 
     // the level is won if every tube is empty or have only one color
-    public isWin(): boolean {
+    public isWon(): boolean {
         if (this._content.length === 0) return true;
         const firstColor = this._content[0];
         for (let i = 0; i < this._content.length; i++) {

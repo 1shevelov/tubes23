@@ -6,6 +6,7 @@ import { ForegroundView } from "../views/ForegroundView";
 import { GameView } from "../views/GameView";
 import { UIView } from "../views/UIView";
 import { Level } from "../components/Level";
+import * as GAME from "../configs/GameConfig";
 
 export default class MainScene extends Phaser.Scene {
     private gameView: GameView;
@@ -14,6 +15,8 @@ export default class MainScene extends Phaser.Scene {
     // private popupService: PopupService;
     private level: Level;
     private gameEvents: Phaser.Events.EventEmitter;
+
+    private moveCounter = 0;
 
     public constructor() {
         super({ key: SceneNames.Main });
@@ -29,6 +32,7 @@ export default class MainScene extends Phaser.Scene {
         // if (process.env.NODE_ENV !== "production") {
         //     this.initStatJS();
         // }
+        this.gameEvents.on(GAME.EventTubesClicked, this.move, this);
     }
 
     private initGameView(): void {
@@ -68,11 +72,21 @@ export default class MainScene extends Phaser.Scene {
 
     private create(): void {
         this.level = new Level(this.gameEvents);
-        this.level.setRandomTubes(30, 4);
+        this.level.setRandomTubes(6, 5);
         // this.level.setClassicTubes([[0, 1, 2], [3, 4, 5, 6], [7], []], 4);
 
         // this.gameView.drawRandomGenTubes(8, 4);
         // console.log(JSON.stringify(this.level.getTubes()));
         this.gameView.drawClassicTubes(this.level.getTubes());
+    }
+
+    private move(source: number, recipient: number): void {
+        const moveResult = this.level.tryToMove(source, recipient);
+        if (moveResult) {
+            this.moveCounter++;
+            if (this.level.isWon()) {
+                console.log(`You win! With ${this.moveCounter} moves`);
+            }
+        }
     }
 }

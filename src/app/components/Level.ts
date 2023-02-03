@@ -84,27 +84,26 @@ export class Level {
         this.setClassicTubes(randTubes, tubeVol);
     }
 
-    public isWin(): boolean {
+    public isWon(): boolean {
+        let colors: number[] = [];
         for (let i = 0; i < this.tubes.length; i++) {
-            if (!this.tubes[i].isWin()) return false;
+            if (!this.tubes[i].isWon()) return false;
+            colors.push(this.tubes[i].getDrainColor());
         }
+        // TODO: check that there is no same color in diff tubes to count win only if all portions in one container
         return true;
     }
 
-    private init(): void {
-        this.gameEvents.on(GAME.EventTubesClicked, this.tryToMove, this);
-    }
-
-    private tryToMove(source: number, recipient: number): void {
+    public tryToMove(source: number, recipient: number): boolean {
         if (!this.tubes[source].canDrain()) {
             console.error("Can't drain from tube #", source);
             this.gameEvents.emit(GAME.EventMoveFailed);
-            return;
+            return false;
         }
         if (!this.tubes[recipient].canAdd()) {
             console.error("Can't add to tube #", recipient);
             this.gameEvents.emit(GAME.EventMoveFailed);
-            return;
+            return false;
         }
         const isSuccess = this.tubes[recipient].tryToAdd(
             this.tubes[source].getDrainColor(),
@@ -113,6 +112,14 @@ export class Level {
             this.tubes[source].drain();
             this.gameEvents.emit(GAME.EventMoveSucceeded);
             console.log(`Moved from ${source} to ${recipient}`);
-        } else this.gameEvents.emit(GAME.EventMoveFailed);
+            return true;
+        } else {
+            this.gameEvents.emit(GAME.EventMoveFailed);
+            return false;
+        }
+    }
+
+    private init(): void {
+        // this.gameEvents.on(GAME.EventTubesClicked, this.tryToMove, this);
     }
 }
