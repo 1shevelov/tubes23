@@ -13,6 +13,8 @@ export class Level {
 
     private tubes: Tube[] = [];
 
+    private startingTubes: Tube[] = [];
+
     private gameEvents: Phaser.Events.EventEmitter;
 
     public constructor(MSEventEmitter: Phaser.Events.EventEmitter) {
@@ -39,6 +41,7 @@ export class Level {
             if (!aTube.initialize(tubeVol, tubes[i])) return false;
             this.tubes.push(aTube);
         }
+        this.tubes.forEach((tube) => this.startingTubes.push(tube));
         return true;
     }
 
@@ -128,6 +131,12 @@ export class Level {
             this.gameEvents.emit(GAME.EventMoveFailed);
             return false;
         }
+    }
+
+    // restore starting state
+    public reset(): void {
+        this.tubes = [];
+        this.startingTubes.forEach((tube) => this.tubes.push(tube));
     }
 
     private init(): void {

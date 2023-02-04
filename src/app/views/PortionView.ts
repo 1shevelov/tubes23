@@ -24,6 +24,13 @@ export class PortionView extends Phaser.GameObjects.Container {
         this.add(this.portionSprite);
     }
 
+    public erase(): void {
+        if (this.portionSprite !== undefined) {
+            this.portionSprite.destroy();
+            console.log("Portion destroyed");
+        }
+    }
+
     public changeSize(squareSize: number): void {
         this.portionSprite.setScale(squareSize / this.portionSprite.width);
     }

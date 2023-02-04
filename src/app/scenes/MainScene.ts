@@ -7,7 +7,7 @@ import { GameView } from "../views/GameView";
 import { UIView } from "../views/UIView";
 import { Level } from "../components/Level";
 import * as GAME from "../configs/GameConfig";
-// import { download } from "../services/Utilities";
+import { download } from "../services/Utilities";
 
 export default class MainScene extends Phaser.Scene {
     private gameView: GameView;
@@ -34,6 +34,8 @@ export default class MainScene extends Phaser.Scene {
         //     this.initStatJS();
         // }
         this.gameEvents.on(GAME.EventTubesClicked, this.move, this);
+
+        this.handleKeys();
     }
 
     private initGameView(): void {
@@ -79,7 +81,6 @@ export default class MainScene extends Phaser.Scene {
         // this.gameView.drawRandomGenTubes(8, 4);
         // console.log(JSON.stringify(this.level.getTubes()));
         this.gameView.drawClassicTubes(this.level.getTubes());
-        // download(this.level.getTubes(), "Tubes-random-classic" + );
     }
 
     private move(source: number, recipient: number): void {
@@ -90,5 +91,26 @@ export default class MainScene extends Phaser.Scene {
                 console.log(`You win! With ${this.moveCounter} moves`);
             }
         }
+    }
+
+    private handleKeys(): void {
+        this.input.keyboard.on("keydown", (event) => {
+            switch (event.keyCode) {
+                // save
+                case Phaser.Input.Keyboard.KeyCodes.S:
+                    const tubes2Save = this.level.getTubes();
+                    const tubeNum = tubes2Save.length;
+                    const tubeVol = tubes2Save[0]["volume"];
+                    download(tubes2Save, `Tubes-random-classic-${tubeNum}_${tubeVol}`);
+                    break;
+                case Phaser.Input.Keyboard.KeyCodes.R:
+                    console.log("reset");
+                    this.level.reset();
+                    this.gameView.reset();
+                    this.gameView.drawClassicTubes(this.level.getTubes());
+                    this.moveCounter = 0;
+                    break;
+            }
+        });
     }
 }

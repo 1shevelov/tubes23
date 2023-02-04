@@ -20,14 +20,27 @@ export class GameView extends Phaser.GameObjects.Container {
     private gameEvents: Phaser.Events.EventEmitter;
 
     private readonly NO_TUBE = -1;
-    private sourceTube = this.NO_TUBE;
-    private recipientTube = this.NO_TUBE;
+    private sourceTube: number;
+    private recipientTube: number;
 
     public constructor(scene: Phaser.Scene, MSEventEmitter: Phaser.Events.EventEmitter) {
         super(scene);
         this.gameEvents = MSEventEmitter;
+        this.reset();
         this.init();
-        // this.drawTubes(13, 5);
+    }
+
+    public reset(): void {
+        this.sourceTube = this.NO_TUBE;
+        this.recipientTube = this.NO_TUBE;
+
+        if (this.tubes.length !== 0) {
+            for (let i = 0; i < this.tubes.length; i++) {
+                this.tubes[i].erase();
+                this.tubes[i].destroy();
+            }
+        }
+        this.tubes = [];
     }
 
     // public drawRandomGenTubes(num: number, volume: number): void {

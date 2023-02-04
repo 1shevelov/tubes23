@@ -116,6 +116,15 @@ export class TubeView extends Phaser.GameObjects.Container {
         );
     }
 
+    public erase(): void {
+        (this.getByName("TubeGraphics") as Phaser.GameObjects.Graphics).destroy();
+        for (let i = 0; i < this.portions.length; i++) {
+            this.portions[i].erase();
+            this.portions[i].destroy();
+        }
+        this.portions = [];
+    }
+
     private getTopPortion(): PortionView | null {
         if (this.isEmpty()) return null;
         return this.portions[this.portions.length - 1];
@@ -135,7 +144,7 @@ export class TubeView extends Phaser.GameObjects.Container {
         );
         tubeOutline.setPosition(x - tubeOutlineWi / 2, y - tubeOutlineHe / 2);
 
-        // tubeOutline.setName("container");
+        tubeOutline.setName("TubeGraphics");
         this.add(tubeOutline);
         this.posX = tubeOutline.x;
         this.posY = tubeOutline.y;
