@@ -24,3 +24,13 @@ export function checkIfFaulty(val: number, MIN: number, MAX: number): boolean {
     }
     return false;
 }
+
+// download(object, "file_name");
+export function download(content: object, fileName: string): void {
+    const a = document.createElement("a");
+    const file = new Blob([JSON.stringify(content, null, 0)], { type: "text/plain" });
+    a.href = URL.createObjectURL(file);
+    a.download = fileName + ".txt";
+    a.click();
+    URL.revokeObjectURL(a.href);
+}

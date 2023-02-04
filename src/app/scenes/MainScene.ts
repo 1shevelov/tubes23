@@ -7,6 +7,7 @@ import { GameView } from "../views/GameView";
 import { UIView } from "../views/UIView";
 import { Level } from "../components/Level";
 import * as GAME from "../configs/GameConfig";
+// import { download } from "../services/Utilities";
 
 export default class MainScene extends Phaser.Scene {
     private gameView: GameView;
@@ -72,19 +73,20 @@ export default class MainScene extends Phaser.Scene {
 
     private create(): void {
         this.level = new Level(this.gameEvents);
-        this.level.setRandomTubes(6, 5);
+        this.level.setRandomClassicLevel(6, 3);
         // this.level.setClassicTubes([[0, 1, 2], [3, 4, 5, 6], [7], []], 4);
 
         // this.gameView.drawRandomGenTubes(8, 4);
         // console.log(JSON.stringify(this.level.getTubes()));
         this.gameView.drawClassicTubes(this.level.getTubes());
+        // download(this.level.getTubes(), "Tubes-random-classic" + );
     }
 
     private move(source: number, recipient: number): void {
         const moveResult = this.level.tryToMove(source, recipient);
         if (moveResult) {
             this.moveCounter++;
-            if (this.level.isWon()) {
+            if (this.level.isWonClassic()) {
                 console.log(`You win! With ${this.moveCounter} moves`);
             }
         }

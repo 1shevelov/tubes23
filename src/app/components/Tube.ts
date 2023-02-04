@@ -131,7 +131,7 @@ export class Tube {
 
     public getDrainColor(): number {
         if (!this.canDrain()) {
-            console.error("This tube can't return a portion");
+            // console.error("This tube can't return a portion");
             return GAME.ErrorValues.InvalidColor;
         }
         if (this.drains === Drains.Neck) {

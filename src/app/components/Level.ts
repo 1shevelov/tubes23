@@ -43,7 +43,7 @@ export class Level {
     }
 
     // fills tubeNum-2 tubes randomly with tubeNum-2 colors
-    public setRandomTubes(tubeNum: number, tubeVol: number): void {
+    public setRandomClassicLevel(tubeNum: number, tubeVol: number): void {
         tubeNum = fixValue(tubeNum, GAME.MIN_TUBES, GAME.MAX_TUBES);
         tubeNum = fixValue(tubeNum, GAME.MIN_TUBES, GAME.MAX_COLORS + 2);
         tubeVol = fixValue(tubeVol, GAME.MIN_VOLUME, GAME.MAX_VOLUME);
@@ -84,13 +84,24 @@ export class Level {
         this.setClassicTubes(randTubes, tubeVol);
     }
 
-    public isWon(): boolean {
-        let colors: number[] = [];
+    // true if
+    // each tube contains portions of one color
+    // and no two tubes contain the same color, e.g. each color is in it's own container
+    public isWonClassic(): boolean {
+        const colors: number[] = [];
         for (let i = 0; i < this.tubes.length; i++) {
             if (!this.tubes[i].isWon()) return false;
             colors.push(this.tubes[i].getDrainColor());
         }
-        // TODO: check that there is no same color in diff tubes to count win only if all portions in one container
+        colors.sort();
+        // console.log(colors);
+        for (let i = 0; i < colors.length; i++) {
+            if (
+                colors[i] === colors[i + 1] &&
+                colors[i] !== GAME.ErrorValues.InvalidColor
+            )
+                return false;
+        }
         return true;
     }
 
