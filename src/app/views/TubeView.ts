@@ -16,16 +16,14 @@
 // public removePortion() - classic from topmost position
 
 import * as GAME from "../configs/GameConfig";
-import * as COLORS from "../configs/Colors";
-import { fixValue } from "../services/Utilities";
+// import * as COLORS from "../configs/Colors";
+// import { fixValue } from "../services/Utilities";
 import { PortionView } from "./PortionView";
 
 export class TubeView extends Phaser.GameObjects.Container {
-    private volume: number;
+    private tubeSprite: Phaser.GameObjects.Rectangle;
 
-    private posX: number;
-    private posY: number;
-    private portionSize: number;
+    private volume: number;
 
     private positions: number[][] = [];
     private portions: PortionView[] = [];
@@ -33,34 +31,32 @@ export class TubeView extends Phaser.GameObjects.Container {
     // is top (last) position occupied, e.g. portion is ready for move
     private isActivated = false;
 
-    public constructor(
-        public scene: Phaser.Scene,
-        volume: number,
-        centerX: number,
-        centerY: number,
-        sizeY: number,
-    ) {
+    public constructor(scene: Phaser.Scene) {
         super(scene);
-        this.init(volume, centerX, centerY, sizeY);
-        this.draw(centerX, centerY);
+        this.create();
     }
 
-    public fillContent(tubeContent: number[]): void {
-        // console.log(tubeContent);
-        if (tubeContent.length === 0) return;
-        let portion: PortionView;
-        for (let i = 0; i < tubeContent.length; i++) {
+    public fillPortions(portions: PortionView[]): void {
+        if (portions.length === 0) return;
+        for (let i = 0; i < portions.length; i++) {
             // console.log(`${i} - ${this.positions[i]}`);
-            portion = new PortionView(
-                this.scene,
-                this.positions[i][0],
-                this.positions[i][1],
-                this.portionSize,
-                COLORS.CurrentPalette[tubeContent[i]],
-            );
-            this.portions.push(portion);
-            this.add(portion);
+            portions[i].changeXPos(this.positions[i][0]);
+            portions[i].changeYPos(this.positions[i][1]);
+            portions[i].show();
+            this.portions.push(portions[i]);
+            this.add(portions[i]);
         }
+    }
+
+    public setVolumeAndSize(vol: number, portionSize: number): void {
+        this.volume = vol;
+        this.tubeSprite.setScale(1.0, vol * portionSize);
+    }
+
+    public place(x: number, y: number): void {
+        this.tubeSprite.setPosition(x, y);
+        this.setPortionsPositions(x, y);
+        this.tubeSprite.setVisible(true);
     }
 
     public isEmpty(): boolean {
@@ -74,7 +70,7 @@ export class TubeView extends Phaser.GameObjects.Container {
     public activate(): void {
         if (this.isActivated) return;
         const topPortion = this.getTopPortion();
-        if (topPortion === null) return;
+        if (topPortion === undefined) return;
         // topPortion.changeYPos(this.positions[this.volume][1]);
         topPortion.animateTo(
             this.positions[this.volume][0],
@@ -84,14 +80,10 @@ export class TubeView extends Phaser.GameObjects.Container {
         this.isActivated = true;
     }
 
-    public getTopPosition(): { x: number; y: number } {
-        return { x: this.positions[this.volume][0], y: this.positions[this.volume][1] };
-    }
-
     public deactivate(): void {
         if (!this.isActivated) return;
         const topPortion = this.getTopPortion();
-        if (topPortion === null) return;
+        if (topPortion === undefined) return;
         // topPortion.changeYPos(this.positions[this.portions.length - 1][1]);
         topPortion.animateTo(
             this.positions[this.portions.length - 1][0],
@@ -99,11 +91,6 @@ export class TubeView extends Phaser.GameObjects.Container {
             100,
         );
         this.isActivated = false;
-    }
-
-    public drawTop(): PortionView | undefined {
-        if (this.isEmpty()) return undefined;
-        return this.portions.pop();
     }
 
     public addToTop(newPortion: PortionView): void {
@@ -116,51 +103,77 @@ export class TubeView extends Phaser.GameObjects.Container {
         );
     }
 
-    public erase(): void {
-        // this.removeAll();
-        // (this.getByName("TubeGraphics") as Phaser.GameObjects.Graphics).destroy();
+    // on game end or level reset
+    public empty(): PortionView[] {
         for (let i = 0; i < this.portions.length; i++) {
             this.portions[i].hide();
         }
-
+        const portionsCopy = [...this.portions];
         this.portions = [];
+        return portionsCopy;
     }
 
-    private getTopPortion(): PortionView | null {
-        if (this.isEmpty()) return null;
+    public removeTopPortion(): PortionView | undefined {
+        if (this.isEmpty()) return undefined;
+        return this.portions.pop();
+    }
+
+    // private getTopPosition(): { x: number; y: number } {
+    //     return { x: this.positions[this.volume][0], y: this.positions[this.volume][1] };
+    // }
+
+    // to activate/deactivate
+    private getTopPortion(): PortionView | undefined {
+        if (this.isEmpty()) return undefined;
         return this.portions[this.portions.length - 1];
     }
 
-    private draw(x: number, y: number): void {
-        const tubeOutline = new Phaser.GameObjects.Graphics(this.scene);
-        tubeOutline.setDefaultStyles(COLORS.TubesStyle);
-        const tubeOutlineWi = this.portionSize;
-        const tubeOutlineHe = this.portionSize * this.volume;
-        tubeOutline.strokeRoundedRect(
+    private create(): void {
+        const INIT_PORTION_SIZE = 10;
+        this.tubeSprite = new Phaser.GameObjects.Rectangle(
+            this.scene,
             0,
             0,
-            tubeOutlineWi,
-            tubeOutlineHe,
-            this.portionSize / 5,
+            INIT_PORTION_SIZE,
+            INIT_PORTION_SIZE * GAME.MIN_VOLUME,
+            0x00000,
+            0.0,
         );
-        tubeOutline.setPosition(x - tubeOutlineWi / 2, y - tubeOutlineHe / 2);
-
-        tubeOutline.setName("TubeGraphics");
-        this.add(tubeOutline);
-        this.posX = tubeOutline.x;
-        this.posY = tubeOutline.y;
-
-        this.setInteractive(
-            new Phaser.Geom.Rectangle(
-                x - tubeOutlineWi / 2,
-                y - tubeOutlineHe / 2,
-                tubeOutlineWi,
-                tubeOutlineHe,
-            ),
-            Phaser.Geom.Rectangle.Contains,
-        );
-        // this.on("pointerup", this.handleClick, this);
+        this.tubeSprite.setStrokeStyle(1, 0xffffff, 1.0);
+        this.tubeSprite.setVisible(false);
+        this.add(this.tubeSprite);
     }
+
+    // private draw(x: number, y: number): void {
+    //     const tubeOutline = new Phaser.GameObjects.Graphics(this.scene);
+    //     tubeOutline.setDefaultStyles(COLORS.TubesStyle);
+    //     const tubeOutlineWi = this.portionSize;
+    //     const tubeOutlineHe = this.portionSize * this.volume;
+    //     tubeOutline.strokeRoundedRect(
+    //         0,
+    //         0,
+    //         tubeOutlineWi,
+    //         tubeOutlineHe,
+    //         this.portionSize / 5,
+    //     );
+    //     tubeOutline.setPosition(x - tubeOutlineWi / 2, y - tubeOutlineHe / 2);
+    //
+    //     tubeOutline.setName("TubeGraphics");
+    //     this.add(tubeOutline);
+    //     this.posX = tubeOutline.x;
+    //     this.posY = tubeOutline.y;
+    //
+    //     this.setInteractive(
+    //         new Phaser.Geom.Rectangle(
+    //             x - tubeOutlineWi / 2,
+    //             y - tubeOutlineHe / 2,
+    //             tubeOutlineWi,
+    //             tubeOutlineHe,
+    //         ),
+    //         Phaser.Geom.Rectangle.Contains,
+    //     );
+    //     // this.on("pointerup", this.handleClick, this);
+    // }
 
     // private randomFill(fillVolume: number): void {
     //     fillVolume = fixValue(fillVolume, 0, this.volume);
@@ -212,18 +225,19 @@ export class TubeView extends Phaser.GameObjects.Container {
     //     // console.log(tube.name);
     // }
 
-    private init(volume: number, centerX: number, centerY: number, sizeY: number): void {
-        this.volume = fixValue(volume, GAME.MIN_VOLUME, GAME.MAX_VOLUME);
-        this.portionSize = sizeY / (this.volume + 1); // for active portion
-        this.setPortionsPositions(centerX, centerY);
-    }
+    // private init(volume: number, centerX: number, centerY: number, sizeY: number): void {
+    //     this.volume = fixValue(volume, GAME.MIN_VOLUME, GAME.MAX_VOLUME);
+    //     this.portionSize = sizeY / (this.volume + 1); // for active portion
+    //     this.setPortionsPositions(centerX, centerY);
+    // }
 
     private setPortionsPositions(centerX: number, centerY: number): void {
-        const zeroPortionCenterY = centerY + ((this.volume - 1) * this.portionSize) / 2;
+        const portionSize = this.tubeSprite.height / this.volume;
+        const zeroPortionCenterY = centerY + ((this.volume - 1) * portionSize) / 2;
         for (let i = 0; i < this.volume + 1; i++) {
             this.positions.push([
                 centerX,
-                zeroPortionCenterY - (2 * i * this.portionSize) / 2,
+                zeroPortionCenterY - (2 * i * portionSize) / 2,
             ]);
         }
         // console.log(this.positions);

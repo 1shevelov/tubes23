@@ -52,52 +52,52 @@ export class GameView extends Phaser.GameObjects.Container {
         for (let i = 1; i < tubeNum; i++)
             if (tubes[i]["volume"] > maxVolume) maxVolume = tubes[i]["volume"];
         const portionNum = (tubes.length - 2) * maxVolume;
+        this.createResources(tubeNum, portionNum);
 
-        let tubeView: TubeView;
-        if (tubeNum > this.tubeCache.length) {
-            for (let i = 0; i < tubeNum - this.tubeCache.length; i++) {
-                tubeView = new TubeView(this.scene, maxVolume, 0, 0, 0);
-                this.tubeCache.push(tubeView);
-            }
-        }
-        let portionView: PortionView;
-        if (portionNum > this.portionCache.length) {
-            for (let i = 0; i < portionNum - this.portionCache.length; i++) {
-                portionView = new PortionView(this.scene, maxVolume, 0, 0, 0);
-                this.portionCache.push(portionView);
-            }
-        }
+        this.setAndPlaceTubes(tubes);
+    }
 
-
+    private setAndPlaceTubes(tubes: object[]): void {
         // deciding how many rows are needed
         let rows = this.tubeRows.length;
         let i = this.tubeRows.length - 2;
-        while (tubeNum < this.tubeRows[i]) {
+        while (tubes.length < this.tubeRows[i]) {
             rows = i + 1;
             i--;
         }
-        const unevenTubes = tubeNum % rows;
+        const unevenTubes = tubes.length % rows;
         const tubesInRows = Array(rows).fill((tubes.length - unevenTubes) / rows);
         for (let i = 1; i <= unevenTubes; i++) {
             tubesInRows[i - 1]++;
         }
         // console.log(tubesInRows);
         const tubeSizeY = this.he / (rows + 1);
-        // this.portionSquareSize = rowGap / (maxVolume + 1.6);
+        const portionSquareSize = rowGap / (maxVolume + 1.6);
 
         let tubeGap = 0;
         let tubeCounter = 0;
+        let aTube: TubeView | undefined;
         tubesInRows.forEach((tubesInThisRow, row) => {
             tubeGap = this.wi / (tubesInThisRow + 1);
             for (let i = 1; i <= tubesInThisRow; i++) {
                 // this.drawTube(i * tubeGap, (row + 1) * rowGap + rowLower, volume);
-                tubeView = new TubeView(
-                    this.scene,
-                    tubes[tubeCounter]["volume"],
-                    i * tubeGap,
-                    ((1.15 * row + 1) * this.he) / (rows + 1) + this.he * 0.02,
-                    tubeSizeY,
-                );
+                aTube = this.tubeCache.pop();
+                if (aTube !== undefined) {
+                    aTube.setVolumeAndSize(
+                        tubes[tubeCounter]["volume"],
+                        portionSquareSize,
+                    );
+                    aTube.place(
+                        i * tubeGap,
+                        ((1.15 * row + 1) * this.he) / (rows + 1) + this.he * 0.02,
+                    );
+                }
+                // new TubeView(
+                // this.scene,
+                // tubes[tubeCounter]["volume"],
+                // i * tubeGap,
+                // ((1.15 * row + 1) * this.he) / (rows + 1) + this.he * 0.02,
+                // tubeSizeY,
                 // console.log(
                 //     `${this.he} / ${rows} / ${((row + 1) * this.he) / (rows + 1)}`,
                 // );
@@ -113,6 +113,23 @@ export class GameView extends Phaser.GameObjects.Container {
             }
         });
         this.addProps();
+    }
+
+    private createResources(tubeNum: number, portionNum: number): void {
+        let tubeView: TubeView;
+        if (tubeNum > this.tubeCache.length) {
+            for (let i = 0; i < tubeNum - this.tubeCache.length; i++) {
+                tubeView = new TubeView(this.scene);
+                this.tubeCache.push(tubeView);
+            }
+        }
+        let portionView: PortionView;
+        if (portionNum > this.portionCache.length) {
+            for (let i = 0; i < portionNum - this.portionCache.length; i++) {
+                portionView = new PortionView(this.scene);
+                this.portionCache.push(portionView);
+            }
+        }
     }
 
     private addProps(): void {

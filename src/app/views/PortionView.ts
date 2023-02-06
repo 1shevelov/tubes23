@@ -14,13 +14,14 @@ export class PortionView extends Phaser.GameObjects.Container {
 
     public constructor(
         scene: Phaser.Scene,
-        centerX: number,
-        centerY: number,
-        squareSize: number,
-        color: number,
+        // centerX: number,
+        // centerY: number,
+        // squareSize: number,
+        // color: number,
     ) {
         super(scene);
-        this.portionSprite = this.draw(centerX, centerY, squareSize, color);
+        // this.portionSprite = this.draw(centerX, centerY, squareSize, color);
+        this.portionSprite = this.create();
         this.add(this.portionSprite);
     }
 
@@ -67,6 +68,23 @@ export class PortionView extends Phaser.GameObjects.Container {
     // private init(x: number, y: number, size: number, color: number): void {
     //     this.draw(x, y, size, color);
     // }
+
+    private create(): Phaser.GameObjects.Sprite {
+        return this.createGolfBall();
+    }
+
+    private createGolfBall(): Phaser.GameObjects.Sprite {
+        const golfBall = new Phaser.GameObjects.Sprite(
+            this.scene,
+            0,
+            0,
+            "game-ui",
+            "ball-golf-150.png",
+        );
+        golfBall.setOrigin(0.5, 0.5);
+        golfBall.setVisible(false);
+        return golfBall;
+    }
 
     private draw(
         x: number,
