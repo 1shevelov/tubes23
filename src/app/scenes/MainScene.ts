@@ -75,12 +75,12 @@ export default class MainScene extends Phaser.Scene {
 
     private create(): void {
         this.level = new Level(this.gameEvents);
-        this.level.setRandomClassicLevel(6, 3);
+        this.level.setRandomClassicLevel(9, 3);
         // this.level.setClassicTubes([[0, 1, 2], [3, 4, 5, 6], [7], []], 4);
 
         // this.gameView.drawRandomGenTubes(8, 4);
         // console.log(JSON.stringify(this.level.getTubes()));
-        this.gameView.drawClassicTubes(this.level.getTubes());
+        this.gameView.createClassicGame(this.level.getTubes());
     }
 
     private move(source: number, recipient: number): void {
@@ -107,7 +107,7 @@ export default class MainScene extends Phaser.Scene {
                     console.log("reset");
                     this.level.reset();
                     this.gameView.reset();
-                    this.gameView.drawClassicTubes(this.level.getTubes());
+                    this.gameView.createClassicGame(this.level.getTubes());
                     this.moveCounter = 0;
                     break;
             }

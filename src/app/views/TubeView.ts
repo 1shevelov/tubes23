@@ -117,11 +117,12 @@ export class TubeView extends Phaser.GameObjects.Container {
     }
 
     public erase(): void {
-        (this.getByName("TubeGraphics") as Phaser.GameObjects.Graphics).destroy();
+        // this.removeAll();
+        // (this.getByName("TubeGraphics") as Phaser.GameObjects.Graphics).destroy();
         for (let i = 0; i < this.portions.length; i++) {
-            this.portions[i].erase();
-            this.portions[i].destroy();
+            this.portions[i].hide();
         }
+
         this.portions = [];
     }
 
