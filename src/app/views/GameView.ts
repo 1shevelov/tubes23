@@ -2,6 +2,7 @@ import { TubeView } from "./TubeView";
 import * as GAME from "../configs/GameConfig";
 // import { fixValue } from "../services/Utilities";
 import { PortionView } from "./PortionView";
+import { CurrentPalette } from "../configs/Colors";
 
 export class GameView extends Phaser.GameObjects.Container {
     // max number of tubes for each row
@@ -38,7 +39,7 @@ export class GameView extends Phaser.GameObjects.Container {
 
         if (this.tubes.length !== 0) {
             for (let i = 0; i < this.tubes.length; i++) {
-                this.tubes[i].erase();
+                this.portionCache.push(...this.tubes[i].empty());
                 this.tubes[i].destroy();
             }
         }
@@ -55,6 +56,7 @@ export class GameView extends Phaser.GameObjects.Container {
         this.createResources(tubeNum, portionNum);
 
         this.setAndPlaceTubes(tubes);
+        this.fillTubes(tubes);
     }
 
     private setAndPlaceTubes(tubes: object[]): void {
@@ -71,8 +73,8 @@ export class GameView extends Phaser.GameObjects.Container {
             tubesInRows[i - 1]++;
         }
         // console.log(tubesInRows);
-        const tubeSizeY = this.he / (rows + 1);
-        const portionSquareSize = rowGap / (maxVolume + 1.6);
+        const tubeSizeY = this.he / (rows + 1) / 1.5;
+        // console.log(`he: ${this.he}: tubeSizeY: ${tubeSizeY}`);
 
         let tubeGap = 0;
         let tubeCounter = 0;
@@ -83,49 +85,47 @@ export class GameView extends Phaser.GameObjects.Container {
                 // this.drawTube(i * tubeGap, (row + 1) * rowGap + rowLower, volume);
                 aTube = this.tubeCache.pop();
                 if (aTube !== undefined) {
-                    aTube.setVolumeAndSize(
-                        tubes[tubeCounter]["volume"],
-                        portionSquareSize,
-                    );
+                    aTube.setVolumeAndSize(tubes[tubeCounter]["volume"], tubeSizeY);
                     aTube.place(
                         i * tubeGap,
                         ((1.15 * row + 1) * this.he) / (rows + 1) + this.he * 0.02,
                     );
+                    this.add(aTube);
+                    this.tubes.push(aTube);
                 }
-                // new TubeView(
-                // this.scene,
-                // tubes[tubeCounter]["volume"],
-                // i * tubeGap,
-                // ((1.15 * row + 1) * this.he) / (rows + 1) + this.he * 0.02,
-                // tubeSizeY,
-                // console.log(
-                //     `${this.he} / ${rows} / ${((row + 1) * this.he) / (rows + 1)}`,
-                // );
-                // tubeView.draw(
-                //     i * tubeGap,
-                //     (row + 1) * rowGap + rowLower,
-                //     this.portionSquareSize,
-                // );
-                tubeView.fillContent(tubes[tubeCounter]["content"]);
-                this.add(tubeView);
-                this.tubes.push(tubeView);
                 tubeCounter++;
             }
         });
         this.addProps();
     }
 
+    private fillTubes(tubes: object[]): void {
+        tubes.forEach((tube, tubeIndex) => {
+            const portions: PortionView[] = [];
+            for (let i = 0; i < tube["volume"]; i++) {
+                const aPortion = this.portionCache.pop();
+                if (aPortion !== undefined) {
+                    aPortion.changeColor(CurrentPalette[tube["content"][i]]);
+                    portions.push(aPortion);
+                }
+            }
+            this.tubes[tubeIndex].fillPortions(portions);
+        });
+    }
+
     private createResources(tubeNum: number, portionNum: number): void {
         let tubeView: TubeView;
-        if (tubeNum > this.tubeCache.length) {
-            for (let i = 0; i < tubeNum - this.tubeCache.length; i++) {
+        const cachedTubesNum = this.tubeCache.length;
+        if (tubeNum > cachedTubesNum) {
+            for (let i = 0; i < tubeNum - cachedTubesNum; i++) {
                 tubeView = new TubeView(this.scene);
                 this.tubeCache.push(tubeView);
             }
         }
         let portionView: PortionView;
-        if (portionNum > this.portionCache.length) {
-            for (let i = 0; i < portionNum - this.portionCache.length; i++) {
+        const cachedPortionsNum = this.portionCache.length;
+        if (portionNum > cachedPortionsNum) {
+            for (let i = 0; i < portionNum - cachedPortionsNum; i++) {
                 portionView = new PortionView(this.scene);
                 this.portionCache.push(portionView);
             }
@@ -196,7 +196,7 @@ export class GameView extends Phaser.GameObjects.Container {
             console.error(`Source or recipient tube is unknown`);
             return;
         }
-        const portion = this.tubes[this.sourceTube].drawTop();
+        const portion = this.tubes[this.sourceTube].removeTopPortion();
         if (!portion) {
             console.error(`Was not able to draw a portion from tube#${this.sourceTube}`);
             return;
