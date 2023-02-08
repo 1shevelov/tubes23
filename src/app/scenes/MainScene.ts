@@ -98,6 +98,7 @@ export default class MainScene extends Phaser.Scene {
             switch (event.keyCode) {
                 // save
                 case Phaser.Input.Keyboard.KeyCodes.S:
+                case Phaser.Input.Keyboard.KeyCodes.E:
                     const tubes2Save = this.level.getTubes();
                     const tubeNum = tubes2Save.length;
                     const tubeVol = tubes2Save[0]["volume"];
@@ -109,6 +110,46 @@ export default class MainScene extends Phaser.Scene {
                     this.gameView.reset();
                     this.gameView.createClassicGame(this.level.getTubes());
                     this.moveCounter = 0;
+                    break;
+                case Phaser.Input.Keyboard.KeyCodes.ONE:
+                case Phaser.Input.Keyboard.KeyCodes.NUMPAD_ONE:
+                    this.gameView.handleClick(0);
+                    break;
+                case Phaser.Input.Keyboard.KeyCodes.TWO:
+                case Phaser.Input.Keyboard.KeyCodes.NUMPAD_TWO:
+                    this.gameView.handleClick(1);
+                    break;
+                case Phaser.Input.Keyboard.KeyCodes.THREE:
+                case Phaser.Input.Keyboard.KeyCodes.NUMPAD_THREE:
+                    this.gameView.handleClick(2);
+                    break;
+                case Phaser.Input.Keyboard.KeyCodes.FOUR:
+                case Phaser.Input.Keyboard.KeyCodes.NUMPAD_FOUR:
+                    this.gameView.handleClick(3);
+                    break;
+                case Phaser.Input.Keyboard.KeyCodes.FIVE:
+                case Phaser.Input.Keyboard.KeyCodes.NUMPAD_FIVE:
+                    this.gameView.handleClick(4);
+                    break;
+                case Phaser.Input.Keyboard.KeyCodes.SIX:
+                case Phaser.Input.Keyboard.KeyCodes.NUMPAD_SIX:
+                    this.gameView.handleClick(5);
+                    break;
+                case Phaser.Input.Keyboard.KeyCodes.SEVEN:
+                case Phaser.Input.Keyboard.KeyCodes.NUMPAD_SEVEN:
+                    this.gameView.handleClick(6);
+                    break;
+                case Phaser.Input.Keyboard.KeyCodes.EIGHT:
+                case Phaser.Input.Keyboard.KeyCodes.NUMPAD_EIGHT:
+                    this.gameView.handleClick(7);
+                    break;
+                case Phaser.Input.Keyboard.KeyCodes.NINE:
+                case Phaser.Input.Keyboard.KeyCodes.NUMPAD_NINE:
+                    this.gameView.handleClick(8);
+                    break;
+                case Phaser.Input.Keyboard.KeyCodes.ZERO:
+                case Phaser.Input.Keyboard.KeyCodes.NUMPAD_ZERO:
+                    this.gameView.handleClick(9);
                     break;
             }
         });

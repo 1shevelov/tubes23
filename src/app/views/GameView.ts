@@ -40,8 +40,8 @@ export class GameView extends Phaser.GameObjects.Container {
 
         if (this.tubes.length !== 0) {
             for (let i = 0; i < this.tubes.length; i++) {
-                this.portionCache.push(...this.tubes[i].empty());
-                this.tubes[i].destroy();
+                this.portionCache.push(...this.tubes[i].reset());
+                this.tubeCache.push(this.tubes[i]);
             }
         }
         this.tubes = [];
@@ -59,6 +59,34 @@ export class GameView extends Phaser.GameObjects.Container {
         this.setAndPlaceTubes(tubes);
         this.fillTubes(tubes);
         // this.addProps();
+    }
+
+    public handleClick(tubeNum: number): void {
+        console.log(`Clicked ${tubeNum}`);
+        if (this.sourceTube === this.NO_TUBE && !this.tubes[tubeNum].isEmpty()) {
+            this.sourceTube = tubeNum;
+            this.tubes[this.sourceTube].activate();
+            return;
+        }
+        if (this.sourceTube === tubeNum) {
+            // tube clicked again - deactivate
+            this.resetSource();
+            return;
+        }
+        if (this.sourceTube !== this.NO_TUBE && this.tubes[tubeNum].isFull()) {
+            // source is full - reset activated tube
+            this.resetSource();
+            return;
+        }
+        if (this.sourceTube !== this.NO_TUBE && !this.tubes[tubeNum].isFull()) {
+            // try to move
+            this.recipientTube = tubeNum;
+            this.gameEvents.emit(
+                GAME.EventTubesChoosen,
+                this.sourceTube,
+                this.recipientTube,
+            );
+        }
     }
 
     private setAndPlaceTubes(tubes: object[]): void {
@@ -151,34 +179,6 @@ export class GameView extends Phaser.GameObjects.Container {
     //         },
     //     );
     // }
-
-    private handleClick(tubeNum: number): void {
-        console.log(`Clicked ${tubeNum}`);
-        if (this.sourceTube === this.NO_TUBE && !this.tubes[tubeNum].isEmpty()) {
-            this.sourceTube = tubeNum;
-            this.tubes[this.sourceTube].activate();
-            return;
-        }
-        if (this.sourceTube === tubeNum) {
-            // tube clicked again - deactivate
-            this.resetSource();
-            return;
-        }
-        if (this.sourceTube !== this.NO_TUBE && this.tubes[tubeNum].isFull()) {
-            // source is full - reset activated tube
-            this.resetSource();
-            return;
-        }
-        if (this.sourceTube !== this.NO_TUBE && !this.tubes[tubeNum].isFull()) {
-            // try to move
-            this.recipientTube = tubeNum;
-            this.gameEvents.emit(
-                GAME.EventTubesChoosen,
-                this.sourceTube,
-                this.recipientTube,
-            );
-        }
-    }
 
     private init(): void {
         this.resize();

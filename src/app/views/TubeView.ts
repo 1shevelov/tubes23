@@ -22,6 +22,7 @@ import { PortionView } from "./PortionView";
 
 export class TubeView extends Phaser.GameObjects.Container {
     private tubeSprite: Phaser.GameObjects.Rectangle;
+    private interactiveLayer: Phaser.GameObjects.Sprite;
 
     private tubeNumber = -1;
 
@@ -122,7 +123,10 @@ export class TubeView extends Phaser.GameObjects.Container {
     }
 
     // on game end or level reset
-    public empty(): PortionView[] {
+    public reset(): PortionView[] {
+        if (this.tubeSprite) this.tubeSprite.setVisible(false);
+        if (this.interactiveLayer) this.interactiveLayer.disableInteractive();
+        this.deactivate();
         for (let i = 0; i < this.portions.length; i++) {
             this.portions[i].hide();
         }
@@ -141,22 +145,24 @@ export class TubeView extends Phaser.GameObjects.Container {
     }
 
     public addInteractivity(): void {
-        const transparentPixel = new Phaser.GameObjects.Sprite(
-            this.scene,
-            this.tubeSprite.x,
-            this.tubeSprite.y,
-            "game-ui",
-            "1x1.png", // "1x1_orange.png" for debug
-        );
-        transparentPixel.setScale(
+        if (!this.interactiveLayer) {
+            this.interactiveLayer = new Phaser.GameObjects.Sprite(
+                this.scene,
+                this.tubeSprite.x,
+                this.tubeSprite.y,
+                "game-ui",
+                "1x1.png", // "1x1_orange.png" for debug
+            );
+            this.interactiveLayer.on("pointerup", () => {
+                this.gameEvents.emit(GAME.EventTubeClicked, this.tubeNumber);
+            });
+            this.add(this.interactiveLayer);
+        }
+        this.interactiveLayer.setScale(
             this.tubeSprite.width * this.tubeSprite.scaleX * 1.2,
             this.tubeSprite.height * this.tubeSprite.scaleY * 1.2,
         );
-        transparentPixel.setInteractive();
-        transparentPixel.on("pointerup", () => {
-            this.gameEvents.emit(GAME.EventTubeClicked, this.tubeNumber);
-        });
-        this.add(transparentPixel);
+        this.interactiveLayer.setInteractive();
     }
 
     // to activate/deactivate
