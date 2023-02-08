@@ -23,6 +23,8 @@ import { PortionView } from "./PortionView";
 export class TubeView extends Phaser.GameObjects.Container {
     private tubeSprite: Phaser.GameObjects.Rectangle;
 
+    private tubeNumber = -1;
+
     private volume: number;
     private readonly portionSizeCoeff = 0.8;
 
@@ -31,10 +33,16 @@ export class TubeView extends Phaser.GameObjects.Container {
 
     // is top (last) position occupied, e.g. portion is ready for move
     private isActivated = false;
+    private gameEvents: Phaser.Events.EventEmitter;
 
-    public constructor(scene: Phaser.Scene) {
+    public constructor(scene: Phaser.Scene, gameEvents: Phaser.Events.EventEmitter) {
         super(scene);
         this.create();
+        this.gameEvents = gameEvents;
+    }
+
+    public setNumber(newNum: number): void {
+        this.tubeNumber = newNum;
     }
 
     public fillPortions(portions: PortionView[]): void {
@@ -65,6 +73,7 @@ export class TubeView extends Phaser.GameObjects.Container {
     public place(x: number, y: number): void {
         this.tubeSprite.setPosition(x, y);
         this.setPortionsPositions(x, y);
+        this.addInteractivity();
         this.tubeSprite.setVisible(true);
     }
 
@@ -131,6 +140,25 @@ export class TubeView extends Phaser.GameObjects.Container {
         return { x: this.positions[this.volume][0], y: this.positions[this.volume][1] };
     }
 
+    public addInteractivity(): void {
+        const transparentPixel = new Phaser.GameObjects.Sprite(
+            this.scene,
+            this.tubeSprite.x,
+            this.tubeSprite.y,
+            "game-ui",
+            "1x1.png", // "1x1_orange.png" for debug
+        );
+        transparentPixel.setScale(
+            this.tubeSprite.width * this.tubeSprite.scaleX * 1.2,
+            this.tubeSprite.height * this.tubeSprite.scaleY * 1.2,
+        );
+        transparentPixel.setInteractive();
+        transparentPixel.on("pointerup", () => {
+            this.gameEvents.emit(GAME.EventTubeClicked, this.tubeNumber);
+        });
+        this.add(transparentPixel);
+    }
+
     // to activate/deactivate
     private getTopPortion(): PortionView | undefined {
         if (this.isEmpty()) return undefined;
@@ -148,7 +176,7 @@ export class TubeView extends Phaser.GameObjects.Container {
             0x00000,
             0.0,
         );
-        this.tubeSprite.setStrokeStyle(1.4, 0xffffff, 1.0);
+        this.tubeSprite.setStrokeStyle(1.6, 0xffffff, 1.0);
         this.tubeSprite.setVisible(false);
         this.add(this.tubeSprite);
     }

@@ -33,7 +33,7 @@ export default class MainScene extends Phaser.Scene {
         // if (process.env.NODE_ENV !== "production") {
         //     this.initStatJS();
         // }
-        this.gameEvents.on(GAME.EventTubesClicked, this.move, this);
+        this.gameEvents.on(GAME.EventTubesChoosen, this.move, this);
 
         this.handleKeys();
     }

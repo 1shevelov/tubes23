@@ -50,6 +50,48 @@
 						"w": 150,
 						"h": 150
 					}
+				},
+				{
+					"filename": "1x1.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 1,
+						"h": 1
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 1,
+						"h": 1
+					},
+					"frame": {
+						"x": 322,
+						"y": 159,
+						"w": 1,
+						"h": 1
+					}
+				},
+				{
+					"filename": "1x1_orange.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 1,
+						"h": 1
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 1,
+						"h": 1
+					},
+					"frame": {
+						"x": 329,
+						"y": 159,
+						"w": 1,
+						"h": 1
+					}
 				}
 			]
 		}

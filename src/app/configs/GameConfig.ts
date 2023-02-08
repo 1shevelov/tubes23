@@ -11,6 +11,7 @@ export enum ErrorValues {
     InvalidColor = -1,
 }
 
-export const EventTubesClicked = "TubesClicked"; // GV -> Level, 2 numbers: source and recepient tube nums
+export const EventTubesChoosen = "TubesChoosen"; // GV -> Level, 2 numbers: source and recepient tube nums
 export const EventMoveFailed = "MoveFailed"; // Level -> GV
 export const EventMoveSucceeded = "MoveSucceeded"; // Level -> GV & MS
+export const EventTubeClicked = "TubeClicked"; // TubeView -> GV

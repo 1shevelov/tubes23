@@ -31,6 +31,7 @@ export class GameView extends Phaser.GameObjects.Container {
         this.gameEvents = MSEventEmitter;
         this.reset();
         this.init();
+        this.gameEvents.on(GAME.EventTubeClicked, this.handleClick, this);
     }
 
     public reset(): void {
@@ -57,6 +58,7 @@ export class GameView extends Phaser.GameObjects.Container {
 
         this.setAndPlaceTubes(tubes);
         this.fillTubes(tubes);
+        // this.addProps();
     }
 
     private setAndPlaceTubes(tubes: object[]): void {
@@ -85,6 +87,7 @@ export class GameView extends Phaser.GameObjects.Container {
                 // this.drawTube(i * tubeGap, (row + 1) * rowGap + rowLower, volume);
                 aTube = this.tubeCache.pop();
                 if (aTube !== undefined) {
+                    aTube.setNumber(tubeCounter);
                     aTube.setVolumeAndSize(tubes[tubeCounter]["volume"], tubeSizeY);
                     aTube.place(
                         i * tubeGap,
@@ -96,7 +99,6 @@ export class GameView extends Phaser.GameObjects.Container {
                 tubeCounter++;
             }
         });
-        this.addProps();
     }
 
     private fillTubes(tubes: object[]): void {
@@ -114,14 +116,6 @@ export class GameView extends Phaser.GameObjects.Container {
     }
 
     private createResources(tubeNum: number, portionNum: number): void {
-        let tubeView: TubeView;
-        const cachedTubesNum = this.tubeCache.length;
-        if (tubeNum > cachedTubesNum) {
-            for (let i = 0; i < tubeNum - cachedTubesNum; i++) {
-                tubeView = new TubeView(this.scene);
-                this.tubeCache.push(tubeView);
-            }
-        }
         let portionView: PortionView;
         const cachedPortionsNum = this.portionCache.length;
         if (portionNum > cachedPortionsNum) {
@@ -130,27 +124,36 @@ export class GameView extends Phaser.GameObjects.Container {
                 this.portionCache.push(portionView);
             }
         }
+        let tubeView: TubeView;
+        const cachedTubesNum = this.tubeCache.length;
+        if (tubeNum > cachedTubesNum) {
+            for (let i = 0; i < tubeNum - cachedTubesNum; i++) {
+                tubeView = new TubeView(this.scene, this.gameEvents);
+                this.tubeCache.push(tubeView);
+            }
+        }
     }
 
-    private addProps(): void {
-        this.tubes.forEach((tube, index) => {
-            tube.setName(index.toString());
-        });
-        this.scene.input.on(
-            "gameobjectup",
-            (
-                _pointer: Phaser.Input.Pointer,
-                gameObject: Phaser.GameObjects.Container,
-                _event: any,
-            ) => {
-                // (gameObject as TubeView).activate();
-                this.handleClick(parseInt(gameObject.name));
-            },
-        );
-    }
+    // private addProps(): void {
+    //     this.tubes.forEach((tube, index) => {
+    //         tube.setName(index.toString());
+    //         tube.addInteractivity();
+    //     });
+    //     this.scene.input.on(
+    //         "gameobjectup",
+    //         (
+    //             _pointer: Phaser.Input.Pointer,
+    //             gameObject: Phaser.GameObjects.Container,
+    //             _event: any,
+    //         ) => {
+    //             // (gameObject as TubeView).activate();
+    //             this.handleClick(parseInt(gameObject.name));
+    //         },
+    //     );
+    // }
 
     private handleClick(tubeNum: number): void {
-        // console.log(`Clicked ${tubeNum}`);
+        console.log(`Clicked ${tubeNum}`);
         if (this.sourceTube === this.NO_TUBE && !this.tubes[tubeNum].isEmpty()) {
             this.sourceTube = tubeNum;
             this.tubes[this.sourceTube].activate();
@@ -170,7 +173,7 @@ export class GameView extends Phaser.GameObjects.Container {
             // try to move
             this.recipientTube = tubeNum;
             this.gameEvents.emit(
-                GAME.EventTubesClicked,
+                GAME.EventTubesChoosen,
                 this.sourceTube,
                 this.recipientTube,
             );
