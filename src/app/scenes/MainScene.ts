@@ -76,7 +76,7 @@ export default class MainScene extends Phaser.Scene {
 
     private create(): void {
         this.level = new Level(this.gameEvents);
-        this.level.setRandomClassicLevel(6, 4);
+        this.level.setRandomClassicLevel(7, 4);
         // this.level.setClassicTubes([[0, 1, 2], [3, 4, 5, 6], [7], []], 4);
 
         // this.gameView.drawRandomGenTubes(8, 4);
@@ -95,14 +95,14 @@ export default class MainScene extends Phaser.Scene {
     }
 
     private helperMove(source: number): void {
-        const theOnlyRecepientTube = this.level.tryToHelperMove(source);
-        if (theOnlyRecepientTube !== GAME.ErrorValues.InvalidTube) {
+        const theOnlyRecepientTubeIndex = this.level.tryToHelperMove(source);
+        if (theOnlyRecepientTubeIndex !== GAME.ErrorValues.InvalidTubeIndex) {
             // TODO: move to method countSuccessfullMove()
+            this.gameView.helperMove(theOnlyRecepientTubeIndex);
             this.moveCounter++;
             if (this.level.isWonClassic()) {
                 console.log(`You win! With ${this.moveCounter} moves`);
             }
-            this.gameView.helperMove(theOnlyRecepientTube);
         }
     }
 

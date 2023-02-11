@@ -132,7 +132,7 @@ export class Tube {
     public getDrainColor(): number {
         if (!this.canDrain()) {
             // console.error("This tube can't return a portion");
-            return GAME.ErrorValues.InvalidColor;
+            return GAME.ErrorValues.InvalidColorIndex;
         }
         if (this.drains === Drains.Neck) {
             return this._content.at(-1) as number;
@@ -142,6 +142,7 @@ export class Tube {
     }
 
     // the level is won if every tube is empty or have only one color
+    // is used to determine the best option for helper move
     public isWon(): boolean {
         if (this._content.length === 0) return true;
         const firstColor = this._content[0];

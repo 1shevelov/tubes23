@@ -101,7 +101,7 @@ export class Level {
         for (let i = 0; i < colors.length; i++) {
             if (
                 colors[i] === colors[i + 1] &&
-                colors[i] !== GAME.ErrorValues.InvalidColor
+                colors[i] !== GAME.ErrorValues.InvalidColorIndex
             )
                 return false;
         }
@@ -110,42 +110,64 @@ export class Level {
 
     // should find only one target tube for the portion
     // or return -1
-    public tryToHelperMove(source: number): number {
+    public tryToHelperMove(sourceTubeIndex: number): number {
         // TODO: check number
-        if (!this.tubes[source].canDrain()) {
-            console.error("Can't drain from tube #", source);
+        if (!this.tubes[sourceTubeIndex].canDrain()) {
+            console.error("Can't drain from tube #", sourceTubeIndex);
             this.gameEvents.emit(GAME.EventMoveFailed);
-            return GAME.ErrorValues.InvalidTube;
+            return GAME.ErrorValues.InvalidTubeIndex;
         }
         // sort through all the tubes and make an array of all that can add this color
         const targetTubesIndices: number[] = [];
         let targetColor: number;
         for (let i = 0; i < this.tubes.length; i++) {
-            if (i === source) continue;
+            if (i === sourceTubeIndex) continue;
             if (this.tubes[i].canAdd()) {
                 targetColor = this.tubes[i].getDrainColor();
                 if (
-                    targetColor === GAME.ErrorValues.InvalidColor ||
-                    targetColor === this.tubes[source].getDrainColor()
+                    targetColor === GAME.ErrorValues.InvalidColorIndex ||
+                    targetColor === this.tubes[sourceTubeIndex].getDrainColor()
                 )
-                    targetTubesIndices.push(source);
+                    targetTubesIndices.push(i);
             }
         }
-        if (targetTubesIndices.length === 0) return GAME.ErrorValues.InvalidTube;
+        console.log(targetTubesIndices);
+        if (targetTubesIndices.length === 0) return GAME.ErrorValues.InvalidTubeIndex;
         // if array.length = 1 send this number
-        if (targetTubesIndices.length === 1) return targetTubesIndices[0];
-        // if array.length > 1 check that all tubes are empty then send number of the first one
-        //                      else send -1
+        let recipientTubeIndex = GAME.ErrorValues.InvalidTubeIndex;
+        if (targetTubesIndices.length === 1) recipientTubeIndex = targetTubesIndices[0];
+        // if array.length > 1
         else {
+            // if there is a recepient tube with only source color then return it
             for (let i = 0; i < targetTubesIndices.length; i++) {
                 if (
-                    this.tubes[targetTubesIndices[i]].getDrainColor() !==
-                    GAME.ErrorValues.InvalidColor
+                    this.tubes[targetTubesIndices[i]].getDrainColor() ===
+                        this.tubes[sourceTubeIndex].getDrainColor() &&
+                    this.tubes[targetTubesIndices[i]].isWon()
                 )
-                    return GAME.ErrorValues.InvalidTube;
+                    recipientTubeIndex = targetTubesIndices[i];
             }
-            return targetTubesIndices[0];
+            // if all tubes are empty then send number of the first one
+            if (recipientTubeIndex === GAME.ErrorValues.InvalidTubeIndex) {
+                for (let i = 0; i < targetTubesIndices.length; i++) {
+                    if (
+                        this.tubes[targetTubesIndices[i]].getDrainColor() !==
+                        GAME.ErrorValues.InvalidColorIndex
+                    )
+                        return GAME.ErrorValues.InvalidTubeIndex;
+                }
+                recipientTubeIndex = targetTubesIndices[0];
+            }
+            // TODO: rename all "recepeints"
         }
+        const isAddingSuccessful = this.tubes[recipientTubeIndex].tryToAdd(
+            this.tubes[sourceTubeIndex].getDrainColor(),
+        );
+        if (isAddingSuccessful) {
+            this.tubes[sourceTubeIndex].drain();
+            console.log(`Moved from ${sourceTubeIndex} to ${recipientTubeIndex}`);
+            return recipientTubeIndex;
+        } else return GAME.ErrorValues.InvalidTubeIndex;
     }
 
     public tryToMove(source: number, recipient: number): boolean {

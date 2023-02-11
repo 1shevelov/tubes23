@@ -8,8 +8,8 @@ export const MAX_VOLUME = 16;
 export const MAX_COLORS = CurrentPalette.length;
 
 export enum ErrorValues {
-    InvalidTube = -1,
-    InvalidColor = -1,
+    InvalidTubeIndex = -1,
+    InvalidColorIndex = -1,
 }
 
 export const Event2TubesChoosen = "2TubesChoosen"; // GV -> Level, 2 numbers: source and recepient tube nums

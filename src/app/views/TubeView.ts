@@ -182,7 +182,7 @@ export class TubeView extends Phaser.GameObjects.Container {
             0x00000,
             0.0,
         );
-        this.tubeSprite.setStrokeStyle(1.6, 0xffffff, 1.0);
+        this.tubeSprite.setStrokeStyle(2.5, 0xffffff, 1.0);
         this.tubeSprite.setVisible(false);
         this.add(this.tubeSprite);
     }
