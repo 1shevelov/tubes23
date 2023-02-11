@@ -100,7 +100,6 @@ export class Tube {
         if (this._content.length !== 0 && this._content.at(-1) !== portion) {
             return false;
         }
-
         this._content.push(portion);
         return true;
     }

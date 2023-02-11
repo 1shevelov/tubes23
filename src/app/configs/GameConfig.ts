@@ -12,8 +12,10 @@ export enum ErrorValues {
     InvalidColorIndex = -1,
 }
 
-export const Event2TubesChoosen = "2TubesChoosen"; // GV -> Level, 2 numbers: source and recepient tube nums
+export const Event2TubesChoosen = "2TubesChoosen"; // GV -> Level, 2 numbers: source and recipient tube nums
 export const EventMoveFailed = "MoveFailed"; // Level -> GV
 export const EventMoveSucceeded = "MoveSucceeded"; // Level -> GV & MS
 export const EventTubeClicked = "TubeClicked"; // TubeView -> GV
 export const EventSourceTubeChoosen = "SourceTubeChoosen";
+
+export const HELPER_ENABLED = true;

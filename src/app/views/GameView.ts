@@ -66,7 +66,8 @@ export class GameView extends Phaser.GameObjects.Container {
         if (this.sourceTube === this.NO_TUBE && !this.tubes[tubeNum].isEmpty()) {
             this.sourceTube = tubeNum;
             this.tubes[this.sourceTube].activate();
-            this.gameEvents.emit(GAME.EventSourceTubeChoosen, this.sourceTube);
+            if (GAME.HELPER_ENABLED)
+                this.gameEvents.emit(GAME.EventSourceTubeChoosen, this.sourceTube);
             return;
         }
         if (this.sourceTube === tubeNum) {
@@ -90,21 +91,21 @@ export class GameView extends Phaser.GameObjects.Container {
         }
     }
 
-    public helperMove(recepient: number): void {
+    public helperMove(recipient: number): void {
         if (this.sourceTube === this.NO_TUBE) {
             console.error(`Source tube for helper move is unknown`);
             return;
         }
-        recepient = fixValue(recepient, 0, this.tubes.length - 1);
-        if (this.tubes[recepient].isFull()) {
-            console.error(`Recepient tube for helper move is full`);
+        recipient = fixValue(recipient, 0, this.tubes.length - 1);
+        if (this.tubes[recipient].isFull()) {
+            console.error(`Recipient tube for helper move is full`);
             return;
         }
         // if (this.recipientTube !== this.NO_TUBE) {
         //     console.error(`Recipient tube for the move has been choosen`);
         //     return;
         // }
-        this.recipientTube = recepient;
+        this.recipientTube = recipient;
         this.transferPortion();
     }
 
