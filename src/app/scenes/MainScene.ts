@@ -101,7 +101,7 @@ export default class MainScene extends Phaser.Scene {
             this.gameView.helperMove(theOnlyRecipientTubeIndex);
             this.moveCounter++;
             if (this.level.isWonClassic()) {
-                console.log(`You win! With ${this.moveCounter} moves`);
+                console.log(`You win in ${this.moveCounter} moves!`);
             }
         }
     }
@@ -163,6 +163,24 @@ export default class MainScene extends Phaser.Scene {
                 case Phaser.Input.Keyboard.KeyCodes.ZERO:
                 case Phaser.Input.Keyboard.KeyCodes.NUMPAD_ZERO:
                     this.gameView.handleClick(9);
+                    break;
+                case Phaser.Input.Keyboard.KeyCodes.A:
+                    this.gameView.handleClick(10);
+                    break;
+                case Phaser.Input.Keyboard.KeyCodes.B:
+                    this.gameView.handleClick(11);
+                    break;
+                case Phaser.Input.Keyboard.KeyCodes.C:
+                    this.gameView.handleClick(12);
+                    break;
+                case Phaser.Input.Keyboard.KeyCodes.D:
+                    this.gameView.handleClick(13);
+                    break;
+                case Phaser.Input.Keyboard.KeyCodes.E:
+                    this.gameView.handleClick(14);
+                    break;
+                case Phaser.Input.Keyboard.KeyCodes.F:
+                    this.gameView.handleClick(15);
                     break;
             }
         });
