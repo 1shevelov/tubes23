@@ -86,23 +86,22 @@ export default class MainScene extends Phaser.Scene {
 
     private move(source: number, recipient: number): void {
         const moveResult = this.level.tryToMove(source, recipient);
-        if (moveResult) {
-            this.moveCounter++;
-            if (this.level.isWonClassic()) {
-                console.log(`You win! With ${this.moveCounter} moves`);
-            }
-        }
+        if (moveResult) this.countSuccessfulMove();
     }
 
     private helperMove(source: number): void {
         const theOnlyRecipientTubeIndex = this.level.tryToHelperMove(source);
         if (theOnlyRecipientTubeIndex !== GAME.ErrorValues.InvalidTubeIndex) {
-            // TODO: move to method countSuccessfullMove()
             this.gameView.helperMove(theOnlyRecipientTubeIndex);
-            this.moveCounter++;
-            if (this.level.isWonClassic()) {
-                console.log(`You win in ${this.moveCounter} moves!`);
-            }
+            this.countSuccessfulMove();
+        }
+    }
+
+    private countSuccessfulMove(): void {
+        this.moveCounter++;
+        this.uiView.setCounter(this.moveCounter);
+        if (this.level.isWonClassic()) {
+            console.log(`You win in ${this.moveCounter} moves!`);
         }
     }
 
