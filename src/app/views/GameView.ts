@@ -3,6 +3,7 @@ import * as GAME from "../configs/GameConfig";
 // import { fixValue } from "../services/Utilities";
 import { PortionView } from "./PortionView";
 import { CurrentPalette } from "../configs/Colors";
+import { fixValue } from "../services/Utilities";
 
 export class GameView extends Phaser.GameObjects.Container {
     // max number of tubes for each row
@@ -31,7 +32,6 @@ export class GameView extends Phaser.GameObjects.Container {
         this.gameEvents = MSEventEmitter;
         this.reset();
         this.init();
-        this.gameEvents.on(GAME.EventTubeClicked, this.handleClick, this);
     }
 
     public reset(): void {
@@ -66,6 +66,7 @@ export class GameView extends Phaser.GameObjects.Container {
         if (this.sourceTube === this.NO_TUBE && !this.tubes[tubeNum].isEmpty()) {
             this.sourceTube = tubeNum;
             this.tubes[this.sourceTube].activate();
+            this.gameEvents.emit(GAME.EventSourceTubeChoosen, this.sourceTube);
             return;
         }
         if (this.sourceTube === tubeNum) {
@@ -82,11 +83,29 @@ export class GameView extends Phaser.GameObjects.Container {
             // try to move
             this.recipientTube = tubeNum;
             this.gameEvents.emit(
-                GAME.EventTubesChoosen,
+                GAME.Event2TubesChoosen,
                 this.sourceTube,
                 this.recipientTube,
             );
         }
+    }
+
+    public helperMove(recepient: number): void {
+        if (this.sourceTube === this.NO_TUBE) {
+            console.error(`Source tube for helper move is unknown`);
+            return;
+        }
+        recepient = fixValue(recepient, 0, this.tubes.length - 1);
+        if (this.tubes[recepient].isFull()) {
+            console.error(`Recepient tube for helper move is full`);
+            return;
+        }
+        // if (this.recipientTube !== this.NO_TUBE) {
+        //     console.error(`Recipient tube for the move has been choosen`);
+        //     return;
+        // }
+        this.recipientTube = recepient;
+        this.transferPortion();
     }
 
     private setAndPlaceTubes(tubes: object[]): void {
@@ -185,6 +204,9 @@ export class GameView extends Phaser.GameObjects.Container {
         this.tubeRows = this.wi > this.he ? this.HOR_ROWS : this.PORT_ROWS;
 
         this.scene.scale.on("resize", this.resize, this);
+
+        this.gameEvents.on(GAME.EventTubeClicked, this.handleClick, this);
+        // TODO: should call these methods directly from MS
         this.gameEvents.on(GAME.EventMoveFailed, this.resetSource, this);
         this.gameEvents.on(GAME.EventMoveSucceeded, this.move, this);
     }
@@ -196,9 +218,13 @@ export class GameView extends Phaser.GameObjects.Container {
 
     private move(): void {
         if (this.sourceTube === this.NO_TUBE || this.recipientTube === this.NO_TUBE) {
-            console.error(`Source or recipient tube is unknown`);
+            console.error(`Source or recipient tube for the move is unknown`);
             return;
         }
+        this.transferPortion();
+    }
+
+    private transferPortion(): void {
         const portion = this.tubes[this.sourceTube].removeTopPortion();
         if (!portion) {
             console.error(`Was not able to draw a portion from tube#${this.sourceTube}`);

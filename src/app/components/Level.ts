@@ -108,6 +108,46 @@ export class Level {
         return true;
     }
 
+    // should find only one target tube for the portion
+    // or return -1
+    public tryToHelperMove(source: number): number {
+        // TODO: check number
+        if (!this.tubes[source].canDrain()) {
+            console.error("Can't drain from tube #", source);
+            this.gameEvents.emit(GAME.EventMoveFailed);
+            return GAME.ErrorValues.InvalidTube;
+        }
+        // sort through all the tubes and make an array of all that can add this color
+        const targetTubesIndices: number[] = [];
+        let targetColor: number;
+        for (let i = 0; i < this.tubes.length; i++) {
+            if (i === source) continue;
+            if (this.tubes[i].canAdd()) {
+                targetColor = this.tubes[i].getDrainColor();
+                if (
+                    targetColor === GAME.ErrorValues.InvalidColor ||
+                    targetColor === this.tubes[source].getDrainColor()
+                )
+                    targetTubesIndices.push(source);
+            }
+        }
+        if (targetTubesIndices.length === 0) return GAME.ErrorValues.InvalidTube;
+        // if array.length = 1 send this number
+        if (targetTubesIndices.length === 1) return targetTubesIndices[0];
+        // if array.length > 1 check that all tubes are empty then send number of the first one
+        //                      else send -1
+        else {
+            for (let i = 0; i < targetTubesIndices.length; i++) {
+                if (
+                    this.tubes[targetTubesIndices[i]].getDrainColor() !==
+                    GAME.ErrorValues.InvalidColor
+                )
+                    return GAME.ErrorValues.InvalidTube;
+            }
+            return targetTubesIndices[0];
+        }
+    }
+
     public tryToMove(source: number, recipient: number): boolean {
         if (!this.tubes[source].canDrain()) {
             console.error("Can't drain from tube #", source);

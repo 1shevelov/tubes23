@@ -8,10 +8,12 @@ export const MAX_VOLUME = 16;
 export const MAX_COLORS = CurrentPalette.length;
 
 export enum ErrorValues {
+    InvalidTube = -1,
     InvalidColor = -1,
 }
 
-export const EventTubesChoosen = "TubesChoosen"; // GV -> Level, 2 numbers: source and recepient tube nums
+export const Event2TubesChoosen = "2TubesChoosen"; // GV -> Level, 2 numbers: source and recepient tube nums
 export const EventMoveFailed = "MoveFailed"; // Level -> GV
 export const EventMoveSucceeded = "MoveSucceeded"; // Level -> GV & MS
 export const EventTubeClicked = "TubeClicked"; // TubeView -> GV
+export const EventSourceTubeChoosen = "SourceTubeChoosen";
