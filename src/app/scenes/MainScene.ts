@@ -110,14 +110,14 @@ export default class MainScene extends Phaser.Scene {
         this.input.keyboard.on("keydown", (event) => {
             switch (event.keyCode) {
                 // save
-                case Phaser.Input.Keyboard.KeyCodes.S:
-                case Phaser.Input.Keyboard.KeyCodes.E:
+                case Phaser.Input.Keyboard.KeyCodes.S: // save
+                case Phaser.Input.Keyboard.KeyCodes.X: // export
                     const tubes2Save = this.level.getTubes();
                     const tubeNum = tubes2Save.length;
                     const tubeVol = tubes2Save[0]["volume"];
                     download(tubes2Save, `Tubes-random-classic-${tubeNum}_${tubeVol}`);
                     break;
-                case Phaser.Input.Keyboard.KeyCodes.R:
+                case Phaser.Input.Keyboard.KeyCodes.R: // reset, restart, reload
                     console.log("reset");
                     this.level.reset();
                     this.gameView.reset();

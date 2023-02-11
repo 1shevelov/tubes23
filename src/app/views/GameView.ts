@@ -63,6 +63,7 @@ export class GameView extends Phaser.GameObjects.Container {
 
     public handleClick(tubeNum: number): void {
         console.log(`Clicked ${tubeNum}`);
+        // TODO: check if no tube with this index - return
         if (this.sourceTube === this.NO_TUBE && !this.tubes[tubeNum].isEmpty()) {
             this.sourceTube = tubeNum;
             this.tubes[this.sourceTube].activate();
