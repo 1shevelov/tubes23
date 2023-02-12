@@ -18,5 +18,11 @@ export const EventMoveSucceeded = "MoveSucceeded"; // Level -> GV & MS
 export const EventTubeClicked = "TubeClicked"; // TubeView -> GV
 export const EventSourceTubeChoosen = "SourceTubeChoosen";
 
+// move helper enabled
 export const HELPER_ENABLED = true;
+
+// show tube labels for hotkeys
 export const SHOW_TUBE_HOTKEY = true;
+
+// save randomly generated classic level without actual tube content
+export const SAVE_WITH_RANDOM_SEED = true;

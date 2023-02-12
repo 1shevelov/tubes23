@@ -35,6 +35,10 @@ export function download(content: object, fileName: string): void {
     URL.revokeObjectURL(a.href);
 }
 
+export function getRandomSeed(): string {
+    return Math.floor(Date.now() * Math.random()).toString();
+}
+
 // can't make it work
 // export function changeColorLuminance(hexColor: string, luminosityFactor: number): string {
 //     // validate hex string

@@ -9,7 +9,7 @@ export class UIView extends Phaser.GameObjects.Container {
     private wi: number;
     private he: number;
 
-    public constructor(public scene) {
+    public constructor(public scene: Phaser.Scene) {
         super(scene);
         this.init();
         this.makeCounter();

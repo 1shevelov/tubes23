@@ -21,6 +21,7 @@
         "@koreez/phaser3-ninepatch": "^2.0.2",
         "is-mobile": "^3.1.1",
         "phaser": "^3.55.2",
+        "seedrandom": "^3.0.5",
         "uuid": "^8.3.2"
     },
     "devDependencies": {

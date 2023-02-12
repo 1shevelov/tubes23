@@ -7,9 +7,11 @@ import { GameView } from "../views/GameView";
 import { UIView } from "../views/UIView";
 import { Level } from "../components/Level";
 import * as GAME from "../configs/GameConfig";
-import { download } from "../services/Utilities";
+import { download, getRandomSeed } from "../services/Utilities";
 
 export default class MainScene extends Phaser.Scene {
+    private SEEDED_RANDOM_LIB = require("seedrandom");
+
     private gameView: GameView;
     private uiView: UIView;
     private foregroundView: ForegroundView;
@@ -18,6 +20,9 @@ export default class MainScene extends Phaser.Scene {
     private gameEvents: Phaser.Events.EventEmitter;
 
     private moveCounter = 0;
+    private randomLevelSeed: string;
+    private randomClassicLevelTubeNum: number;
+    private randomClassicLevelTubeVol: number;
 
     public constructor() {
         super({ key: SceneNames.Main });
@@ -76,7 +81,16 @@ export default class MainScene extends Phaser.Scene {
 
     private create(): void {
         this.level = new Level(this.gameEvents);
-        this.level.setRandomClassicLevel(10, 5);
+
+        this.randomLevelSeed = getRandomSeed();
+        const rng = this.SEEDED_RANDOM_LIB(this.randomLevelSeed);
+        this.randomClassicLevelTubeNum = 15;
+        this.randomClassicLevelTubeVol = 3;
+        this.level.setRandomClassicLevel(
+            this.randomClassicLevelTubeNum,
+            this.randomClassicLevelTubeVol,
+            rng,
+        );
         // this.level.setClassicTubes([[0, 1, 2], [3, 4, 5, 6], [7], []], 4);
 
         // this.gameView.drawRandomGenTubes(8, 4);
@@ -105,16 +119,33 @@ export default class MainScene extends Phaser.Scene {
         }
     }
 
+    private saveLevel(): void {
+        if (GAME.SAVE_WITH_RANDOM_SEED) {
+            const saveStruct = {
+                level: "Classic Random",
+                tubes: this.randomClassicLevelTubeNum,
+                volume: this.randomClassicLevelTubeVol,
+                seed: this.randomLevelSeed,
+            };
+            download(
+                saveStruct,
+                `Tubes-random-classic-${this.randomClassicLevelTubeNum}_${this.randomClassicLevelTubeVol}`,
+            );
+        } else {
+            const tubes2Save = this.level.getTubes();
+            const tubeNum = tubes2Save.length;
+            const tubeVol = tubes2Save[0]["volume"];
+            download(tubes2Save, `Tubes-random-classic-${tubeNum}_${tubeVol}`);
+        }
+    }
+
     private handleKeys(): void {
         this.input.keyboard.on("keydown", (event) => {
             switch (event.keyCode) {
                 // save
                 case Phaser.Input.Keyboard.KeyCodes.S: // save
                 case Phaser.Input.Keyboard.KeyCodes.X: // export
-                    const tubes2Save = this.level.getTubes();
-                    const tubeNum = tubes2Save.length;
-                    const tubeVol = tubes2Save[0]["volume"];
-                    download(tubes2Save, `Tubes-random-classic-${tubeNum}_${tubeVol}`);
+                    this.saveLevel();
                     break;
                 case Phaser.Input.Keyboard.KeyCodes.R: // reset, restart, reload
                     console.log("reset");

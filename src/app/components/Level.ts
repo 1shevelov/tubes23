@@ -45,8 +45,12 @@ export class Level {
         return true;
     }
 
-    // fills tubeNum-2 tubes randomly with tubeNum-2 colors
-    public setRandomClassicLevel(tubeNum: number, tubeVol: number): void {
+    // fully fills tubeNum-2 tubes randomly with tubeNum-2 colors
+    public setRandomClassicLevel(
+        tubeNum: number,
+        tubeVol: number,
+        rng: () => number, // preseeded RNG
+    ): void {
         tubeNum = fixValue(tubeNum, GAME.MIN_TUBES, GAME.MAX_TUBES);
         tubeNum = fixValue(tubeNum, GAME.MIN_TUBES, GAME.MAX_COLORS + 2);
         tubeVol = fixValue(tubeVol, GAME.MIN_VOLUME, GAME.MAX_VOLUME);
@@ -59,9 +63,10 @@ export class Level {
             color: number;
             number: number;
         }[] = [];
+
         let randColorIndex: number;
         for (let i = 0; i < colors; i++) {
-            randColorIndex = Math.floor(Math.random() * allColors.length);
+            randColorIndex = Math.floor(rng() * allColors.length);
             colors2Place.push({ color: allColors[randColorIndex], number: fillSize });
             allColors.splice(randColorIndex, 1);
         }
@@ -72,7 +77,7 @@ export class Level {
         for (let i = 0; i < colors; i++) {
             randTube = [];
             for (let j = 0; j < fillSize; j++) {
-                portionColorIndex = Math.floor(Math.random() * colors2Place.length);
+                portionColorIndex = Math.floor(rng() * colors2Place.length);
                 colors2Place[portionColorIndex].number--;
                 randTube.push(colors2Place[portionColorIndex].color);
                 if (colors2Place[portionColorIndex].number === 0)
