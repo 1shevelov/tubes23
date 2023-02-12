@@ -2,29 +2,39 @@
 export const WhiteBackground = "#ffffff";
 export const BlackBackground = "#000000";
 
-export const TubesStyle = {
-    lineStyle: {
-        width: 1,
-        color: 0xffffff,
-        alpha: 1,
-    },
-    fillStyle: {
-        color: 0xffffff,
-        alpha: 1,
-    },
-}
+export const TubeLabelStyle: Phaser.Types.GameObjects.Text.TextStyle = {
+    fontSize: "22px",
+    fontStyle: "bold",
+    align: "center",
+};
+export const uiCounterStyle: Phaser.Types.GameObjects.Text.TextStyle = {
+    fontSize: "34px",
+    fontStyle: "bold",
+    align: "center",
+};
 
-export const PortionsStyle = {
-    lineStyle: {
-        width: 1.5,
-        color: 0xffffff,
-        alpha: 1,
-    },
-    fillStyle: {
-        color: 0xffffff,
-        alpha: 1,
-    },
-}
+// export const TubeStyle = {
+//     lineStyle: {
+//         width: 1,
+//         color: 0xffffff,
+//         alpha: 1,
+//     },
+//     fillStyle: {
+//         color: 0xffffff,
+//         alpha: 1,
+//     },
+// }
+// export const PortionStyle = {
+//     lineStyle: {
+//         width: 1.5,
+//         color: 0xffffff,
+//         alpha: 1,
+//     },
+//     fillStyle: {
+//         color: 0xffffff,
+//         alpha: 1,
+//     },
+// }
 
 export const AoccPalette = [
     0xfad201 /* traffic yellow */,
@@ -39,5 +49,4 @@ export const AoccPalette = [
     0x6c4675 /* blue lilac */,
     0xea899a /* light pink */,
 ]
-
 export const CurrentPalette = AoccPalette;

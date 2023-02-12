@@ -19,3 +19,4 @@ export const EventTubeClicked = "TubeClicked"; // TubeView -> GV
 export const EventSourceTubeChoosen = "SourceTubeChoosen";
 
 export const HELPER_ENABLED = true;
+export const SHOW_TUBE_HOTKEY = true;

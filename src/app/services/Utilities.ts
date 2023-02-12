@@ -35,30 +35,30 @@ export function download(content: object, fileName: string): void {
     URL.revokeObjectURL(a.href);
 }
 
-export function changeColorLuminance(hexColor: string, luminosityFactor: number): string {
-    // validate hex string
-    hexColor = String(hexColor).replace(/[^0-9a-f]/gi, "");
-    if (hexColor.length < 6) {
-        hexColor =
-            hexColor[0] +
-            hexColor[0] +
-            hexColor[1] +
-            hexColor[1] +
-            hexColor[2] +
-            hexColor[2];
-    }
+// can't make it work
+// export function changeColorLuminance(hexColor: string, luminosityFactor: number): string {
+//     // validate hex string
+//     hexColor = String(hexColor).replace(/[^0-9a-f]/gi, "");
+//     if (hexColor.length < 6) {
+//         hexColor =
+//             hexColor[0] +
+//             hexColor[0] +
+//             hexColor[1] +
+//             hexColor[1] +
+//             hexColor[2] +
+//             hexColor[2];
+//     }
 
-    // convert to decimal and change luminosity
-    let rgb = "#";
-    let color: number;
-    let colorStr: string;
-    for (let i = 0; i < 3; i++) {
-        color = parseInt(hexColor.substr(i * 2, 2), 16);
-        colorStr = Math.round(
-            Math.min(Math.max(0, color + color * luminosityFactor), 255),
-        ).toString(16);
-        rgb += ("00" + color).substr(colorStr.length);
-    }
-
-    return rgb;
-}
+//     // convert to decimal and change luminosity
+//     let rgb = "#";
+//     let color: number;
+//     let colorStr: string;
+//     for (let i = 0; i < 3; i++) {
+//         color = parseInt(hexColor.substr(i * 2, 2), 16);
+//         colorStr = Math.round(
+//             Math.min(Math.max(0, color + color * luminosityFactor), 255),
+//         ).toString(16);
+//         rgb += ("00" + color).substr(colorStr.length);
+//     }
+//     return rgb;
+// }

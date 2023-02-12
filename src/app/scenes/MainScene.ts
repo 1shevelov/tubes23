@@ -76,7 +76,7 @@ export default class MainScene extends Phaser.Scene {
 
     private create(): void {
         this.level = new Level(this.gameEvents);
-        this.level.setRandomClassicLevel(8, 3);
+        this.level.setRandomClassicLevel(10, 5);
         // this.level.setClassicTubes([[0, 1, 2], [3, 4, 5, 6], [7], []], 4);
 
         // this.gameView.drawRandomGenTubes(8, 4);
@@ -159,27 +159,27 @@ export default class MainScene extends Phaser.Scene {
                 case Phaser.Input.Keyboard.KeyCodes.NUMPAD_NINE:
                     this.gameView.handleClick(8);
                     break;
-                case Phaser.Input.Keyboard.KeyCodes.ZERO:
-                case Phaser.Input.Keyboard.KeyCodes.NUMPAD_ZERO:
+                // case Phaser.Input.Keyboard.KeyCodes.ZERO:
+                // case Phaser.Input.Keyboard.KeyCodes.NUMPAD_ZERO:
+                //     this.gameView.handleClick(9);
+                //     break;
+                case Phaser.Input.Keyboard.KeyCodes.A:
                     this.gameView.handleClick(9);
                     break;
-                case Phaser.Input.Keyboard.KeyCodes.A:
+                case Phaser.Input.Keyboard.KeyCodes.B:
                     this.gameView.handleClick(10);
                     break;
-                case Phaser.Input.Keyboard.KeyCodes.B:
+                case Phaser.Input.Keyboard.KeyCodes.C:
                     this.gameView.handleClick(11);
                     break;
-                case Phaser.Input.Keyboard.KeyCodes.C:
+                case Phaser.Input.Keyboard.KeyCodes.D:
                     this.gameView.handleClick(12);
                     break;
-                case Phaser.Input.Keyboard.KeyCodes.D:
+                case Phaser.Input.Keyboard.KeyCodes.E:
                     this.gameView.handleClick(13);
                     break;
-                case Phaser.Input.Keyboard.KeyCodes.E:
-                    this.gameView.handleClick(14);
-                    break;
                 case Phaser.Input.Keyboard.KeyCodes.F:
-                    this.gameView.handleClick(15);
+                    this.gameView.handleClick(14);
                     break;
             }
         });

@@ -16,7 +16,8 @@
 // public removePortion() - classic from topmost position
 
 import * as GAME from "../configs/GameConfig";
-// import * as COLORS from "../configs/Colors";
+import { UIService } from "../services/UIService";
+import * as COLORS from "../configs/Colors";
 // import { fixValue } from "../services/Utilities";
 import { PortionView } from "./PortionView";
 
@@ -145,6 +146,38 @@ export class TubeView extends Phaser.GameObjects.Container {
     }
 
     public addInteractivity(): void {
+        if (GAME.SHOW_TUBE_HOTKEY) {
+            let label = (this.tubeNumber + 1).toString();
+            switch (label) {
+                case "10":
+                    label = "A";
+                    break;
+                case "11":
+                    label = "B";
+                    break;
+                case "12":
+                    label = "C";
+                    break;
+                case "13":
+                    label = "D";
+                    break;
+                case "14":
+                    label = "E";
+                    break;
+                case "15":
+                    label = "F";
+            }
+            const hotkeyLabel = UIService.createText(
+                this.scene,
+                this.tubeSprite.x,
+                this.tubeSprite.y +
+                    (this.tubeSprite.height * this.tubeSprite.scaleY) / 1.6,
+                label,
+                COLORS.TubeLabelStyle,
+            );
+            this.add(hotkeyLabel);
+        }
+
         if (!this.interactiveLayer) {
             this.interactiveLayer = new Phaser.GameObjects.Sprite(
                 this.scene,

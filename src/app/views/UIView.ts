@@ -1,5 +1,6 @@
 // import { CounterComponent } from "../components/CounterComponent";
 import { UIService } from "../services/UIService";
+import * as COLORS from "../configs/Colors";
 
 export class UIView extends Phaser.GameObjects.Container {
     // private counter: CounterComponent;
@@ -25,16 +26,12 @@ export class UIView extends Phaser.GameObjects.Container {
     }
 
     private makeCounter(): void {
-        const counterStyle: Phaser.Types.GameObjects.Text.TextStyle = {
-            fontSize: "36px",
-            align: "center",
-        };
         this.counter = UIService.createText(
             this.scene,
             this.wi / 2,
             this.he / 10,
             "0",
-            counterStyle,
+            COLORS.uiCounterStyle,
         );
     }
 }

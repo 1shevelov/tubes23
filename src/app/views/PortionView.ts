@@ -86,14 +86,14 @@ export class PortionView extends Phaser.GameObjects.Container {
         return golfBall;
     }
 
-    private draw(
-        x: number,
-        y: number,
-        size: number,
-        color: number,
-    ): Phaser.GameObjects.Sprite {
-        return this.drawGolfBall(x, y, size, color);
-    }
+    // private draw(
+    //     x: number,
+    //     y: number,
+    //     size: number,
+    //     color: number,
+    // ): Phaser.GameObjects.Sprite {
+    //     return this.drawGolfBall(x, y, size, color);
+    // }
 
     // private drawRoundedRect(
     //     figure: Phaser.GameObjects.Graphics,
@@ -110,25 +110,25 @@ export class PortionView extends Phaser.GameObjects.Container {
     //     );
     // }
 
-    private drawGolfBall(
-        x: number,
-        y: number,
-        size: number,
-        color: number,
-    ): Phaser.GameObjects.Sprite {
-        const golfBall = new Phaser.GameObjects.Sprite(
-            this.scene,
-            0,
-            0,
-            "game-ui",
-            "ball-golf-150.png",
-        );
-        golfBall.setOrigin(0.5, 0.5);
-        golfBall.setPosition(x, y);
-        golfBall.setScale((size / golfBall.width) * this.portionSizeCoeff);
-        golfBall.setTint(color, 0xffffff, color, color);
-        return golfBall;
-    }
+    // private drawGolfBall(
+    //     x: number,
+    //     y: number,
+    //     size: number,
+    //     color: number,
+    // ): Phaser.GameObjects.Sprite {
+    //     const golfBall = new Phaser.GameObjects.Sprite(
+    //         this.scene,
+    //         0,
+    //         0,
+    //         "game-ui",
+    //         "ball-golf-150.png",
+    //     );
+    //     golfBall.setOrigin(0.5, 0.5);
+    //     golfBall.setPosition(x, y);
+    //     golfBall.setScale((size / golfBall.width) * this.portionSizeCoeff);
+    //     golfBall.setTint(color, 0xffffff, color, color);
+    //     return golfBall;
+    // }
 
     // private drawCircle(
     //     portionContainer: Phaser.GameObjects.Container,

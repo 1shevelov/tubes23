@@ -131,7 +131,7 @@ export class Level {
                     targetTubesIndices.push(i);
             }
         }
-        console.log(targetTubesIndices);
+        // console.log(targetTubesIndices);
         if (targetTubesIndices.length === 0) return GAME.ErrorValues.InvalidTubeIndex;
         // if array.length = 1 send this number
         let recipientTubeIndex = GAME.ErrorValues.InvalidTubeIndex;
@@ -165,7 +165,7 @@ export class Level {
         );
         if (isAddingSuccessful) {
             this.tubes[sourceTubeIndex].drain();
-            console.log(`Moved from ${sourceTubeIndex} to ${recipientTubeIndex}`);
+            // console.log(`Moved from ${sourceTubeIndex} to ${recipientTubeIndex}`);
             return recipientTubeIndex;
         } else return GAME.ErrorValues.InvalidTubeIndex;
     }

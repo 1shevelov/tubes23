@@ -7,8 +7,8 @@ import { fixValue } from "../services/Utilities";
 
 export class GameView extends Phaser.GameObjects.Container {
     // max number of tubes for each row
-    private readonly HOR_ROWS = [5, 16, 24, GAME.MAX_TUBES];
-    private readonly PORT_ROWS = [4, 10, 18, 28, GAME.MAX_TUBES];
+    private readonly HOR_ROWS = [8, 16, 24, GAME.MAX_TUBES];
+    private readonly PORT_ROWS = [5, 10, 18, 28, GAME.MAX_TUBES];
     private tubeRows: number[]; // contains HOR or PORT
 
     private wi: number;
@@ -62,7 +62,7 @@ export class GameView extends Phaser.GameObjects.Container {
     }
 
     public handleClick(tubeNum: number): void {
-        console.log(`Clicked ${tubeNum}`);
+        // console.log(`Clicked ${tubeNum}`);
         if (tubeNum + 1 > this.tubes.length) {
             console.warn(`No tube #${tubeNum + 1}`);
             return;
@@ -127,7 +127,7 @@ export class GameView extends Phaser.GameObjects.Container {
             tubesInRows[i - 1]++;
         }
         // console.log(tubesInRows);
-        const tubeSizeY = this.he / (rows + 1) / 1.5;
+        const tubeSizeY = this.he / (rows + 1) / 1.25;
         // console.log(`he: ${this.he}: tubeSizeY: ${tubeSizeY}`);
 
         let tubeGap = 0;
