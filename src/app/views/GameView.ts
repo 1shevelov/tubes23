@@ -143,7 +143,7 @@ export class GameView extends Phaser.GameObjects.Container {
                     aTube.setVolumeAndSize(tubes[tubeCounter]["volume"], tubeSizeY);
                     aTube.place(
                         i * tubeGap,
-                        ((1.15 * row + 1) * this.he) / (rows + 1) + this.he * 0.02,
+                        ((1.15 * row + 1) * this.he) / (rows + 1), // + this.he * 0.02,
                     );
                     this.add(aTube);
                     this.tubes.push(aTube);

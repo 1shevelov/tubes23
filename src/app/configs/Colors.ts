@@ -12,6 +12,11 @@ export const uiCounterStyle: Phaser.Types.GameObjects.Text.TextStyle = {
     fontStyle: "bold",
     align: "center",
 };
+export const uiWinMessageStyle: Phaser.Types.GameObjects.Text.TextStyle = {
+    fontSize: "34px",
+    fontStyle: "bold",
+    align: "center",
+};
 
 // export const TubeStyle = {
 //     lineStyle: {

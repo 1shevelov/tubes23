@@ -115,8 +115,14 @@ export default class MainScene extends Phaser.Scene {
         this.moveCounter++;
         this.uiView.setCounter(this.moveCounter);
         if (this.level.isWonClassic()) {
-            console.log(`You win in ${this.moveCounter} moves!`);
+            this.endGame();
         }
+    }
+
+    private endGame(): void {
+        this.uiView.showWin();
+        console.log(`You win in ${this.moveCounter} moves!`);
+        console.warn("Reload the page to play again");
     }
 
     private saveLevel(): void {
@@ -153,6 +159,13 @@ export default class MainScene extends Phaser.Scene {
                     this.gameView.reset();
                     this.gameView.createClassicGame(this.level.getTubes());
                     this.moveCounter = 0;
+                    break;
+                case Phaser.Input.Keyboard.KeyCodes.L: // load
+                    console.log("loading not implemented");
+                    // this.level.load();
+                    // this.gameView.reset();
+                    // this.gameView.createClassicGame(this.level.getTubes());
+                    // this.moveCounter = 0;
                     break;
                 case Phaser.Input.Keyboard.KeyCodes.ONE:
                 case Phaser.Input.Keyboard.KeyCodes.NUMPAD_ONE:

@@ -7,6 +7,8 @@ import PreloadScene from "./app/scenes/PreloadScene";
 const config = {
     transparent: false,
     antialiasGL: false,
+    // pixelArt: true,
+    // roundPixels: true,
     type: Phaser.WEBGL,
     width: 2000,
     height: 1400,
