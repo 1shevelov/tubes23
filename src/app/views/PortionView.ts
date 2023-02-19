@@ -79,7 +79,9 @@ export class PortionView extends Phaser.GameObjects.Container {
             0,
             0,
             "game-ui",
-            "ball-golf-150.png",
+            // "ball-golf-150.png",
+            "glass-ball2-150.png",
+            // "foot-ball2-150.png",
         );
         golfBall.setOrigin(0.5, 0.5);
         golfBall.setVisible(false);

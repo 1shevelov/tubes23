@@ -4,30 +4,30 @@
 			"image": "game-ui.png",
 			"format": "RGBA8888",
 			"size": {
-				"w": 475,
-				"h": 319
+				"w": 312,
+				"h": 327
 			},
 			"scale": 1,
 			"frames": [
 				{
-					"filename": "ball-golf.png",
+					"filename": "glass-ball2-150.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
-						"w": 313,
-						"h": 313
+						"w": 150,
+						"h": 151
 					},
 					"spriteSourceSize": {
 						"x": 0,
 						"y": 0,
-						"w": 313,
-						"h": 313
+						"w": 150,
+						"h": 151
 					},
 					"frame": {
 						"x": 3,
 						"y": 3,
-						"w": 313,
-						"h": 313
+						"w": 150,
+						"h": 151
 					}
 				},
 				{
@@ -45,8 +45,50 @@
 						"h": 150
 					},
 					"frame": {
-						"x": 322,
+						"x": 159,
 						"y": 3,
+						"w": 150,
+						"h": 150
+					}
+				},
+				{
+					"filename": "foot-ball-150.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 150,
+						"h": 150
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 1,
+						"w": 150,
+						"h": 148
+					},
+					"frame": {
+						"x": 159,
+						"y": 159,
+						"w": 150,
+						"h": 148
+					}
+				},
+				{
+					"filename": "foot-ball2-150.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 150,
+						"h": 150
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 150,
+						"h": 150
+					},
+					"frame": {
+						"x": 3,
+						"y": 160,
 						"w": 150,
 						"h": 150
 					}
@@ -66,8 +108,8 @@
 						"h": 1
 					},
 					"frame": {
-						"x": 322,
-						"y": 159,
+						"x": 3,
+						"y": 316,
 						"w": 1,
 						"h": 1
 					}
@@ -87,8 +129,8 @@
 						"h": 1
 					},
 					"frame": {
-						"x": 329,
-						"y": 159,
+						"x": 3,
+						"y": 323,
 						"w": 1,
 						"h": 1
 					}

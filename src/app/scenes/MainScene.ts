@@ -84,8 +84,8 @@ export default class MainScene extends Phaser.Scene {
 
         this.randomLevelSeed = getRandomSeed();
         const rng = this.SEEDED_RANDOM_LIB(this.randomLevelSeed);
-        this.randomClassicLevelTubeNum = 6;
-        this.randomClassicLevelTubeVol = 4;
+        this.randomClassicLevelTubeNum = 10;
+        this.randomClassicLevelTubeVol = 3;
         this.level.setRandomClassicLevel(
             this.randomClassicLevelTubeNum,
             this.randomClassicLevelTubeVol,
