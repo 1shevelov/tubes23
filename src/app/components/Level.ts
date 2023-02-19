@@ -13,7 +13,7 @@ export class Level {
 
     private tubes: Tube[] = [];
 
-    private startingTubes: Tube[] = [];
+    private startingTubesContent: number[][] = [];
 
     private gameEvents: Phaser.Events.EventEmitter;
 
@@ -41,7 +41,8 @@ export class Level {
             if (!aTube.initialize(tubeVol, tubes[i])) return false;
             this.tubes.push(aTube);
         }
-        this.tubes.forEach((tube) => this.startingTubes.push(tube));
+        this.tubes.forEach((tube) => this.startingTubesContent.push([...tube.content]));
+        // console.log(JSON.stringify(this.startingTubesContent));
         return true;
     }
 
@@ -202,8 +203,12 @@ export class Level {
 
     // restore starting state
     public reset(): void {
-        this.tubes = [];
-        this.startingTubes.forEach((tube) => this.tubes.push(tube));
+        // this.tubes = [];
+        // console.log("tubes BEFORE:" + JSON.stringify(this.tubes));
+        this.startingTubesContent.forEach((startingContent, i) => {
+            this.tubes[i].content = [...startingContent];
+        });
+        // console.log("tubes AFTER:" + JSON.stringify(this.tubes));
     }
 
     private init(): void {

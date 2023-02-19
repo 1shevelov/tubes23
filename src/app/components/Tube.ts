@@ -66,7 +66,7 @@ export class Tube {
         return this._content;
     }
 
-    public set content(newContent) {
+    public set content(newContent: number[]) {
         if (newContent.length > GAME.MAX_VOLUME) {
             console.error(
                 `Trying to fill tube with ${newContent.length} portions, while max allowed is ${GAME.MAX_VOLUME}. Aborting`,
@@ -81,6 +81,7 @@ export class Tube {
             newContent.find((val) => checkIfFaulty(val, 0, GAME.MAX_COLORS - 1)) ===
             undefined
         ) {
+            this._content = [];
             this._content = [...newContent];
         }
         // if (this._content.length > this.volume) {

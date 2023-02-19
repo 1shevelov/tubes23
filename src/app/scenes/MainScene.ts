@@ -84,8 +84,8 @@ export default class MainScene extends Phaser.Scene {
 
         this.randomLevelSeed = getRandomSeed();
         const rng = this.SEEDED_RANDOM_LIB(this.randomLevelSeed);
-        this.randomClassicLevelTubeNum = 15;
-        this.randomClassicLevelTubeVol = 3;
+        this.randomClassicLevelTubeNum = 6;
+        this.randomClassicLevelTubeVol = 4;
         this.level.setRandomClassicLevel(
             this.randomClassicLevelTubeNum,
             this.randomClassicLevelTubeVol,
@@ -145,6 +145,16 @@ export default class MainScene extends Phaser.Scene {
         }
     }
 
+    private resetLevel(): void {
+        console.log("Level reset");
+        this.level.reset();
+        this.gameView.reset();
+        this.gameView.createClassicGame(this.level.getTubes());
+        this.moveCounter = 0;
+        this.uiView.setCounter(this.moveCounter);
+        this.uiView.hideWin();
+    }
+
     private handleKeys(): void {
         this.input.keyboard.on("keydown", (event) => {
             switch (event.keyCode) {
@@ -154,11 +164,7 @@ export default class MainScene extends Phaser.Scene {
                     this.saveLevel();
                     break;
                 case Phaser.Input.Keyboard.KeyCodes.R: // reset, restart, reload
-                    console.log("reset");
-                    this.level.reset();
-                    this.gameView.reset();
-                    this.gameView.createClassicGame(this.level.getTubes());
-                    this.moveCounter = 0;
+                    this.resetLevel();
                     break;
                 case Phaser.Input.Keyboard.KeyCodes.L: // load
                     console.log("loading not implemented");

@@ -39,6 +39,12 @@ export class UIView extends Phaser.GameObjects.Container {
         });
     }
 
+    public hideWin(): void {
+        this.winMessage.setVisible(false);
+        this.winMessage.setAlpha(0.0);
+        this.winMessage.setTint(0xffffff);
+    }
+
     public setCounter(newVal: number): void {
         this.counter.setText(newVal.toString());
     }
