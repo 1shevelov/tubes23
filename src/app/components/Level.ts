@@ -30,7 +30,7 @@ export class Level {
         return tubes;
     }
 
-    public setClassicTubes(tubes: number[][], tubeVol: number): boolean {
+    public setClassicTubes(tubes: number[][], tubeVol: number, drains: number): boolean {
         if (tubes.length < GAME.MIN_TUBES || tubes.length > GAME.MAX_TUBES) {
             console.error("Invalid number of tubes: ", tubes.length);
             return false;
@@ -38,7 +38,7 @@ export class Level {
         let aTube: Tube;
         for (let i = 0; i < tubes.length; i++) {
             aTube = new Tube();
-            if (!aTube.initialize(tubeVol, tubes[i])) return false;
+            if (!aTube.initialize(tubeVol, tubes[i], drains)) return false;
             this.tubes.push(aTube);
         }
         this.tubes.forEach((tube) => this.startingTubesContent.push([...tube.content]));
@@ -50,11 +50,13 @@ export class Level {
     public setRandomClassicLevel(
         tubeNum: number,
         tubeVol: number,
+        drains: number, // TODO: exchange for enum Drains
         rng: () => number, // preseeded RNG
     ): void {
         tubeNum = fixValue(tubeNum, GAME.MIN_TUBES, GAME.MAX_TUBES);
         tubeNum = fixValue(tubeNum, GAME.MIN_TUBES, GAME.MAX_COLORS + 2);
         tubeVol = fixValue(tubeVol, GAME.MIN_VOLUME, GAME.MAX_VOLUME);
+        // TODO: checkIfFaulty(drains) in enum Drains
         const colors = tubeNum - 2;
         const fillSize = tubeVol; // can be lower
 
@@ -90,7 +92,7 @@ export class Level {
             randTubes.push([]);
         }
         // console.log(JSON.stringify(randTubes));
-        this.setClassicTubes(randTubes, tubeVol);
+        this.setClassicTubes(randTubes, tubeVol, drains);
     }
 
     // true if
