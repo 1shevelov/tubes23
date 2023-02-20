@@ -49,7 +49,7 @@ export class GameView extends Phaser.GameObjects.Container {
 
     public createClassicGame(tubes: object[]): void {
         // check data
-        console.log(JSON.stringify(tubes));
+        // console.log(JSON.stringify(tubes));
         const tubeNum = tubes.length;
         let maxVolume = tubes[0]["volume"];
         for (let i = 1; i < tubeNum; i++)
@@ -170,20 +170,20 @@ export class GameView extends Phaser.GameObjects.Container {
     }
 
     private createResources(tubeNum: number, portionNum: number): void {
-        let portionView: PortionView;
-        const cachedPortionsNum = this.portionCache.length;
-        if (portionNum > cachedPortionsNum) {
-            for (let i = 0; i < portionNum - cachedPortionsNum; i++) {
-                portionView = new PortionView(this.scene);
-                this.portionCache.push(portionView);
-            }
-        }
         let tubeView: TubeView;
         const cachedTubesNum = this.tubeCache.length;
         if (tubeNum > cachedTubesNum) {
             for (let i = 0; i < tubeNum - cachedTubesNum; i++) {
                 tubeView = new TubeView(this.scene, this.gameEvents);
                 this.tubeCache.push(tubeView);
+            }
+        }
+        let portionView: PortionView;
+        const cachedPortionsNum = this.portionCache.length;
+        if (portionNum > cachedPortionsNum) {
+            for (let i = 0; i < portionNum - cachedPortionsNum; i++) {
+                portionView = new PortionView(this.scene);
+                this.portionCache.push(portionView);
             }
         }
     }

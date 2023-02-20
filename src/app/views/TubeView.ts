@@ -212,10 +212,10 @@ export class TubeView extends Phaser.GameObjects.Container {
             0,
             INIT_PORTION_SIZE,
             INIT_PORTION_SIZE * GAME.MIN_VOLUME,
-            0x00000,
+            0x111b11,
             0.0,
         );
-        this.tubeSprite.setStrokeStyle(2.5, 0xffffff, 1.0);
+        this.tubeSprite.setStrokeStyle(2.5, 0xdddddd, 1.0);
         this.tubeSprite.setVisible(false);
         this.add(this.tubeSprite);
     }

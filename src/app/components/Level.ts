@@ -195,7 +195,7 @@ export class Level {
         if (isSuccess) {
             this.tubes[source].drain();
             this.gameEvents.emit(GAME.EventMoveSucceeded);
-            console.log(`Moved from ${source} to ${recipient}`);
+            // console.log(`Moved from ${source} to ${recipient}`);
             return true;
         } else {
             this.gameEvents.emit(GAME.EventMoveFailed);

@@ -89,7 +89,7 @@ export default class MainScene extends Phaser.Scene {
         this.level.setRandomClassicLevel(
             this.randomClassicLevelTubeNum,
             this.randomClassicLevelTubeVol,
-            1, // enum Drains
+            0, // enum Drains
             rng,
         );
         // this.level.setClassicTubes([[0, 1, 2], [3, 4, 5, 6], [7], []], 4);
