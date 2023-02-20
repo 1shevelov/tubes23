@@ -116,6 +116,29 @@ export class Level {
         return true;
     }
 
+    // true if
+    // all winColor portions are in one container
+    // and no other colors is in this container
+    public isWonOneColor(winColor: number): boolean {
+        let tubeWithWinColor: number = GAME.ErrorValues.InvalidTubeIndex;
+        let tubeContent: number[];
+        for (let i = 0; i < this.tubes.length; i++) {
+            tubeContent = this.tubes[i].content;
+            for (let j = 0; j < tubeContent.length; j++) {
+                if (tubeContent[j] === winColor) {
+                    if (tubeWithWinColor === GAME.ErrorValues.InvalidTubeIndex)
+                        tubeWithWinColor = i;
+                    else if (tubeWithWinColor !== i) return false;
+                }
+            }
+        }
+        tubeContent = this.tubes[tubeWithWinColor].content;
+        for (let i = 0; i < tubeContent.length; i++) {
+            if (tubeContent[i] !== winColor) return false;
+        }
+        return true;
+    }
+
     // should find only one target tube for the portion
     // or return -1
     public tryToHelperMove(sourceTubeIndex: number): number {

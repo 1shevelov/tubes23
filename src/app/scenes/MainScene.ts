@@ -24,6 +24,8 @@ export default class MainScene extends Phaser.Scene {
     private randomClassicLevelTubeNum: number;
     private randomClassicLevelTubeVol: number;
 
+    private isWinningColor = GAME.ErrorValues.InvalidColorIndex;
+
     public constructor() {
         super({ key: SceneNames.Main });
     }
@@ -93,9 +95,12 @@ export default class MainScene extends Phaser.Scene {
             rng,
         );
         // this.level.setClassicTubes([[0, 1, 2], [3, 4, 5, 6], [7], []], 4);
-
-        // this.gameView.drawRandomGenTubes(8, 4);
         // console.log(JSON.stringify(this.level.getTubes()));
+
+        // setting winning color
+        // this.isWinningColor = this.level.getTubes()[0]["content"][0];
+        // console.log(this.isWinningColor);
+
         this.gameView.createClassicGame(this.level.getTubes());
     }
 
@@ -115,9 +120,9 @@ export default class MainScene extends Phaser.Scene {
     private countSuccessfulMove(): void {
         this.moveCounter++;
         this.uiView.setCounter(this.moveCounter);
-        if (this.level.isWonClassic()) {
-            this.endGame();
-        }
+        if (this.isWinningColor === GAME.ErrorValues.InvalidColorIndex) {
+            if (this.level.isWonClassic()) this.endGame(); // gather all colors to win
+        } else if (this.level.isWonOneColor(this.isWinningColor)) this.endGame();
     }
 
     private endGame(): void {
