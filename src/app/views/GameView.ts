@@ -63,6 +63,13 @@ export class GameView extends Phaser.GameObjects.Container {
         // this.addProps();
     }
 
+    public undoMove(tubePair: number[]): void {
+        // console.log("GameView move to undo: ", tubePair);
+        this.recipientTube = tubePair[0];
+        this.sourceTube = tubePair[1];
+        this.move();
+    }
+
     public handleClick(tubeNum: number): void {
         // console.log(`Clicked ${tubeNum}`);
         if (tubeNum + 1 > this.tubes.length) {

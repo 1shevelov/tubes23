@@ -55,6 +55,9 @@ export default class MainScene extends Phaser.Scene {
     private initUIView(): void {
         this.uiView = new UIView(this);
         this.add.existing(this.uiView);
+        const uiEvents = this.uiView.getUiEvents();
+        uiEvents.on("ButtonRestartClicked", this.resetLevel, this);
+        uiEvents.on("ButtonUndoClicked", this.undoMove, this);
     }
 
     private initForegroundView(): void {
@@ -161,6 +164,16 @@ export default class MainScene extends Phaser.Scene {
         this.uiView.hideWin();
     }
 
+    private undoMove(): void {
+        if (this.moveCounter === 0) return;
+        // TODO: if gameState = win return;
+        const lastMove = this.level.undoMove();
+        this.gameView.undoMove(lastMove);
+        this.moveCounter--;
+        this.uiView.setCounter(this.moveCounter);
+        this.uiView.hideWin();
+    }
+
     private handleKeys(): void {
         this.input.keyboard.on("keydown", (event) => {
             switch (event.keyCode) {
@@ -178,6 +191,9 @@ export default class MainScene extends Phaser.Scene {
                     // this.gameView.reset();
                     // this.gameView.createClassicGame(this.level.getTubes());
                     // this.moveCounter = 0;
+                    break;
+                case Phaser.Input.Keyboard.KeyCodes.U: // undo
+                    this.undoMove();
                     break;
                 case Phaser.Input.Keyboard.KeyCodes.ONE:
                 case Phaser.Input.Keyboard.KeyCodes.NUMPAD_ONE:

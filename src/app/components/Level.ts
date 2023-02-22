@@ -17,6 +17,8 @@ export class Level {
 
     private gameEvents: Phaser.Events.EventEmitter;
 
+    private moves: number[][] = [];
+
     public constructor(MSEventEmitter: Phaser.Events.EventEmitter) {
         this.gameEvents = MSEventEmitter;
         this.init();
@@ -196,27 +198,29 @@ export class Level {
         );
         if (isAddingSuccessful) {
             this.tubes[sourceTubeIndex].drain();
+            this.moves.push([sourceTubeIndex, recipientTubeIndex]);
             // console.log(`Moved from ${sourceTubeIndex} to ${recipientTubeIndex}`);
             return recipientTubeIndex;
         } else return GAME.ErrorValues.InvalidTubeIndex;
     }
 
-    public tryToMove(source: number, recipient: number): boolean {
-        if (!this.tubes[source].canDrain()) {
-            console.error("Can't drain from tube #", source);
+    public tryToMove(sourceTubeIndex: number, recipientTubeIndex: number): boolean {
+        if (!this.tubes[sourceTubeIndex].canDrain()) {
+            console.error("Can't drain from tube #", sourceTubeIndex);
             this.gameEvents.emit(GAME.EventMoveFailed);
             return false;
         }
-        if (!this.tubes[recipient].canAdd()) {
-            console.error("Can't add to tube #", recipient);
+        if (!this.tubes[recipientTubeIndex].canAdd()) {
+            console.error("Can't add to tube #", recipientTubeIndex);
             this.gameEvents.emit(GAME.EventMoveFailed);
             return false;
         }
-        const isSuccess = this.tubes[recipient].tryToAdd(
-            this.tubes[source].getDrainColor(),
+        const isSuccess = this.tubes[recipientTubeIndex].tryToAdd(
+            this.tubes[sourceTubeIndex].getDrainColor(),
         );
         if (isSuccess) {
-            this.tubes[source].drain();
+            this.tubes[sourceTubeIndex].drain();
+            this.moves.push([sourceTubeIndex, recipientTubeIndex]);
             this.gameEvents.emit(GAME.EventMoveSucceeded);
             // console.log(`Moved from ${source} to ${recipient}`);
             return true;
@@ -233,7 +237,26 @@ export class Level {
         this.startingTubesContent.forEach((startingContent, i) => {
             this.tubes[i].content = [...startingContent];
         });
+        this.moves = [];
         // console.log("tubes AFTER:" + JSON.stringify(this.tubes));
+    }
+
+    public undoMove(): number[] {
+        if (this.moves.length === 0) {
+            console.error("No moves to undo");
+            return [];
+        }
+        const lastMove = this.moves.pop();
+        if (lastMove === undefined) return []; // TS "lastMove is possibly undefined" linter error handling
+
+        // TODO: if Drains === 1 (faucet) I need to get top color -> getLastAddedColor()
+        // AND not drain(), but removeLastAddedColor()
+        const portionColor = this.tubes[lastMove[1]].getDrainColor();
+        // console.log("Source tube before undo: ", this.tubes[lastMove[0]].content);
+        this.tubes[lastMove[0]].content.push(portionColor);
+        // console.log("Source tube after undo: ", this.tubes[lastMove[0]].content);
+        this.tubes[lastMove[1]].drain();
+        return lastMove;
     }
 
     private init(): void {
