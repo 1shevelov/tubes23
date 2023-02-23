@@ -98,19 +98,24 @@ export class UIView extends Phaser.GameObjects.Container {
         button.add(buttonRect);
 
         button.setInteractive(
-            new Phaser.Geom.Rectangle(pos.x, pos.y, size.x * 1.2, size.y * 1.3),
+            new Phaser.Geom.Rectangle(
+                pos.x - (size.x * 1.2) / 2,
+                pos.y - (size.y * 1.3) / 2,
+                size.x * 1.2,
+                size.y * 1.3,
+            ),
             Phaser.Geom.Rectangle.Contains,
         );
-        const debugInteractiveRect = new Phaser.GameObjects.Rectangle(
-            this.scene,
-            pos.x, // - size.x * 0.05,
-            pos.y,
-            size.x * 1.2,
-            size.y * 1.3,
-            0x00ff00,
-            0.3,
-        );
-        button.add(debugInteractiveRect);
+        // const debugInteractiveRect = new Phaser.GameObjects.Rectangle(
+        //     this.scene,
+        //     pos.x, // - size.x * 0.05,
+        //     pos.y,
+        //     size.x * 1.2,
+        //     size.y * 1.3,
+        //     0x00ff00,
+        //     0.3,
+        // );
+        // button.add(debugInteractiveRect);
 
         const buttonLabel = UIService.createText(
             this.scene,
