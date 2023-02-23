@@ -13,6 +13,7 @@ export class UIView extends Phaser.GameObjects.Container {
     private winMessage: Phaser.GameObjects.Text;
     private buttonRestart: Phaser.GameObjects.Container;
     private buttonUndo: Phaser.GameObjects.Container;
+    private newLevelPopup: Phaser.GameObjects.Container;
 
     private wi: number;
     private he: number;
@@ -25,6 +26,7 @@ export class UIView extends Phaser.GameObjects.Container {
         this.makeCounter();
         this.makeWinMessage();
         this.makeButtons();
+        this.makeNewLevelPopup();
     }
 
     public getUiEvents(): Phaser.Events.EventEmitter {
@@ -69,6 +71,27 @@ export class UIView extends Phaser.GameObjects.Container {
         this.he = height;
 
         this.uiEvents = new Phaser.Events.EventEmitter();
+    }
+
+    private makeNewLevelPopup(): void {
+        const popupWidth = this.wi * 0.8;
+        const popupHeight = this.he * 0.8;
+        this.newLevelPopup = new Phaser.GameObjects.Container(this.scene, this.wi /2, this.he/2);
+
+        const back = new Phaser.GameObjects.Rectangle(
+            this.scene,
+            this.newLevelPopup.x - popupWidth / 2,
+            this.newLevelPopup.y - popupHeight / 2,
+            popupWidth,
+            popupHeight,
+            0x111b11,
+            1.0,
+        );
+        back.setStrokeStyle(1.5, 0x99ff99, 1.0);
+        this.newLevelPopup.add(back);
+
+        this.newLevelPopup.setVisible(false);
+        this.add(this.newLevelPopup);
     }
 
     private makeCounter(): void {
