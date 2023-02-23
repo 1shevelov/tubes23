@@ -74,7 +74,7 @@ export class UIView extends Phaser.GameObjects.Container {
     private makeCounter(): void {
         this.counter = UIService.createText(
             this.scene,
-            this.wi / 1.05,
+            this.wi / 1.08,
             this.he / 15,
             "0",
             COLORS.uiCounterStyle,
@@ -98,19 +98,19 @@ export class UIView extends Phaser.GameObjects.Container {
         button.add(buttonRect);
 
         button.setInteractive(
-            new Phaser.Geom.Rectangle(pos.x, pos.y, size.x, size.y),
+            new Phaser.Geom.Rectangle(pos.x, pos.y, size.x * 1.2, size.y * 1.3),
             Phaser.Geom.Rectangle.Contains,
         );
-        // const debugInteractiveRect = new Phaser.GameObjects.Rectangle(
-        //     this.scene,
-        //     pos.x - size.x * 0.05,
-        //     pos.y - size.y * 0.05,
-        //     size.x * 1.2,
-        //     size.y * 1.2,
-        //     0x00ff00,
-        //     0.3,
-        // );
-        // button.add(debugInteractiveRect);
+        const debugInteractiveRect = new Phaser.GameObjects.Rectangle(
+            this.scene,
+            pos.x, // - size.x * 0.05,
+            pos.y,
+            size.x * 1.2,
+            size.y * 1.3,
+            0x00ff00,
+            0.3,
+        );
+        button.add(debugInteractiveRect);
 
         const buttonLabel = UIService.createText(
             this.scene,
@@ -127,10 +127,13 @@ export class UIView extends Phaser.GameObjects.Container {
     }
 
     private makeButtons(): void {
+        const buttonWidth = 150 > this.wi / 3.7 ? this.wi / 3.7 : 150;
+        const buttonHeight = buttonWidth / 2.4;
+
         this.buttonRestart = this.makeButton(
             "(R)estart",
-            { x: this.wi * 0.05, y: this.he / 15 - 60 / 2 },
-            { x: 150, y: 60 },
+            { x: this.wi * 0.07, y: buttonHeight / 2 },
+            { x: buttonWidth, y: buttonHeight },
         );
         this.buttonRestart.setVisible(true);
         this.buttonRestart.on("pointerup", () =>
@@ -141,7 +144,7 @@ export class UIView extends Phaser.GameObjects.Container {
         this.buttonUndo = this.makeButton(
             "(U)ndo",
             { x: this.wi * 0.25, y: this.he / 15 - 60 / 2 },
-            { x: 150, y: 60 },
+            { x: buttonWidth, y: buttonHeight },
         );
         this.buttonUndo.setVisible(true);
         this.buttonUndo.on("pointerup", () => this.uiEvents.emit("ButtonUndoClicked"));
@@ -151,7 +154,7 @@ export class UIView extends Phaser.GameObjects.Container {
         this.winMessage = UIService.createText(
             this.scene,
             this.wi / 1.03,
-            this.counter.y + this.he / 15,
+            this.counter.y + this.he / 20,
             "YOU WIN!",
             COLORS.uiWinMessageStyle,
         );

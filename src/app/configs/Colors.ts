@@ -13,12 +13,12 @@ export const uiCounterStyle: Phaser.Types.GameObjects.Text.TextStyle = {
     align: "center",
 };
 export const uiWinMessageStyle: Phaser.Types.GameObjects.Text.TextStyle = {
-    fontSize: "34px",
+    fontSize: "30px",
     fontStyle: "bold",
     align: "center",
 };
 export const uiButtonLabelStyle: Phaser.Types.GameObjects.Text.TextStyle = {
-    fontSize: "22px",
+    fontSize: "20px",
     // fontStyle: "bold",
     align: "center",
 };
