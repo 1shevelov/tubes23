@@ -65,6 +65,14 @@ export class UIView extends Phaser.GameObjects.Container {
         this.counter.setText(newVal.toString());
     }
 
+    public showNewLevelPopup(): void {
+        this.newLevelPopup.setVisible(true);
+    }
+
+    // public hideNewLevelPopup(): void {
+    //     this.newLevelPopup.setVisible(false);
+    // }
+
     private init(): void {
         const { width, height } = this.scene.scale.gameSize;
         this.wi = width;
@@ -76,7 +84,11 @@ export class UIView extends Phaser.GameObjects.Container {
     private makeNewLevelPopup(): void {
         const popupWidth = this.wi * 0.8;
         const popupHeight = this.he * 0.8;
-        this.newLevelPopup = new Phaser.GameObjects.Container(this.scene, this.wi /2, this.he/2);
+        this.newLevelPopup = new Phaser.GameObjects.Container(
+            this.scene,
+            this.wi / 2,
+            this.he / 2,
+        );
 
         const back = new Phaser.GameObjects.Rectangle(
             this.scene,
@@ -89,6 +101,24 @@ export class UIView extends Phaser.GameObjects.Container {
         );
         back.setStrokeStyle(1.5, 0x99ff99, 1.0);
         this.newLevelPopup.add(back);
+
+        const title = UIService.createText(
+            this.scene,
+            this.wi / 2,
+            this.he / 10,
+            "New game",
+            COLORS.uiWinMessageStyle,
+        );
+        this.newLevelPopup.add(title);
+
+        const startButton = this.makeButton(
+            "GO",
+            { x: this.wi / 2, y: this.he * 0.8 },
+            { x: 120, y: 70 },
+        );
+        startButton.setInteractive();
+        startButton.on("pointerup", () => this.newLevelPopup.setVisible(false));
+        this.newLevelPopup.add(startButton);
 
         this.newLevelPopup.setVisible(false);
         this.add(this.newLevelPopup);
@@ -150,7 +180,7 @@ export class UIView extends Phaser.GameObjects.Container {
         button.add(buttonLabel);
 
         button.setVisible(false);
-        this.add(button);
+        // this.add(button);
         return button;
     }
 
@@ -160,22 +190,24 @@ export class UIView extends Phaser.GameObjects.Container {
 
         this.buttonRestart = this.makeButton(
             "(R)estart",
-            { x: this.wi * 0.07, y: buttonHeight / 2 },
+            { x: this.wi * 0.07, y: buttonHeight / 3 },
             { x: buttonWidth, y: buttonHeight },
         );
         this.buttonRestart.setVisible(true);
         this.buttonRestart.on("pointerup", () =>
             this.uiEvents.emit("ButtonRestartClicked"),
         );
+        this.add(this.buttonRestart);
 
         // console.log(this.wi / 2, this.he);
         this.buttonUndo = this.makeButton(
             "(U)ndo",
-            { x: this.wi * 0.25, y: this.he / 15 - 60 / 2 },
+            { x: this.wi * 0.25, y: buttonHeight / 3 },
             { x: buttonWidth, y: buttonHeight },
         );
         this.buttonUndo.setVisible(true);
         this.buttonUndo.on("pointerup", () => this.uiEvents.emit("ButtonUndoClicked"));
+        this.add(this.buttonUndo);
     }
 
     private makeWinMessage(): void {

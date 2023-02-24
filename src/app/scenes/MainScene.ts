@@ -195,6 +195,9 @@ export default class MainScene extends Phaser.Scene {
                 case Phaser.Input.Keyboard.KeyCodes.U: // undo
                     this.undoMove();
                     break;
+                case Phaser.Input.Keyboard.KeyCodes.N: // new game
+                    this.uiView.showNewLevelPopup();
+                    break;
                 case Phaser.Input.Keyboard.KeyCodes.ONE:
                 case Phaser.Input.Keyboard.KeyCodes.NUMPAD_ONE:
                     this.gameView.handleClick(0);
