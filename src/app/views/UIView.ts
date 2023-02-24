@@ -92,8 +92,8 @@ export class UIView extends Phaser.GameObjects.Container {
 
         const back = new Phaser.GameObjects.Rectangle(
             this.scene,
-            this.newLevelPopup.x - popupWidth / 2,
-            this.newLevelPopup.y - popupHeight / 2,
+            0, //this.newLevelPopup.x - popupWidth / 2,
+            0, //this.newLevelPopup.y - popupHeight / 2,
             popupWidth,
             popupHeight,
             0x111b11,
@@ -104,8 +104,8 @@ export class UIView extends Phaser.GameObjects.Container {
 
         const title = UIService.createText(
             this.scene,
-            this.wi / 2,
-            this.he / 10,
+            0,
+            -popupHeight / 2 + this.he / 20,
             "New game",
             COLORS.uiWinMessageStyle,
         );
