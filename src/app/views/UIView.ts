@@ -1,6 +1,7 @@
 // import { CounterComponent } from "../components/CounterComponent";
 import { UIService } from "../services/UIService";
 import * as COLORS from "../configs/Colors";
+// import * as GAME from "../configs/GameConfig";
 
 interface XY {
     x: number;
@@ -13,7 +14,9 @@ export class UIView extends Phaser.GameObjects.Container {
     private winMessage: Phaser.GameObjects.Text;
     private buttonRestart: Phaser.GameObjects.Container;
     private buttonUndo: Phaser.GameObjects.Container;
+
     private newLevelPopup: Phaser.GameObjects.Container;
+    // private dropDownDom:
 
     private wi: number;
     private he: number;
@@ -113,15 +116,36 @@ export class UIView extends Phaser.GameObjects.Container {
 
         const startButton = this.makeButton(
             "GO",
-            { x: this.wi / 2, y: this.he * 0.8 },
+            { x: 0, y: this.he / 8 },
             { x: 120, y: 70 },
         );
         startButton.setInteractive();
         startButton.on("pointerup", () => this.newLevelPopup.setVisible(false));
         this.newLevelPopup.add(startButton);
 
+        this.makeLevelSizeDropdown(this.newLevelPopup, popupHeight);
+
         this.newLevelPopup.setVisible(false);
         this.add(this.newLevelPopup);
+    }
+
+    private makeLevelSizeDropdown(
+        parentCont: Phaser.GameObjects.Container,
+        parentContHeight: number,
+    ): void {
+        const dropDown = this.scene.add
+            .dom(0, -parentContHeight / 3)
+            .createFromCache("TubesNumDropdown");
+        // dropDown.setVisible(false);
+        dropDown.addListener("click");
+        dropDown.on("click", function (event) {
+            if (event.target.name === "tubes-number") {
+                console.log("Tubes number clicked!");
+            } else {
+                console.log("Something else clicked: ", event.target);
+            }
+        });
+        parentCont.add(dropDown);
     }
 
     private makeCounter(): void {
@@ -179,7 +203,7 @@ export class UIView extends Phaser.GameObjects.Container {
         );
         button.add(buttonLabel);
 
-        button.setVisible(false);
+        // button.setVisible(false);
         // this.add(button);
         return button;
     }
@@ -193,7 +217,7 @@ export class UIView extends Phaser.GameObjects.Container {
             { x: this.wi * 0.07, y: buttonHeight / 3 },
             { x: buttonWidth, y: buttonHeight },
         );
-        this.buttonRestart.setVisible(true);
+        // this.buttonRestart.setVisible(true);
         this.buttonRestart.on("pointerup", () =>
             this.uiEvents.emit("ButtonRestartClicked"),
         );
@@ -205,7 +229,7 @@ export class UIView extends Phaser.GameObjects.Container {
             { x: this.wi * 0.25, y: buttonHeight / 3 },
             { x: buttonWidth, y: buttonHeight },
         );
-        this.buttonUndo.setVisible(true);
+        // this.buttonUndo.setVisible(true);
         this.buttonUndo.on("pointerup", () => this.uiEvents.emit("ButtonUndoClicked"));
         this.add(this.buttonUndo);
     }

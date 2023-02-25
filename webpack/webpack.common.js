@@ -52,7 +52,7 @@ module.exports = {
                 //         { from: "./src/assets/audio", to: "assets/audio" },
                 // { from: "./src/assets/uncompressed", to: "assets/uncompressed" },
                 { from: "./src/assets/spriteSheets", to: "assets/spriteSheets" },
-                //         // PLEASE UNCOMMENT THESE, IF YOU NEED THEM
+                { from: "./src/assets/html", to: "assets/html" },
                 //         // { from: "./src/assets/spines", to: "assets/spines" },
                 //         // { from: "./src/assets/shaders", to: "assets/shaders" },
                 //         // { from: "./src/assets/video", to: "assets/video" },

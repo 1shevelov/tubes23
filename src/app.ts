@@ -37,6 +37,9 @@ const config = {
     },
     antialias: true,
     scene: [PreloadScene, BootScene, MainScene],
+    dom: {
+        createContainer: true,
+    },
 };
 window.addEventListener("load", () => {
     // const messageService = IocContext.DefaultInstance.get<MessageService, unknown>(MessageService);

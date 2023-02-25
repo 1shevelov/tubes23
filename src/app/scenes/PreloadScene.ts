@@ -18,6 +18,7 @@ export default class PreloadScene extends Phaser.Scene {
         // this.loadAudio();
         // this.loadSpines();
         // this.loadShaders();
+        this.load.html("TubesNumDropdown", "assets/html/TubesNumDropdown.html");
     }
 
     private init(): void {
