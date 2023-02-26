@@ -3,7 +3,7 @@
   background: #eceeee;
   border: 1px solid #42464b;
   border-radius: 6px;
-  height: 257px;
+  height: 395px;
   margin: 20px auto 0;
   width: 298px;
 }
@@ -15,8 +15,19 @@
   color: #727678;
   display: block;
   height: 43px;
-  font: 600 14px/1 'Open Sans', sans-serif;
+  font: 600 20px/1 'Open Sans', sans-serif;
   padding-top: 14px;
+  margin: 0;
+  text-align: center;
+  text-shadow: 0 -1px 0 rgba(0,0,0,0.2), 0 1px 0 #fff;
+}
+.new-game-elements {
+  color: #b2b4b6;
+  display: block;
+  /* height: 43px; */
+  font: 600 16px/1 'Open Sans', sans-serif;
+  padding-top: 10px;
+  /* padding-bottom: 10px; */
   margin: 0;
   text-align: center;
   text-shadow: 0 -1px 0 rgba(0,0,0,0.2), 0 1px 0 #fff;
@@ -98,7 +109,7 @@ input[type="submit"] {
   border-top-right-radius: 5px;
   border-bottom-right-radius: 5px;
   border-bottom-left-radius:5px;
-  box-shadow: inset 0px 1px 0px #2ab7ec, 0px 5px 0px 0px #497a78, 0px 10px 5px #999;
+  box-shadow: inset 0px 1px 0px #2ab7ec, 0px 5px 0px 0px #497a78, 0px 5px 5px #999;
 }
 
 .shadow {
@@ -117,42 +128,59 @@ input[type="submit"]:active {
 }    
 </style>
 
-<div class="new-game">
-    <h2 align="center">New game</h2>
-    <!-- <input type="text" placeholder="Username" id="username" name="username">
-    <input type="password" placeholder="password" id="password" name="password"> -->
-    <label for="tubes-num-select" align="center"
-    style="font-family: sans-serif; font-size: 1rem; padding-right: 10px;">
-      Choose number of tubes:
-    </label>
-    <select name="tubes-number" id="tubes-num-select" align="center"
-    style="font-size: 0.9rem; padding: 2px 5px;">
-        <option value="">Select number</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-        <option value="6">6</option>
-        <option value="7">7</option>
-        <option value="8">8</option>
-        <option value="9">9</option>
-        <option value="10">10</option>
-    </select>
+<form name="form">
+  <div class="new-game">
+    <h1 align="center">New game</h1>
+    <fieldset class="new-game-elements">
+      <label for="tubes-num-select">
+        <!-- align="center" style="font-size: 1rem; padding-right: 10px;" -->
+        Choose number of tubes:
+      </label>
+      <p><select name="tubes-number" id="tubes-num-select">
+        <!-- align="center" style="font-size: 0.9rem; padding: 2px 5px;" -->
+          <option value="0">Random (8-12)</option>
+          <option value="4">4 / 2 colors</option>
+          <option value="5">5 / 3 colors</option>
+          <option value="6">6 / 4 colors</option>
+          <option value="7">7 / 5 colors</option>
+          <option value="8">8 / 6 colors</option>
+          <option value="9">9 / 7 colors</option>
+          <option value="10" selected>10 / 8 colors</option>
+          <option value="11">11 / 9 colors</option>
+          <option value="12">12 / 10 colors</option>
+      </select></p>
+    </fieldset>
 
-    <label for="tubes-vol-select" align="center"
-    style="font-family: sans-serif; font-size: 1rem; padding-right: 10px;">
-      Choose tubes' volume:
-    </label>
-    <select name="tubes-volume" id="tubes-vol-select" align="center"
-    style="font-size: 0.9rem; padding: 2px 5px;">
-        <option value="">Select volume</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-        <option value="6">6</option>
-        <option value="7">7</option>
-        <option value="8">8</option>
-    </select>
-    <!-- add select "Classic: all colors"
-    and One color -->
+    <fieldset class="new-game-elements">
+      <label for="tubes-vol-select">
+        Choose tubes' volume:
+      </label>
+      <p><select name="tubes-volume" id="tubes-vol-select">
+          <option value="0">Random (3-6)</option>
+          <option value="3">3</option>
+          <option value="4" selected>4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+          <option value="8">8</option>
+      </select></p>
+    </fieldset>
+
+    <fieldset class="new-game-elements">
+      <legend align="center">Game mode:</legend>
+      <div>
+        <input type="radio" id="mode-classic" name="game-mode" value="classic"
+               checked>
+        <label for="mode-classic">Classic</label>
+      </div>
+  
+      <div>
+        <input type="radio" id="mode-uno" name="game-mode" value="uno">
+        <label for="mode-uno">Uno</label>
+      </div>
+    </fieldset>
+  
     <input type="submit" value="Start" name="StartButton">
-</div>
-<div class="shadow"></div>
+  </div>
+  <div class="shadow"></div>
+</form>
