@@ -1,5 +1,5 @@
 <style>
-.login {
+.new-game {
   background: #eceeee;
   border: 1px solid #42464b;
   border-radius: 6px;
@@ -7,7 +7,7 @@
   margin: 20px auto 0;
   width: 298px;
 }
-.login h1 {
+.new-game h1 {
   background-image: linear-gradient(top, #f1f3f3, #d4dae0);
   border-bottom: 1px solid #a6abaf;
   border-radius: 6px 6px 0 0;
@@ -21,7 +21,7 @@
   text-align: center;
   text-shadow: 0 -1px 0 rgba(0,0,0,0.2), 0 1px 0 #fff;
 }
-input[type="password"], input[type="text"] {
+/* input[type="password"], input[type="text"] {
   background: linear-gradient(top, #d6d7d7, #dee0e0);
   border: 1px solid #a1a3a3;
   border-radius: 4px;
@@ -33,8 +33,8 @@ input[type="password"], input[type="text"] {
   padding-left: 37px;
   transition: box-shadow 0.3s;
   width: 240px;
-}
-input[type="password"]:focus, input[type="text"]:focus {
+} */
+/* input[type="password"]:focus, input[type="text"]:focus {
   box-shadow: 0 0 4px 1px rgba(55, 166, 155, 0.3);
   outline: 0;
 }
@@ -43,7 +43,7 @@ input[type="password"]:focus, input[type="text"]:focus {
   height: 16px;
   margin: 26px 0 0 28px;
   width: 87px;
-}
+} */
 /* input[type="checkbox"] {
   cursor: pointer;
   height: 16px;
@@ -117,10 +117,42 @@ input[type="submit"]:active {
 }    
 </style>
 
-<div class="login">
-    <h3 align="center">New game</h3>
-    <input type="text" placeholder="Username" id="username" name="username">
-    <input type="password" placeholder="password" id="password" name="password">
+<div class="new-game">
+    <h2 align="center">New game</h2>
+    <!-- <input type="text" placeholder="Username" id="username" name="username">
+    <input type="password" placeholder="password" id="password" name="password"> -->
+    <label for="tubes-num-select" align="center"
+    style="font-family: sans-serif; font-size: 1rem; padding-right: 10px;">
+      Choose number of tubes:
+    </label>
+    <select name="tubes-number" id="tubes-num-select" align="center"
+    style="font-size: 0.9rem; padding: 2px 5px;">
+        <option value="">Select number</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+    </select>
+
+    <label for="tubes-vol-select" align="center"
+    style="font-family: sans-serif; font-size: 1rem; padding-right: 10px;">
+      Choose tubes' volume:
+    </label>
+    <select name="tubes-volume" id="tubes-vol-select" align="center"
+    style="font-size: 0.9rem; padding: 2px 5px;">
+        <option value="">Select volume</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+    </select>
+    <!-- add select "Classic: all colors"
+    and One color -->
     <input type="submit" value="Start" name="StartButton">
 </div>
 <div class="shadow"></div>

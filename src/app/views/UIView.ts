@@ -30,7 +30,7 @@ export class UIView extends Phaser.GameObjects.Container {
         this.makeWinMessage();
         this.makeButtons();
         this.makeNewLevelPopup();
-        // this.makeNewLevelForm();
+        this.makeNewLevelForm();
     }
 
     public getUiEvents(): Phaser.Events.EventEmitter {
@@ -86,7 +86,9 @@ export class UIView extends Phaser.GameObjects.Container {
     }
 
     private makeNewLevelForm(): void {
-        const element = this.scene.add.dom(400, 600).createFromCache("NewGameForm");
+        const element = this.scene.add
+            .dom(this.wi / 2, 600)
+            .createFromCache("NewGameForm");
         element.setPerspective(800);
         element.addListener("click");
         element.on("click", (event) => {
