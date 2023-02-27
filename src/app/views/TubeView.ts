@@ -17,9 +17,10 @@
 
 import * as GAME from "../configs/GameConfig";
 import { UIService } from "../services/UIService";
-import * as COLORS from "../configs/Colors";
+import * as UI_CONFIG from "../configs/UiConfig";
 // import { fixValue } from "../services/Utilities";
 import { PortionView } from "./PortionView";
+import { ViewEvents } from "../configs/Events";
 
 export class TubeView extends Phaser.GameObjects.Container {
     private tubeSprite: Phaser.GameObjects.Rectangle;
@@ -173,7 +174,7 @@ export class TubeView extends Phaser.GameObjects.Container {
                 this.tubeSprite.y +
                     (this.tubeSprite.height * this.tubeSprite.scaleY) / 1.6,
                 label,
-                COLORS.TubeLabelStyle,
+                UI_CONFIG.TubeLabelStyle,
             );
             this.add(hotkeyLabel);
         }
@@ -187,7 +188,7 @@ export class TubeView extends Phaser.GameObjects.Container {
                 "1x1.png", // "1x1_orange.png" for debug
             );
             this.interactiveLayer.on("pointerup", () => {
-                this.gameEvents.emit(GAME.EventTubeClicked, this.tubeNumber);
+                this.gameEvents.emit(ViewEvents.TubeClicked, this.tubeNumber);
             });
             this.add(this.interactiveLayer);
         }

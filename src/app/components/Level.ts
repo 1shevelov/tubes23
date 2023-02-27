@@ -1,6 +1,7 @@
 import { Tube } from "./Tube";
 import * as GAME from "../configs/GameConfig";
 import { fixValue } from "../services/Utilities";
+import { GameEvents } from "../configs/Events";
 
 enum WinConditions {
     CollectAll, // Classic rules: collect all colors
@@ -147,7 +148,7 @@ export class Level {
         // TODO: check number
         if (!this.tubes[sourceTubeIndex].canDrain()) {
             console.error("Can't drain from tube #", sourceTubeIndex);
-            this.gameEvents.emit(GAME.EventMoveFailed);
+            this.gameEvents.emit(GameEvents.MoveFailed);
             return GAME.ErrorValues.InvalidTubeIndex;
         }
         // sort through all the tubes and make an array of all that can add this color
@@ -207,12 +208,12 @@ export class Level {
     public tryToMove(sourceTubeIndex: number, recipientTubeIndex: number): boolean {
         if (!this.tubes[sourceTubeIndex].canDrain()) {
             console.error("Can't drain from tube #", sourceTubeIndex);
-            this.gameEvents.emit(GAME.EventMoveFailed);
+            this.gameEvents.emit(GameEvents.MoveFailed);
             return false;
         }
         if (!this.tubes[recipientTubeIndex].canAdd()) {
             console.error("Can't add to tube #", recipientTubeIndex);
-            this.gameEvents.emit(GAME.EventMoveFailed);
+            this.gameEvents.emit(GameEvents.MoveFailed);
             return false;
         }
         const isSuccess = this.tubes[recipientTubeIndex].tryToAdd(
@@ -221,11 +222,11 @@ export class Level {
         if (isSuccess) {
             this.tubes[sourceTubeIndex].drain();
             this.moves.push([sourceTubeIndex, recipientTubeIndex]);
-            this.gameEvents.emit(GAME.EventMoveSucceeded);
+            this.gameEvents.emit(GameEvents.MoveSucceeded);
             // console.log(`Moved from ${source} to ${recipient}`);
             return true;
         } else {
-            this.gameEvents.emit(GAME.EventMoveFailed);
+            this.gameEvents.emit(GameEvents.MoveFailed);
             return false;
         }
     }

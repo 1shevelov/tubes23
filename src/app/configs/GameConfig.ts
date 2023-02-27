@@ -1,4 +1,4 @@
-import { CurrentPalette } from "./Colors";
+import { CurrentPalette } from "./UiConfig";
 
 export const MIN_TUBES = 2;
 export const MAX_TUBES = 40;
@@ -11,12 +11,6 @@ export enum ErrorValues {
     InvalidTubeIndex = -1,
     InvalidColorIndex = -1,
 }
-
-export const Event2TubesChoosen = "2TubesChoosen"; // GV -> Level, 2 numbers: source and recipient tube nums
-export const EventMoveFailed = "MoveFailed"; // Level -> GV
-export const EventMoveSucceeded = "MoveSucceeded"; // Level -> GV & MS
-export const EventTubeClicked = "TubeClicked"; // TubeView -> GV
-export const EventSourceTubeChoosen = "SourceTubeChoosen";
 
 // move helper enabled
 export const HELPER_ENABLED = true;

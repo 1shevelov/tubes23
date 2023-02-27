@@ -8,6 +8,12 @@ import { UIView } from "../views/UIView";
 import { Level } from "../components/Level";
 import * as GAME from "../configs/GameConfig";
 import { download, getRandomSeed } from "../services/Utilities";
+import { GameEvents } from "../configs/Events";
+
+enum GameStates {
+    NoGame,
+    Game,
+}
 
 export default class MainScene extends Phaser.Scene {
     private SEEDED_RANDOM_LIB = require("seedrandom");
@@ -18,6 +24,8 @@ export default class MainScene extends Phaser.Scene {
     // private popupService: PopupService;
     private level: Level;
     private gameEvents: Phaser.Events.EventEmitter;
+
+    private gameState = GameStates.NoGame;
 
     private moveCounter = 0;
     private randomLevelSeed: string;
@@ -40,8 +48,8 @@ export default class MainScene extends Phaser.Scene {
         // if (process.env.NODE_ENV !== "production") {
         //     this.initStatJS();
         // }
-        this.gameEvents.on(GAME.Event2TubesChoosen, this.move, this);
-        this.gameEvents.on(GAME.EventSourceTubeChoosen, this.helperMove, this);
+        this.gameEvents.on(GameEvents.TwoTubesChoosen, this.move, this);
+        this.gameEvents.on(GameEvents.SourceTubeChoosen, this.helperMove, this);
 
         this.handleKeys();
     }
@@ -85,6 +93,12 @@ export default class MainScene extends Phaser.Scene {
     }
 
     private create(): void {
+        this.startGame();
+        this.uiView.showGameUi();
+        this.gameState = GameStates.Game;
+    }
+
+    private startGame(): void {
         this.level = new Level(this.gameEvents);
 
         this.randomLevelSeed = getRandomSeed();
@@ -155,6 +169,7 @@ export default class MainScene extends Phaser.Scene {
     }
 
     private resetLevel(): void {
+        if (this.moveCounter === 0) return;
         console.log("Level reset");
         this.level.reset();
         this.gameView.reset();
@@ -177,15 +192,17 @@ export default class MainScene extends Phaser.Scene {
     private handleKeys(): void {
         this.input.keyboard.on("keydown", (event) => {
             switch (event.keyCode) {
-                // save
                 case Phaser.Input.Keyboard.KeyCodes.S: // save
                 case Phaser.Input.Keyboard.KeyCodes.X: // export
+                    if (this.gameState === GameStates.NoGame) return;
                     this.saveLevel();
                     break;
                 case Phaser.Input.Keyboard.KeyCodes.R: // reset, restart, reload
+                    if (this.gameState === GameStates.NoGame) return;
                     this.resetLevel();
                     break;
                 case Phaser.Input.Keyboard.KeyCodes.L: // load
+                    if (this.gameState === GameStates.NoGame) return;
                     console.log("loading not implemented");
                     // this.level.load();
                     // this.gameView.reset();
@@ -193,45 +210,56 @@ export default class MainScene extends Phaser.Scene {
                     // this.moveCounter = 0;
                     break;
                 case Phaser.Input.Keyboard.KeyCodes.U: // undo
+                    if (this.gameState === GameStates.NoGame) return;
                     this.undoMove();
                     break;
-                case Phaser.Input.Keyboard.KeyCodes.N: // new game
-                    this.uiView.showNewLevelPopup();
-                    break;
+                // case Phaser.Input.Keyboard.KeyCodes.N: // new game
+                //     if (this.gameState === GameStates.NoGame) return;
+                //     // this.uiView.showNewLevelPopup();
+                //     break;
                 case Phaser.Input.Keyboard.KeyCodes.ONE:
                 case Phaser.Input.Keyboard.KeyCodes.NUMPAD_ONE:
+                    if (this.gameState === GameStates.NoGame) return;
                     this.gameView.handleClick(0);
                     break;
                 case Phaser.Input.Keyboard.KeyCodes.TWO:
                 case Phaser.Input.Keyboard.KeyCodes.NUMPAD_TWO:
+                    if (this.gameState === GameStates.NoGame) return;
                     this.gameView.handleClick(1);
                     break;
                 case Phaser.Input.Keyboard.KeyCodes.THREE:
                 case Phaser.Input.Keyboard.KeyCodes.NUMPAD_THREE:
+                    if (this.gameState === GameStates.NoGame) return;
                     this.gameView.handleClick(2);
                     break;
                 case Phaser.Input.Keyboard.KeyCodes.FOUR:
                 case Phaser.Input.Keyboard.KeyCodes.NUMPAD_FOUR:
+                    if (this.gameState === GameStates.NoGame) return;
                     this.gameView.handleClick(3);
                     break;
                 case Phaser.Input.Keyboard.KeyCodes.FIVE:
                 case Phaser.Input.Keyboard.KeyCodes.NUMPAD_FIVE:
+                    if (this.gameState === GameStates.NoGame) return;
                     this.gameView.handleClick(4);
                     break;
                 case Phaser.Input.Keyboard.KeyCodes.SIX:
                 case Phaser.Input.Keyboard.KeyCodes.NUMPAD_SIX:
+                    if (this.gameState === GameStates.NoGame) return;
                     this.gameView.handleClick(5);
                     break;
                 case Phaser.Input.Keyboard.KeyCodes.SEVEN:
                 case Phaser.Input.Keyboard.KeyCodes.NUMPAD_SEVEN:
+                    if (this.gameState === GameStates.NoGame) return;
                     this.gameView.handleClick(6);
                     break;
                 case Phaser.Input.Keyboard.KeyCodes.EIGHT:
                 case Phaser.Input.Keyboard.KeyCodes.NUMPAD_EIGHT:
+                    if (this.gameState === GameStates.NoGame) return;
                     this.gameView.handleClick(7);
                     break;
                 case Phaser.Input.Keyboard.KeyCodes.NINE:
                 case Phaser.Input.Keyboard.KeyCodes.NUMPAD_NINE:
+                    if (this.gameState === GameStates.NoGame) return;
                     this.gameView.handleClick(8);
                     break;
                 // case Phaser.Input.Keyboard.KeyCodes.ZERO:
@@ -239,21 +267,27 @@ export default class MainScene extends Phaser.Scene {
                 //     this.gameView.handleClick(9);
                 //     break;
                 case Phaser.Input.Keyboard.KeyCodes.A:
+                    if (this.gameState === GameStates.NoGame) return;
                     this.gameView.handleClick(9);
                     break;
                 case Phaser.Input.Keyboard.KeyCodes.B:
+                    if (this.gameState === GameStates.NoGame) return;
                     this.gameView.handleClick(10);
                     break;
                 case Phaser.Input.Keyboard.KeyCodes.C:
+                    if (this.gameState === GameStates.NoGame) return;
                     this.gameView.handleClick(11);
                     break;
                 case Phaser.Input.Keyboard.KeyCodes.D:
+                    if (this.gameState === GameStates.NoGame) return;
                     this.gameView.handleClick(12);
                     break;
                 case Phaser.Input.Keyboard.KeyCodes.E:
+                    if (this.gameState === GameStates.NoGame) return;
                     this.gameView.handleClick(13);
                     break;
                 case Phaser.Input.Keyboard.KeyCodes.F:
+                    if (this.gameState === GameStates.NoGame) return;
                     this.gameView.handleClick(14);
                     break;
             }

@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 export const WhiteBackground = "#ffffff";
 export const BlackBackground = "#000000";
 
@@ -46,6 +45,7 @@ export const uiButtonLabelStyle: Phaser.Types.GameObjects.Text.TextStyle = {
 //     },
 // }
 
+/* eslint-disable prettier/prettier */
 export const AoccPalette = [
     0xfad201 /* traffic yellow */,
     0xff7514 /* pastel orange */,

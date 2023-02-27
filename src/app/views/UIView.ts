@@ -1,7 +1,7 @@
 // import { CounterComponent } from "../components/CounterComponent";
 import { UIService } from "../services/UIService";
-import * as COLORS from "../configs/Colors";
-// import * as GAME from "../configs/GameConfig";
+import * as UI_CONFIG from "../configs/UiConfig";
+import { UiEvents } from "../configs/Events";
 
 interface XY {
     x: number;
@@ -15,7 +15,7 @@ export class UIView extends Phaser.GameObjects.Container {
     private buttonRestart: Phaser.GameObjects.Container;
     private buttonUndo: Phaser.GameObjects.Container;
 
-    private newLevelPopup: Phaser.GameObjects.Container;
+    private newLevelForm: Phaser.GameObjects.DOMElement;
     // private dropDownDom:
 
     private wi: number;
@@ -29,8 +29,21 @@ export class UIView extends Phaser.GameObjects.Container {
         this.makeCounter();
         this.makeWinMessage();
         this.makeButtons();
-        this.makeNewLevelPopup();
+        // this.makeNewLevelPopup();
         this.makeNewLevelForm();
+    }
+
+    public showGameUi(): void {
+        this.buttonRestart.setVisible(true);
+        this.buttonUndo.setVisible(true);
+        this.counter.setVisible(true);
+    }
+
+    public hideGameUi(): void {
+        this.buttonRestart.setVisible(false);
+        this.buttonUndo.setVisible(false);
+        this.counter.setVisible(false);
+        this.hideWin();
     }
 
     public getUiEvents(): Phaser.Events.EventEmitter {
@@ -69,9 +82,9 @@ export class UIView extends Phaser.GameObjects.Container {
         this.counter.setText(newVal.toString());
     }
 
-    public showNewLevelPopup(): void {
-        this.newLevelPopup.setVisible(true);
-    }
+    // public showNewLevelPopup(): void {
+    //     this.newLevelPopup.setVisible(true);
+    // }
 
     // public hideNewLevelPopup(): void {
     //     this.newLevelPopup.setVisible(false);
@@ -86,15 +99,17 @@ export class UIView extends Phaser.GameObjects.Container {
     }
 
     private makeNewLevelForm(): void {
-        const element = this.scene.add
+        const animationDuration = 1500;
+
+        this.newLevelForm = this.scene.add
             .dom(this.wi / 2, 600)
             .createFromCache("NewGameForm");
-        element.setPerspective(800);
+        this.newLevelForm.setPerspective(800);
 
         this.scene.tweens.add({
-            targets: element,
+            targets: this.newLevelForm,
             y: 300,
-            duration: 3000,
+            duration: animationDuration,
             ease: "Power3",
         });
 
@@ -104,77 +119,85 @@ export class UIView extends Phaser.GameObjects.Container {
         //     console.log("Form data: ", data);
         //     event.preventDefault();
         // });
-        const form = element.getChildByName("form");
+        const form = this.newLevelForm.getChildByName("form");
         (form as HTMLFormElement).addEventListener("submit", (event) => {
             const data = new FormData(form as HTMLFormElement);
             console.log("Form data: ", data);
+            this.scene.tweens.add({
+                targets: this.newLevelForm,
+                y: -300,
+                alpha: 0.5,
+                duration: animationDuration,
+                ease: "Power3",
+                onComplete: () => this.newLevelForm.setVisible(false),
+            });
             event.preventDefault();
         });
     }
 
-    private makeNewLevelPopup(): void {
-        const popupWidth = this.wi * 0.8;
-        const popupHeight = this.he * 0.8;
-        this.newLevelPopup = new Phaser.GameObjects.Container(
-            this.scene,
-            this.wi / 2,
-            this.he / 2,
-        );
+    // private makeNewLevelPopup(): void {
+    //     const popupWidth = this.wi * 0.8;
+    //     const popupHeight = this.he * 0.8;
+    //     this.newLevelPopup = new Phaser.GameObjects.Container(
+    //         this.scene,
+    //         this.wi / 2,
+    //         this.he / 2,
+    //     );
 
-        const back = new Phaser.GameObjects.Rectangle(
-            this.scene,
-            0, //this.newLevelPopup.x - popupWidth / 2,
-            0, //this.newLevelPopup.y - popupHeight / 2,
-            popupWidth,
-            popupHeight,
-            0x111b11,
-            1.0,
-        );
-        back.setStrokeStyle(1.5, 0x99ff99, 1.0);
-        this.newLevelPopup.add(back);
+    //     const back = new Phaser.GameObjects.Rectangle(
+    //         this.scene,
+    //         0, //this.newLevelPopup.x - popupWidth / 2,
+    //         0, //this.newLevelPopup.y - popupHeight / 2,
+    //         popupWidth,
+    //         popupHeight,
+    //         0x111b11,
+    //         1.0,
+    //     );
+    //     back.setStrokeStyle(1.5, 0x99ff99, 1.0);
+    //     this.newLevelPopup.add(back);
 
-        const title = UIService.createText(
-            this.scene,
-            0,
-            -popupHeight / 2 + this.he / 20,
-            "New game",
-            COLORS.uiWinMessageStyle,
-        );
-        this.newLevelPopup.add(title);
+    //     const title = UIService.createText(
+    //         this.scene,
+    //         0,
+    //         -popupHeight / 2 + this.he / 20,
+    //         "New game",
+    //         COLORS.uiWinMessageStyle,
+    //     );
+    //     this.newLevelPopup.add(title);
 
-        const startButton = this.makeButton(
-            "GO",
-            { x: 0, y: this.he / 8 },
-            { x: 120, y: 70 },
-        );
-        startButton.setInteractive();
-        startButton.on("pointerup", () => this.newLevelPopup.setVisible(false));
-        this.newLevelPopup.add(startButton);
+    //     const startButton = this.makeButton(
+    //         "GO",
+    //         { x: 0, y: this.he / 8 },
+    //         { x: 120, y: 70 },
+    //     );
+    //     startButton.setInteractive();
+    //     startButton.on("pointerup", () => this.newLevelPopup.setVisible(false));
+    //     this.newLevelPopup.add(startButton);
 
-        this.makeLevelSizeDropdown(this.newLevelPopup, popupHeight);
+    //     // this.makeLevelSizeDropdown(this.newLevelPopup, popupHeight);
 
-        this.newLevelPopup.setVisible(false);
-        this.add(this.newLevelPopup);
-    }
+    //     this.newLevelPopup.setVisible(false);
+    //     this.add(this.newLevelPopup);
+    // }
 
-    private makeLevelSizeDropdown(
-        parentCont: Phaser.GameObjects.Container,
-        parentContHeight: number,
-    ): void {
-        const dropDown = this.scene.add
-            .dom(0, -parentContHeight / 3)
-            .createFromCache("TubesNumDropdown");
-        // dropDown.setVisible(false);
-        dropDown.addListener("click");
-        dropDown.on("click", function (event) {
-            if (event.target.name === "tubes-number") {
-                console.log("Tubes number clicked!");
-            } else {
-                console.log("Something else clicked: ", event.target);
-            }
-        });
-        parentCont.add(dropDown);
-    }
+    // private makeLevelSizeDropdown(
+    //     parentCont: Phaser.GameObjects.Container,
+    //     parentContHeight: number,
+    // ): void {
+    //     const dropDown = this.scene.add
+    //         .dom(0, -parentContHeight / 3)
+    //         .createFromCache("TubesNumDropdown");
+    //     // dropDown.setVisible(false);
+    //     dropDown.addListener("click");
+    //     dropDown.on("click", function (event) {
+    //         if (event.target.name === "tubes-number") {
+    //             console.log("Tubes number clicked!");
+    //         } else {
+    //             console.log("Something else clicked: ", event.target);
+    //         }
+    //     });
+    //     parentCont.add(dropDown);
+    // }
 
     private makeCounter(): void {
         this.counter = UIService.createText(
@@ -182,8 +205,9 @@ export class UIView extends Phaser.GameObjects.Container {
             this.wi / 1.08,
             this.he / 15,
             "0",
-            COLORS.uiCounterStyle,
+            UI_CONFIG.uiCounterStyle,
         );
+        this.counter.setVisible(false);
         this.add(this.counter);
     }
 
@@ -227,7 +251,7 @@ export class UIView extends Phaser.GameObjects.Container {
             pos.x,
             pos.y,
             label,
-            COLORS.uiButtonLabelStyle,
+            UI_CONFIG.uiButtonLabelStyle,
         );
         button.add(buttonLabel);
 
@@ -247,8 +271,9 @@ export class UIView extends Phaser.GameObjects.Container {
         );
         // this.buttonRestart.setVisible(true);
         this.buttonRestart.on("pointerup", () =>
-            this.uiEvents.emit("ButtonRestartClicked"),
+            this.uiEvents.emit(UiEvents.ButtonRestartClicked),
         );
+        this.buttonRestart.setVisible(false);
         this.add(this.buttonRestart);
 
         // console.log(this.wi / 2, this.he);
@@ -257,8 +282,10 @@ export class UIView extends Phaser.GameObjects.Container {
             { x: this.wi * 0.25, y: buttonHeight / 3 },
             { x: buttonWidth, y: buttonHeight },
         );
-        // this.buttonUndo.setVisible(true);
-        this.buttonUndo.on("pointerup", () => this.uiEvents.emit("ButtonUndoClicked"));
+        this.buttonUndo.setVisible(false);
+        this.buttonUndo.on("pointerup", () =>
+            this.uiEvents.emit(UiEvents.ButtonUndoClicked),
+        );
         this.add(this.buttonUndo);
     }
 
@@ -268,7 +295,7 @@ export class UIView extends Phaser.GameObjects.Container {
             this.wi / 1.03,
             this.counter.y + this.he / 20,
             "YOU WIN!",
-            COLORS.uiWinMessageStyle,
+            UI_CONFIG.uiWinMessageStyle,
         );
         this.winMessage.setOrigin(1, 0.5);
         this.winMessage.setVisible(false);

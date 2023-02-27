@@ -2,8 +2,9 @@ import { TubeView } from "./TubeView";
 import * as GAME from "../configs/GameConfig";
 // import { fixValue } from "../services/Utilities";
 import { PortionView } from "./PortionView";
-import { CurrentPalette } from "../configs/Colors";
+import { CurrentPalette } from "../configs/UiConfig";
 import { fixValue } from "../services/Utilities";
+import { GameEvents, ViewEvents } from "../configs/Events";
 
 export class GameView extends Phaser.GameObjects.Container {
     // max number of tubes for each row
@@ -80,7 +81,7 @@ export class GameView extends Phaser.GameObjects.Container {
             this.sourceTube = tubeNum;
             this.tubes[this.sourceTube].activate();
             if (GAME.HELPER_ENABLED)
-                this.gameEvents.emit(GAME.EventSourceTubeChoosen, this.sourceTube);
+                this.gameEvents.emit(GameEvents.SourceTubeChoosen, this.sourceTube);
             return;
         }
         if (this.sourceTube === tubeNum) {
@@ -97,7 +98,7 @@ export class GameView extends Phaser.GameObjects.Container {
             // try to move
             this.recipientTube = tubeNum;
             this.gameEvents.emit(
-                GAME.Event2TubesChoosen,
+                GameEvents.TwoTubesChoosen,
                 this.sourceTube,
                 this.recipientTube,
             );
@@ -219,10 +220,10 @@ export class GameView extends Phaser.GameObjects.Container {
 
         this.scene.scale.on("resize", this.resize, this);
 
-        this.gameEvents.on(GAME.EventTubeClicked, this.handleClick, this);
+        this.gameEvents.on(ViewEvents.TubeClicked, this.handleClick, this);
         // TODO: should call these methods directly from MS
-        this.gameEvents.on(GAME.EventMoveFailed, this.resetSource, this);
-        this.gameEvents.on(GAME.EventMoveSucceeded, this.move, this);
+        this.gameEvents.on(GameEvents.MoveFailed, this.resetSource, this);
+        this.gameEvents.on(GameEvents.MoveSucceeded, this.move, this);
     }
 
     private resetSource(): void {
