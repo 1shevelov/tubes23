@@ -94,11 +94,11 @@ export default class MainScene extends Phaser.Scene {
         document.body.appendChild(stats.dom);
     }
 
-    private create(): void {
-        this.startGame();
-        this.uiView.showGameUi();
-        this.gameState = GameStates.Game;
-    }
+    // private create(): void {
+    //     this.startGame();
+    //     this.uiView.showGameUi();
+    //     this.gameState = GameStates.Game;
+    // }
 
     // eslint-disable-next-line @typescript-eslint/ban-types
     private initNewGame(newGameObj: FormData): void {
@@ -112,27 +112,30 @@ export default class MainScene extends Phaser.Scene {
             if (key === "tubes_volume") tubesVol = Number(value);
             if (key === "game_mode") gameMode = value.toString();
         }
-        tubesNum = fixValue(tubesNum, GAME.MIN_TUBES, GAME.MAX_TUBES);
-        tubesVol = fixValue(tubesVol, GAME.MIN_VOLUME, GAME.MAX_VOLUME);
-        switch (gameMode) {
-            case "classic":
-                break;
-            case "uno":
-                break;
-            default:
-                console.warn("Unknown game mode: ", gameMode);
-                gameMode = "classic";
+        this.randomClassicLevelTubeNum = fixValue(
+            tubesNum,
+            GAME.MIN_TUBES,
+            GAME.MAX_TUBES,
+        );
+        this.randomClassicLevelTubeVol = fixValue(
+            tubesVol,
+            GAME.MIN_VOLUME,
+            GAME.MAX_VOLUME,
+        );
+        if (gameMode !== "classic" && gameMode !== "uno") {
+            console.error(`Unknown game mode \"${gameMode}\", setting to \"classic\"`);
+            gameMode = "classic";
         }
-        console.log(tubesNum, tubesVol, gameMode);
+        this.startGame(gameMode);
     }
 
-    private startGame(): void {
+    private startGame(gameMode: string): void {
         this.level = new Level(this.gameEvents);
 
         this.randomLevelSeed = getRandomSeed();
         const rng = this.SEEDED_RANDOM_LIB(this.randomLevelSeed);
-        this.randomClassicLevelTubeNum = 10;
-        this.randomClassicLevelTubeVol = 4;
+        // this.randomClassicLevelTubeNum = 10;
+        // this.randomClassicLevelTubeVol = 4;
         this.level.setRandomClassicLevel(
             this.randomClassicLevelTubeNum,
             this.randomClassicLevelTubeVol,
@@ -143,10 +146,14 @@ export default class MainScene extends Phaser.Scene {
         // console.log(JSON.stringify(this.level.getTubes()));
 
         // setting winning color
-        // this.isWinningColor = this.level.getTubes()[0]["content"][0];
+        if (gameMode === "uno")
+            this.isWinningColor = this.level.getTubes()[0]["content"][0];
         // console.log(this.isWinningColor);
 
         this.gameView.createClassicGame(this.level.getTubes());
+
+        this.uiView.showGameUi();
+        this.gameState = GameStates.Game;
     }
 
     private move(source: number, recipient: number): void {
