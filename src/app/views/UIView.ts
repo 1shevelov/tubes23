@@ -33,6 +33,7 @@ export class UIView extends Phaser.GameObjects.Container {
         // this.makeNewLevelPopup();
         this.makeNewLevelForm();
         this.makeGoalMessage();
+        this.showNewLevelForm();
     }
 
     public showGameUi(): void {
@@ -56,8 +57,13 @@ export class UIView extends Phaser.GameObjects.Container {
 
     // for game mode Uno
     public setUnoGoalMessage(winColor: number): void {
-        this.goalMessage.setText("Gather this color to win");
+        this.goalMessage.setText("Gather this color only to win");
         this.goalMessage.setTint(winColor);
+    }
+
+    public setClassicGoalMessage(): void {
+        this.goalMessage.setText("Gather all colors to win");
+        this.goalMessage.setTint(0xffffff);
     }
 
     public showWin(): void {
@@ -92,13 +98,17 @@ export class UIView extends Phaser.GameObjects.Container {
         this.counter.setText(newVal.toString());
     }
 
-    // public showNewLevelPopup(): void {
-    //     this.newLevelPopup.setVisible(true);
-    // }
-
-    // public hideNewLevelPopup(): void {
-    //     this.newLevelPopup.setVisible(false);
-    // }
+    public showNewLevelForm(): void {
+        const animationDuration = 1500;
+        this.newLevelForm.setVisible(true);
+        this.scene.tweens.add({
+            targets: this.newLevelForm,
+            y: 300,
+            alpha: 1.0,
+            duration: animationDuration,
+            ease: "Power3",
+        });
+    }
 
     private init(): void {
         const { width, height } = this.scene.scale.gameSize;
@@ -112,16 +122,9 @@ export class UIView extends Phaser.GameObjects.Container {
         const animationDuration = 1500;
 
         this.newLevelForm = this.scene.add
-            .dom(this.wi / 2, 600)
+            .dom(this.wi / 2, this.he)
             .createFromCache("NewGameForm");
         this.newLevelForm.setPerspective(800);
-
-        this.scene.tweens.add({
-            targets: this.newLevelForm,
-            y: 300,
-            duration: animationDuration,
-            ease: "Power3",
-        });
 
         // element.on("submit", (event) => {
         //     const form = element.getChildByName("form");
@@ -141,6 +144,7 @@ export class UIView extends Phaser.GameObjects.Container {
                 onComplete: () => {
                     this.uiEvents.emit(UiEvents.NewGameSettingsSubmitted, data);
                     this.newLevelForm.setVisible(false);
+                    this.newLevelForm.setY(this.he);
                 },
             });
             event.preventDefault();
@@ -320,7 +324,7 @@ export class UIView extends Phaser.GameObjects.Container {
             this.scene,
             this.wi / 2,
             this.he / 1.05,
-            "Gather all colors to win",
+            "",
             UI_CONFIG.uiButtonLabelStyle,
         );
         this.goalMessage.setOrigin(0.5, 0.5);
