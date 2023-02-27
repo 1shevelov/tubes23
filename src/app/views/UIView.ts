@@ -12,6 +12,7 @@ export class UIView extends Phaser.GameObjects.Container {
     // private counter: CounterComponent;
     private counter: Phaser.GameObjects.Text;
     private winMessage: Phaser.GameObjects.Text;
+    private goalMessage: Phaser.GameObjects.Text;
     private buttonRestart: Phaser.GameObjects.Container;
     private buttonUndo: Phaser.GameObjects.Container;
 
@@ -31,23 +32,32 @@ export class UIView extends Phaser.GameObjects.Container {
         this.makeButtons();
         // this.makeNewLevelPopup();
         this.makeNewLevelForm();
+        this.makeGoalMessage();
     }
 
     public showGameUi(): void {
         this.buttonRestart.setVisible(true);
         this.buttonUndo.setVisible(true);
         this.counter.setVisible(true);
+        this.goalMessage.setVisible(true);
     }
 
     public hideGameUi(): void {
         this.buttonRestart.setVisible(false);
         this.buttonUndo.setVisible(false);
         this.counter.setVisible(false);
+        this.goalMessage.setVisible(false);
         this.hideWin();
     }
 
     public getUiEvents(): Phaser.Events.EventEmitter {
         return this.uiEvents;
+    }
+
+    // for game mode Uno
+    public setUnoGoalMessage(winColor: number): void {
+        this.goalMessage.setText("Gather this color to win");
+        this.goalMessage.setTint(winColor);
     }
 
     public showWin(): void {
@@ -303,5 +313,18 @@ export class UIView extends Phaser.GameObjects.Container {
         this.winMessage.setVisible(false);
         this.winMessage.setAlpha(0.0);
         this.add(this.winMessage);
+    }
+
+    private makeGoalMessage(): void {
+        this.goalMessage = UIService.createText(
+            this.scene,
+            this.wi / 2,
+            this.he / 1.05,
+            "Gather all colors to win",
+            UI_CONFIG.uiButtonLabelStyle,
+        );
+        this.goalMessage.setOrigin(0.5, 0.5);
+        this.goalMessage.setVisible(false);
+        this.add(this.goalMessage);
     }
 }

@@ -9,6 +9,7 @@ import { Level } from "../components/Level";
 import * as GAME from "../configs/GameConfig";
 import { download, fixValue, getRandomSeed } from "../services/Utilities";
 import { GameEvents, UiEvents } from "../configs/Events";
+import { AoccPalette } from "../configs/UiConfig";
 
 enum GameStates {
     NoGame,
@@ -146,9 +147,11 @@ export default class MainScene extends Phaser.Scene {
         // console.log(JSON.stringify(this.level.getTubes()));
 
         // setting winning color
-        if (gameMode === "uno")
+        if (gameMode === "uno") {
             this.isWinningColor = this.level.getTubes()[0]["content"][0];
-        // console.log(this.isWinningColor);
+            this.uiView.setUnoGoalMessage(AoccPalette[this.isWinningColor]);
+            // console.log(this.isWinningColor);
+        }
 
         this.gameView.createClassicGame(this.level.getTubes());
 
