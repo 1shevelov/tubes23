@@ -122,14 +122,16 @@ export class UIView extends Phaser.GameObjects.Container {
         const form = this.newLevelForm.getChildByName("form");
         (form as HTMLFormElement).addEventListener("submit", (event) => {
             const data = new FormData(form as HTMLFormElement);
-            console.log("Form data: ", data);
             this.scene.tweens.add({
                 targets: this.newLevelForm,
                 y: -300,
                 alpha: 0.5,
                 duration: animationDuration,
                 ease: "Power3",
-                onComplete: () => this.newLevelForm.setVisible(false),
+                onComplete: () => {
+                    this.uiEvents.emit(UiEvents.NewGameSettingsSubmitted, data);
+                    this.newLevelForm.setVisible(false);
+                },
             });
             event.preventDefault();
         });

@@ -7,8 +7,8 @@ import { GameView } from "../views/GameView";
 import { UIView } from "../views/UIView";
 import { Level } from "../components/Level";
 import * as GAME from "../configs/GameConfig";
-import { download, getRandomSeed } from "../services/Utilities";
-import { GameEvents } from "../configs/Events";
+import { download, fixValue, getRandomSeed } from "../services/Utilities";
+import { GameEvents, UiEvents } from "../configs/Events";
 
 enum GameStates {
     NoGame,
@@ -63,9 +63,11 @@ export default class MainScene extends Phaser.Scene {
     private initUIView(): void {
         this.uiView = new UIView(this);
         this.add.existing(this.uiView);
+
         const uiEvents = this.uiView.getUiEvents();
-        uiEvents.on("ButtonRestartClicked", this.resetLevel, this);
-        uiEvents.on("ButtonUndoClicked", this.undoMove, this);
+        uiEvents.on(UiEvents.ButtonRestartClicked, this.resetLevel, this);
+        uiEvents.on(UiEvents.ButtonUndoClicked, this.undoMove, this);
+        uiEvents.on(UiEvents.NewGameSettingsSubmitted, this.initNewGame, this);
     }
 
     private initForegroundView(): void {
@@ -96,6 +98,32 @@ export default class MainScene extends Phaser.Scene {
         this.startGame();
         this.uiView.showGameUi();
         this.gameState = GameStates.Game;
+    }
+
+    // eslint-disable-next-line @typescript-eslint/ban-types
+    private initNewGame(newGameObj: FormData): void {
+        // console.log(...newGameObj);
+        let tubesNum = 0;
+        let tubesVol = 0;
+        let gameMode = "";
+        for (const [key, value] of newGameObj) {
+            // console.log(`${key}: ${value}`);
+            if (key === "tubes_number") tubesNum = Number(value);
+            if (key === "tubes_volume") tubesVol = Number(value);
+            if (key === "game_mode") gameMode = value.toString();
+        }
+        tubesNum = fixValue(tubesNum, GAME.MIN_TUBES, GAME.MAX_TUBES);
+        tubesVol = fixValue(tubesVol, GAME.MIN_VOLUME, GAME.MAX_VOLUME);
+        switch (gameMode) {
+            case "classic":
+                break;
+            case "uno":
+                break;
+            default:
+                console.warn("Unknown game mode: ", gameMode);
+                gameMode = "classic";
+        }
+        console.log(tubesNum, tubesVol, gameMode);
     }
 
     private startGame(): void {
