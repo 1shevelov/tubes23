@@ -25,6 +25,7 @@ import { ViewEvents } from "../configs/Events";
 export class TubeView extends Phaser.GameObjects.Container {
     private tubeSprite: Phaser.GameObjects.Rectangle;
     private interactiveLayer: Phaser.GameObjects.Sprite;
+    private hotkeyLabel: Phaser.GameObjects.Text;
 
     private tubeNumber = -1;
 
@@ -127,6 +128,7 @@ export class TubeView extends Phaser.GameObjects.Container {
     // on game end or level reset
     public reset(): PortionView[] {
         if (this.tubeSprite) this.tubeSprite.setVisible(false);
+        if (this.hotkeyLabel) this.hotkeyLabel.setVisible(false);
         if (this.interactiveLayer) this.interactiveLayer.disableInteractive();
         this.deactivate();
         for (let i = 0; i < this.portions.length; i++) {
@@ -134,6 +136,7 @@ export class TubeView extends Phaser.GameObjects.Container {
         }
         const portionsCopy = [...this.portions];
         this.portions = [];
+        this.positions = [];
         return portionsCopy;
     }
 
@@ -168,15 +171,23 @@ export class TubeView extends Phaser.GameObjects.Container {
                 case "15":
                     label = "F";
             }
-            const hotkeyLabel = UIService.createText(
-                this.scene,
+            if (!this.hotkeyLabel) {
+                this.hotkeyLabel = UIService.createText(
+                    this.scene,
+                    0,
+                    0,
+                    "",
+                    UI_CONFIG.TubeLabelStyle,
+                );
+                this.add(this.hotkeyLabel);
+            }
+            this.hotkeyLabel.setPosition(
                 this.tubeSprite.x,
                 this.tubeSprite.y +
                     (this.tubeSprite.height * this.tubeSprite.scaleY) / 1.6,
-                label,
-                UI_CONFIG.TubeLabelStyle,
             );
-            this.add(hotkeyLabel);
+            this.hotkeyLabel.setText(label);
+            this.hotkeyLabel.setVisible(true);
         }
 
         if (!this.interactiveLayer) {
