@@ -59,7 +59,7 @@ export class GameView extends Phaser.GameObjects.Container {
         this.createResources(tubeNum, portionNum);
         this.setAndPlaceTubes(tubes);
         // this.tubes.forEach((tube) => console.log(tube.getPortionsNum()));
-        this.fillTubes(tubes);
+        this.fillTubes(tubes, portionNum);
         // this.tubes.forEach((tube) => console.log(tube.getPortionsNum()));
         // this.addProps();
     }
@@ -163,18 +163,20 @@ export class GameView extends Phaser.GameObjects.Container {
         });
     }
 
-    private fillTubes(tubes: object[]): void {
-        tubes.forEach((tube, tubeIndex) => {
+    private fillTubes(tubes: object[], portionNum: number): void {
+        for (let i = 0; i < tubes.length; i++) {
+            // tubes.forEach((tube, tubeIndex) => {
             const portions: PortionView[] = [];
-            for (let i = 0; i < tube["volume"]; i++) {
+            for (let j = 0; j < tubes[i]["volume"]; j++) {
                 const aPortion = this.portionCache.pop();
-                if (aPortion !== undefined) {
-                    aPortion.changeColor(CurrentPalette[tube["content"][i]]);
+                if (aPortion !== undefined && portionNum > 0) {
+                    aPortion.changeColor(CurrentPalette[tubes[i]["content"][j]]);
                     portions.push(aPortion);
+                    portionNum--;
                 }
             }
-            this.tubes[tubeIndex].fillPortions(portions);
-        });
+            this.tubes[i].fillPortions(portions);
+        }
     }
 
     private createResources(tubeNum: number, portionNum: number): void {

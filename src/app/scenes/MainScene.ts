@@ -53,7 +53,7 @@ export default class MainScene extends Phaser.Scene {
         this.gameEvents.on(GameEvents.TwoTubesChoosen, this.move, this);
         this.gameEvents.on(GameEvents.SourceTubeChoosen, this.helperMove, this);
 
-        this.handleKeys();
+        this.setHotKeyHandlers();
     }
 
     private initGameView(): void {
@@ -67,7 +67,7 @@ export default class MainScene extends Phaser.Scene {
         this.add.existing(this.uiView);
 
         const uiEvents = this.uiView.getUiEvents();
-        uiEvents.on(UiEvents.ButtonRestartClicked, this.resetLevel, this);
+        uiEvents.on(UiEvents.ButtonRestartClicked, this.resetGame, this);
         uiEvents.on(UiEvents.ButtonUndoClicked, this.undoMove, this);
         uiEvents.on(UiEvents.NewGameSettingsSubmitted, this.initNewGame, this);
     }
@@ -133,7 +133,6 @@ export default class MainScene extends Phaser.Scene {
 
     private startGame(gameMode: string): void {
         this.level = new Level(this.gameEvents);
-
         this.randomLevelSeed = getRandomSeed();
         const rng = this.SEEDED_RANDOM_LIB(this.randomLevelSeed);
         this.level.setRandomClassicLevel(
@@ -184,7 +183,7 @@ export default class MainScene extends Phaser.Scene {
     private endGame(): void {
         this.uiView.showWin();
         console.log(`You win in ${this.moveCounter} moves!`);
-        console.warn("Reload the page to play again");
+        console.log('Press "N" or reload to PLAY AGAIN');
         this.gameState = GameStates.GameFinished;
     }
 
@@ -215,7 +214,7 @@ export default class MainScene extends Phaser.Scene {
         }
     }
 
-    private resetLevel(): void {
+    private resetGame(): void {
         if (this.moveCounter === 0) return;
         console.log("Level reset");
         this.level.reset();
@@ -236,7 +235,7 @@ export default class MainScene extends Phaser.Scene {
         this.uiView.hideWin();
     }
 
-    private handleKeys(): void {
+    private setHotKeyHandlers(): void {
         this.input.keyboard.on("keydown", (event) => {
             switch (event.keyCode) {
                 case Phaser.Input.Keyboard.KeyCodes.S: // save
@@ -246,7 +245,7 @@ export default class MainScene extends Phaser.Scene {
                     break;
                 case Phaser.Input.Keyboard.KeyCodes.R: // reset, restart, reload
                     if (this.gameState === GameStates.NoGame) return;
-                    this.resetLevel();
+                    this.resetGame();
                     break;
                 case Phaser.Input.Keyboard.KeyCodes.L: // load
                     if (this.gameState === GameStates.NoGame) return;
@@ -264,6 +263,7 @@ export default class MainScene extends Phaser.Scene {
                     if (this.gameState === GameStates.NoGame) return;
                     this.gameState = GameStates.NoGame;
                     this.uiView.hideGameUi();
+                    this.gameView.reset();
                     this.uiView.showNewLevelForm();
                     break;
                 case Phaser.Input.Keyboard.KeyCodes.ONE:
