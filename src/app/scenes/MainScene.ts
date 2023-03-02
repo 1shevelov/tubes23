@@ -189,22 +189,29 @@ export default class MainScene extends Phaser.Scene {
     }
 
     private saveLevel(): void {
+        let gameMode = "Classic Random";
+        let gameModeFileName = "classic-random";
+        if (this.isWinningColor !== GAME.ErrorValues.InvalidColorIndex) {
+            gameMode = "Uno Classic Random";
+            gameModeFileName = "uno-classic-random";
+        }
         if (GAME.SAVE_WITH_RANDOM_SEED) {
             const saveStruct = {
-                level: "Classic Random",
+                level: gameMode,
                 tubes: this.randomClassicLevelTubeNum,
                 volume: this.randomClassicLevelTubeVol,
                 seed: this.randomLevelSeed,
             };
             download(
                 saveStruct,
-                `Tubes-random-classic-${this.randomClassicLevelTubeNum}_${this.randomClassicLevelTubeVol}`,
+                `Tubes-${gameModeFileName}-${this.randomClassicLevelTubeNum}_${this.randomClassicLevelTubeVol}`,
             );
         } else {
             const tubes2Save = this.level.getTubes();
             const tubeNum = tubes2Save.length;
             const tubeVol = tubes2Save[0]["volume"];
-            download(tubes2Save, `Tubes-random-classic-${tubeNum}_${tubeVol}`);
+
+            download(tubes2Save, `Tubes-${gameModeFileName}-${tubeNum}_${tubeVol}`);
         }
     }
 
