@@ -7,7 +7,12 @@ import { GameView } from "../views/GameView";
 import { UIView } from "../views/UIView";
 import { Level } from "../components/Level";
 import * as GAME from "../configs/GameConfig";
-import { download, fixValue, getRandomSeed } from "../services/Utilities";
+import {
+    download,
+    fixValue,
+    getRandomSeed,
+    getRandomPositiveInt,
+} from "../services/Utilities";
 import { GameEvents, UiEvents } from "../configs/Events";
 import { AoccPalette } from "../configs/UiConfig";
 
@@ -29,8 +34,11 @@ export default class MainScene extends Phaser.Scene {
 
     private gameState = GameStates.NoGame;
 
-    private moveCounter = 0;
     private randomLevelSeed: string;
+    private rng: () => number;
+
+    private moveCounter = 0;
+
     private randomClassicLevelTubeNum: number;
     private randomClassicLevelTubeVol: number;
 
@@ -54,6 +62,9 @@ export default class MainScene extends Phaser.Scene {
         this.gameEvents.on(GameEvents.SourceTubeChoosen, this.helperMove, this);
 
         this.setHotKeyHandlers();
+
+        this.randomLevelSeed = getRandomSeed();
+        this.rng = this.SEEDED_RANDOM_LIB(this.randomLevelSeed);
     }
 
     private initGameView(): void {
@@ -105,8 +116,8 @@ export default class MainScene extends Phaser.Scene {
     // eslint-disable-next-line @typescript-eslint/ban-types
     private initNewGame(newGameObj: FormData): void {
         // console.log(...newGameObj);
-        let tubesNum = 0;
-        let tubesVol = 0;
+        let tubesNum: number = GAME.ErrorValues.InvalidTubeIndex;
+        let tubesVol: number = GAME.ErrorValues.InvalidTubeVolume;
         let gameMode = "";
         for (const [key, value] of newGameObj) {
             // console.log(`${key}: ${value}`);
@@ -114,6 +125,11 @@ export default class MainScene extends Phaser.Scene {
             if (key === "tubes_volume") tubesVol = Number(value);
             if (key === "game_mode") gameMode = value.toString();
         }
+        // Random (8-12)
+        if (tubesNum === 0) tubesNum = getRandomPositiveInt(8, 12, this.rng);
+        // Random (3-5)
+        if (tubesVol === 0) tubesVol = getRandomPositiveInt(3, 5, this.rng);
+
         this.randomClassicLevelTubeNum = fixValue(
             tubesNum,
             GAME.MIN_TUBES,
@@ -133,13 +149,11 @@ export default class MainScene extends Phaser.Scene {
 
     private startGame(gameMode: string): void {
         this.level = new Level(this.gameEvents);
-        this.randomLevelSeed = getRandomSeed();
-        const rng = this.SEEDED_RANDOM_LIB(this.randomLevelSeed);
         this.level.setRandomClassicLevel(
             this.randomClassicLevelTubeNum,
             this.randomClassicLevelTubeVol,
             0, // enum Drains
-            rng,
+            this.rng,
         );
         // this.level.setClassicTubes([[0, 1, 2], [3, 4, 5, 6], [7], []], 4);
         // console.log(JSON.stringify(this.level.getTubes()));

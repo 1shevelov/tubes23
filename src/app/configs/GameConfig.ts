@@ -9,6 +9,7 @@ export const MAX_COLORS = CurrentPalette.length;
 
 export enum ErrorValues {
     InvalidTubeIndex = -1,
+    InvalidTubeVolume = -1,
     InvalidColorIndex = -1,
 }
 

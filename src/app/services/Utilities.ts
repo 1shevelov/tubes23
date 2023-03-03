@@ -39,6 +39,22 @@ export function getRandomSeed(): string {
     return Math.floor(Date.now() * Math.random()).toString();
 }
 
+export function getRandomPositiveInt(
+    min: number,
+    max: number,
+    rng: () => number,
+): number {
+    if (!Number.isFinite(min) || !Number.isFinite(max)) {
+        console.error(`Invalid value: \"${min}\" or \"${max}\". Aborting`);
+        return -1;
+    }
+    if (min < 0) min = 0;
+    if (max < 0) max = 0;
+    min = Math.round(min);
+    max = Math.round(max);
+    return Math.floor(rng() * (max - min + 1)) + min;
+}
+
 // can't make it work
 // export function changeColorLuminance(hexColor: string, luminosityFactor: number): string {
 //     // validate hex string
