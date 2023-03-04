@@ -35,6 +35,45 @@ export function download(content: object, fileName: string): void {
     URL.revokeObjectURL(a.href);
 }
 
+export function checkUploadedGameFile(file: File): boolean {
+    const MAX_GAME_SAVE_FILE_SIZE = 1024 * 10; // in Bytes
+
+    if (file.name === "") {
+        return false;
+    }
+    if (file.type === "text/plain" || file.type === "application/json") {
+        if (file.size > MAX_GAME_SAVE_FILE_SIZE) {
+            console.error(`The file is too big: ${file.size}B`);
+            return false;
+        }
+        return true;
+    } else {
+        console.error(
+            `Invalid file type: "${file.type}". Only ".TXT" or ".JSON" allowed`,
+        );
+        return false;
+    }
+}
+
+export async function processGameSave(file: File): Promise<object> {
+    const fReader = new FileReader();
+    fReader.readAsText(file);
+    fReader.onload = (event) => {
+        const str = (event.target ?? {}).result;
+        let json: object;
+        try {
+            json = JSON.parse(str as string);
+            console.log("inside JSON: ", JSON.stringify(json));
+        } catch (error) {
+            console.error(error);
+            // throw new Error('Error occured: ', e);
+            return {};
+        }
+        return json;
+    };
+    return fReader.onload;
+}
+
 export function getRandomSeed(): string {
     return Math.floor(Date.now() * Math.random()).toString();
 }

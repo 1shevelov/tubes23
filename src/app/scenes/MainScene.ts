@@ -12,6 +12,8 @@ import {
     fixValue,
     getRandomSeed,
     getRandomPositiveInt,
+    checkUploadedGameFile,
+    processGameSave,
 } from "../services/Utilities";
 import { GameEvents, UiEvents } from "../configs/Events";
 import { AoccPalette } from "../configs/UiConfig";
@@ -114,17 +116,28 @@ export default class MainScene extends Phaser.Scene {
     // }
 
     // eslint-disable-next-line @typescript-eslint/ban-types
-    private initNewGame(newGameObj: FormData): void {
+    private async initNewGame(newGameObj: FormData): Promise<void> {
         // console.log(...newGameObj);
         let tubesNum: number = GAME.ErrorValues.InvalidTubeIndex;
         let tubesVol: number = GAME.ErrorValues.InvalidTubeVolume;
         let gameMode = "";
+        let gameFile: any;
         for (const [key, value] of newGameObj) {
             // console.log(`${key}: ${value}`);
             if (key === "tubes_number") tubesNum = Number(value);
             if (key === "tubes_volume") tubesVol = Number(value);
             if (key === "game_mode") gameMode = value.toString();
+            if (key === "load_file") gameFile = value;
         }
+
+        if (checkUploadedGameFile(gameFile)) {
+            let gameObj: object;
+            // TODO: fix load game object return
+            // eslint-disable-next-line prefer-const
+            gameObj = await processGameSave(gameFile);
+            console.log(JSON.stringify(gameObj));
+        }
+
         // Random (8-12)
         if (tubesNum === 0) tubesNum = getRandomPositiveInt(8, 12, this.rng);
         // Random (3-5)
