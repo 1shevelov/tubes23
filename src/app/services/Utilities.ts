@@ -55,24 +55,27 @@ export function checkUploadedGameFile(file: File): boolean {
     }
 }
 
-export async function processGameSave(file: File): Promise<object> {
-    const fReader = new FileReader();
-    fReader.readAsText(file);
-    fReader.onload = (event) => {
-        const str = (event.target ?? {}).result;
-        let json: object;
-        try {
-            json = JSON.parse(str as string);
-            console.log("inside JSON: ", JSON.stringify(json));
-        } catch (error) {
-            console.error(error);
-            // throw new Error('Error occured: ', e);
-            return {};
-        }
-        return json;
-    };
-    return fReader.onload;
-}
+// export function processGameSave(file: File): object {
+//     const fReader = new FileReader();
+//     fReader.readAsText(file);
+//     fReader.onload = (event) => {
+//         const str = (event.target ?? {}).result;
+//         let json: object;
+//         try {
+//             json = JSON.parse(str as string);
+//             console.log("inside JSON: ", JSON.stringify(json));
+//         } catch (error) {
+//             console.error(error);
+//             // throw new Error('Error occured: ', e);
+//             return {};
+//         }
+//         return json;
+//     };
+//     fReader.onerror = (error) => {
+//         console.error(error);
+//         return {};
+//     };
+// }
 
 export function getRandomSeed(): string {
     return Math.floor(Date.now() * Math.random()).toString();

@@ -13,7 +13,7 @@ import {
     getRandomSeed,
     getRandomPositiveInt,
     checkUploadedGameFile,
-    processGameSave,
+    // processGameSave,
 } from "../services/Utilities";
 import { GameEvents, UiEvents } from "../configs/Events";
 import { AoccPalette } from "../configs/UiConfig";
@@ -115,9 +115,14 @@ export default class MainScene extends Phaser.Scene {
     //     this.gameState = GameStates.Game;
     // }
 
-    // eslint-disable-next-line @typescript-eslint/ban-types
-    private async initNewGame(newGameObj: FormData): Promise<void> {
-        // console.log(...newGameObj);
+    private showNewGameForm(): void {
+        this.gameState = GameStates.NoGame;
+        this.uiView.hideGameUi();
+        this.gameView.reset();
+        this.uiView.showNewLevelForm();
+    }
+
+    private initNewGame(newGameObj: FormData): void {
         let tubesNum: number = GAME.ErrorValues.InvalidTubeIndex;
         let tubesVol: number = GAME.ErrorValues.InvalidTubeVolume;
         let gameMode = "";
@@ -131,33 +136,62 @@ export default class MainScene extends Phaser.Scene {
         }
 
         if (checkUploadedGameFile(gameFile)) {
-            let gameObj: object;
-            // TODO: fix load game object return
-            // eslint-disable-next-line prefer-const
-            gameObj = await processGameSave(gameFile);
-            console.log(JSON.stringify(gameObj));
-        }
+            const fReader = new FileReader();
+            fReader.readAsText(gameFile);
+            let json = {};
+            fReader.onload = (event) => {
+                const str = (event.target ?? {}).result;
+                try {
+                    json = JSON.parse(str as string);
+                    // console.log("result JSON: ", JSON.stringify(json));
+                    this.loadGame(json);
+                } catch (error) {
+                    console.error(error);
+                    console.error(
+                        "Error loading saved game JSON. LOAD another save or START a new game",
+                    );
+                    // throw new Error('Error occured: ', e);
+                    this.showNewGameForm();
+                }
+            };
+            fReader.onerror = (error) => {
+                console.error(error);
+                console.error(
+                    "Error loading saved game JSON. LOAD another save or START a new game",
+                );
+                this.showNewGameForm();
+            };
+        } else {
+            // starting new game
 
-        // Random (8-12)
-        if (tubesNum === 0) tubesNum = getRandomPositiveInt(8, 12, this.rng);
-        // Random (3-5)
-        if (tubesVol === 0) tubesVol = getRandomPositiveInt(3, 5, this.rng);
+            // Random (8-12)
+            if (tubesNum === 0) tubesNum = getRandomPositiveInt(8, 12, this.rng);
+            // Random (3-5)
+            if (tubesVol === 0) tubesVol = getRandomPositiveInt(3, 5, this.rng);
 
-        this.randomClassicLevelTubeNum = fixValue(
-            tubesNum,
-            GAME.MIN_TUBES,
-            GAME.MAX_TUBES,
-        );
-        this.randomClassicLevelTubeVol = fixValue(
-            tubesVol,
-            GAME.MIN_VOLUME,
-            GAME.MAX_VOLUME,
-        );
-        if (gameMode !== "classic" && gameMode !== "uno") {
-            console.error(`Unknown game mode \"${gameMode}\", setting to \"classic\"`);
-            gameMode = "classic";
+            this.randomClassicLevelTubeNum = fixValue(
+                tubesNum,
+                GAME.MIN_TUBES,
+                GAME.MAX_TUBES,
+            );
+            this.randomClassicLevelTubeVol = fixValue(
+                tubesVol,
+                GAME.MIN_VOLUME,
+                GAME.MAX_VOLUME,
+            );
+            if (gameMode !== "classic" && gameMode !== "uno") {
+                console.error(
+                    `Unknown game mode \"${gameMode}\", setting to \"classic\"`,
+                );
+                gameMode = "classic";
+            }
+            this.startGame(gameMode);
         }
-        this.startGame(gameMode);
+    }
+
+    private loadGame(gameObj: object): void {
+        console.log("Will try to init a game from this data a bit later");
+        console.log(JSON.stringify(gameObj));
     }
 
     private startGame(gameMode: string): void {
@@ -288,10 +322,7 @@ export default class MainScene extends Phaser.Scene {
                     break;
                 case Phaser.Input.Keyboard.KeyCodes.N: // new game
                     if (this.gameState === GameStates.NoGame) return;
-                    this.gameState = GameStates.NoGame;
-                    this.uiView.hideGameUi();
-                    this.gameView.reset();
-                    this.uiView.showNewLevelForm();
+                    this.showNewGameForm();
                     break;
                 case Phaser.Input.Keyboard.KeyCodes.ONE:
                 case Phaser.Input.Keyboard.KeyCodes.NUMPAD_ONE:
