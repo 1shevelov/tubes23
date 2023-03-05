@@ -58,10 +58,7 @@ export class GameView extends Phaser.GameObjects.Container {
         const portionNum = (tubes.length - 2) * maxVolume;
         this.createResources(tubeNum, portionNum);
         this.setAndPlaceTubes(tubes);
-        // this.tubes.forEach((tube) => console.log(tube.getPortionsNum()));
-        this.fillTubes(tubes, portionNum);
-        // this.tubes.forEach((tube) => console.log(tube.getPortionsNum()));
-        // this.addProps();
+        this.fillTubes(tubes);
     }
 
     public undoMove(tubePair: number[]): void {
@@ -163,16 +160,14 @@ export class GameView extends Phaser.GameObjects.Container {
         });
     }
 
-    private fillTubes(tubes: object[], portionNum: number): void {
+    private fillTubes(tubes: object[]): void {
         for (let i = 0; i < tubes.length; i++) {
-            // tubes.forEach((tube, tubeIndex) => {
             const portions: PortionView[] = [];
-            for (let j = 0; j < tubes[i]["volume"]; j++) {
+            for (let j = 0; j < tubes[i]["content"].length; j++) {
                 const aPortion = this.portionCache.pop();
-                if (aPortion !== undefined && portionNum > 0) {
+                if (aPortion !== undefined) {
                     aPortion.changeColor(CurrentPalette[tubes[i]["content"][j]]);
                     portions.push(aPortion);
-                    portionNum--;
                 }
             }
             this.tubes[i].fillPortions(portions);
@@ -217,10 +212,10 @@ export class GameView extends Phaser.GameObjects.Container {
     // }
 
     private init(): void {
-        this.resize();
+        this.updateWindowSize();
         this.tubeRows = this.wi > this.he ? this.HOR_ROWS : this.PORT_ROWS;
 
-        this.scene.scale.on("resize", this.resize, this);
+        this.scene.scale.on("resize", this.updateWindowSize, this);
 
         this.gameEvents.on(ViewEvents.TubeClicked, this.handleClick, this);
         // TODO: should call these methods directly from MS
@@ -256,18 +251,11 @@ export class GameView extends Phaser.GameObjects.Container {
         this.recipientTube = this.NO_TUBE;
     }
 
-    private resize(): void {
-        // const prevWi = this.wi;
-        // const prevHe = this.he;
+    private updateWindowSize(): void {
         const { width, height } = this.scene.scale.gameSize;
-        const halfShiftX = (width - this.wi) / 2;
-        const halfShiftY = (height - this.he) / 2;
+        // const halfShiftX = (width - this.wi) / 2;
+        // const halfShiftY = (height - this.he) / 2;
         this.wi = width;
         this.he = height;
-
-        this.tubes.forEach((tube) => {
-            tube.setX(tube.x + halfShiftX);
-            tube.setY(tube.y + halfShiftY);
-        });
     }
 }

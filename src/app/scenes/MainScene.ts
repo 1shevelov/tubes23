@@ -74,6 +74,10 @@ export default class MainScene extends Phaser.Scene {
         this.gameView = new GameView(this, this.gameEvents);
         this.add.existing(this.gameView);
         // this.cameras.main.setRoundPixels(true);
+        this.scale.on("resize", () => {
+            this.gameView.reset();
+            this.gameView.createClassicGame(this.level.getTubes());
+        });
     }
 
     private initUIView(): void {
