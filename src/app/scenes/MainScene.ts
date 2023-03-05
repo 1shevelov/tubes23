@@ -194,6 +194,28 @@ export default class MainScene extends Phaser.Scene {
         // console.log("Will try to init a game from this data a bit later");
         console.log(JSON.stringify(gameObj));
         this.level = new Level(this.gameEvents);
+
+        // if randomly generated level
+        this.rng = this.SEEDED_RANDOM_LIB(gameObj[FILES.SaveFile.Seed]);
+        this.level.setRandomClassicLevel(
+            gameObj[FILES.SaveFile.Tubes],
+            gameObj[FILES.SaveFile.Volume],
+            0, // enum Drains
+            this.rng,
+        );
+        // setting winning color
+        if (gameObj[FILES.SaveFile.Mode] === FILES.GameModes.UnoClassicRandom) {
+            this.isWinningColor = this.level.getTubes()[0]["content"][0];
+            this.uiView.setUnoGoalMessage(AoccPalette[this.isWinningColor]);
+            // console.log(this.isWinningColor);
+        } else {
+            this.uiView.setClassicGoalMessage();
+        }
+
+        this.gameView.createClassicGame(this.level.getTubes());
+
+        this.uiView.showGameUi();
+        this.gameState = GameStates.Game;
     }
 
     private startGame(gameMode: string): void {
@@ -265,14 +287,14 @@ export default class MainScene extends Phaser.Scene {
             };
             download(
                 saveStruct,
-                `Tubes-${saveGameMode}-${this.randomClassicLevelTubeNum}_${this.randomClassicLevelTubeVol}`,
+                `tubes-${saveGameMode}-${this.randomClassicLevelTubeNum}_${this.randomClassicLevelTubeVol}`,
             );
         } else {
             const tubes2Save = this.level.getTubes();
             const tubeNum = tubes2Save.length;
             const tubeVol = tubes2Save[0]["volume"];
 
-            download(tubes2Save, `Tubes-${saveGameMode}-${tubeNum}_${tubeVol}`);
+            download(tubes2Save, `tubes-${saveGameMode}-${tubeNum}_${tubeVol}`);
         }
     }
 
@@ -309,14 +331,14 @@ export default class MainScene extends Phaser.Scene {
                     if (this.gameState === GameStates.NoGame) return;
                     this.resetGame();
                     break;
-                case Phaser.Input.Keyboard.KeyCodes.L: // load
-                    if (this.gameState === GameStates.NoGame) return;
-                    console.log("loading not implemented");
-                    // this.level.load();
-                    // this.gameView.reset();
-                    // this.gameView.createClassicGame(this.level.getTubes());
-                    // this.moveCounter = 0;
-                    break;
+                // case Phaser.Input.Keyboard.KeyCodes.L: // load
+                //     if (this.gameState === GameStates.NoGame) return;
+                //     console.log("loading not implemented");
+                //     // this.level.load();
+                //     // this.gameView.reset();
+                //     // this.gameView.createClassicGame(this.level.getTubes());
+                //     // this.moveCounter = 0;
+                //     break;
                 case Phaser.Input.Keyboard.KeyCodes.U: // undo
                     if (this.gameState === GameStates.NoGame) return;
                     this.undoMove();
