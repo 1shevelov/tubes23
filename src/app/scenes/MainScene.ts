@@ -261,6 +261,26 @@ export default class MainScene extends Phaser.Scene {
         }
     }
 
+    private addEmptyTube(): void {
+        console.log("+1");
+        if (!this.level.addEmptyTube()) {
+            console.error("Error while trying to add an empty tube");
+            return;
+        }
+        this.gameView.reset();
+        this.gameView.createClassicGame(this.level.getTubes());
+    }
+
+    private removeEmptyTube(): void {
+        console.log("-1");
+        if (!this.level.removeEmptyTube()) {
+            console.error("Error while trying to remove an empty tube");
+            return;
+        }
+        this.gameView.reset();
+        this.gameView.createClassicGame(this.level.getTubes());
+    }
+
     private countSuccessfulMove(): void {
         this.moveCounter++;
         this.uiView.setCounter(this.moveCounter);
@@ -350,6 +370,16 @@ export default class MainScene extends Phaser.Scene {
                 case Phaser.Input.Keyboard.KeyCodes.N: // new game
                     if (this.gameState === GameStates.NoGame) return;
                     this.showNewGameForm();
+                    break;
+                case Phaser.Input.Keyboard.KeyCodes.PLUS:
+                case Phaser.Input.Keyboard.KeyCodes.NUMPAD_ADD:
+                    if (this.gameState !== GameStates.Game) return;
+                    this.addEmptyTube();
+                    break;
+                case Phaser.Input.Keyboard.KeyCodes.MINUS:
+                case Phaser.Input.Keyboard.KeyCodes.NUMPAD_SUBTRACT:
+                    if (this.gameState !== GameStates.Game) return;
+                    this.removeEmptyTube();
                     break;
                 case Phaser.Input.Keyboard.KeyCodes.ONE:
                 case Phaser.Input.Keyboard.KeyCodes.NUMPAD_ONE:

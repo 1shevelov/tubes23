@@ -33,6 +33,29 @@ export class Level {
         return tubes;
     }
 
+    public addEmptyTube(): boolean {
+        if (this.tubes.length >= GAME.MAX_TUBES) {
+            console.error("Max number of tubes reached. Cannot add more");
+            return false;
+        }
+        const aTube = new Tube();
+        if (!aTube.initialize(this.tubes[0].volume, [], this.tubes[0].drains))
+            return false;
+        this.tubes.push(aTube);
+        return true;
+    }
+
+    public removeEmptyTube(): boolean {
+        if (this.tubes.length <= GAME.MIN_TUBES) {
+            console.error("Min number of tubes reached. Cannot remove more");
+            return false;
+        }
+        // search for empty tubes from the end of this.tubes
+        // remove the first found
+        // or return false if not found
+        return true;
+    }
+
     public setClassicTubes(tubes: number[][], tubeVol: number, drains: number): boolean {
         if (tubes.length < GAME.MIN_TUBES || tubes.length > GAME.MAX_TUBES) {
             console.error("Invalid number of tubes: ", tubes.length);
