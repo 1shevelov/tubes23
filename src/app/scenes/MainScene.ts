@@ -15,6 +15,7 @@ import {
     checkUploadedGameFile,
     // processGameSave,
 } from "../services/Utilities";
+import * as FILES from "../services/Files";
 import { GameEvents, UiEvents } from "../configs/Events";
 import { AoccPalette } from "../configs/UiConfig";
 
@@ -190,8 +191,9 @@ export default class MainScene extends Phaser.Scene {
     }
 
     private loadGame(gameObj: object): void {
-        console.log("Will try to init a game from this data a bit later");
+        // console.log("Will try to init a game from this data a bit later");
         console.log(JSON.stringify(gameObj));
+        this.level = new Level(this.gameEvents);
     }
 
     private startGame(gameMode: string): void {
@@ -249,29 +251,28 @@ export default class MainScene extends Phaser.Scene {
     }
 
     private saveLevel(): void {
-        let gameMode = "Classic Random";
-        let gameModeFileName = "classic-random";
-        if (this.isWinningColor !== GAME.ErrorValues.InvalidColorIndex) {
-            gameMode = "Uno Classic Random";
-            gameModeFileName = "uno-classic-random";
-        }
+        let saveGameMode: string;
+        if (this.isWinningColor === GAME.ErrorValues.InvalidColorIndex)
+            saveGameMode = FILES.GameModes.ClassicRandom; //"Classic Random";
+        else saveGameMode = FILES.GameModes.UnoClassicRandom;
+
         if (GAME.SAVE_WITH_RANDOM_SEED) {
             const saveStruct = {
-                level: gameMode,
-                tubes: this.randomClassicLevelTubeNum,
-                volume: this.randomClassicLevelTubeVol,
-                seed: this.randomLevelSeed,
+                [FILES.SaveFile.Mode]: saveGameMode,
+                [FILES.SaveFile.Tubes]: this.randomClassicLevelTubeNum,
+                [FILES.SaveFile.Volume]: this.randomClassicLevelTubeVol,
+                [FILES.SaveFile.Seed]: this.randomLevelSeed,
             };
             download(
                 saveStruct,
-                `Tubes-${gameModeFileName}-${this.randomClassicLevelTubeNum}_${this.randomClassicLevelTubeVol}`,
+                `Tubes-${saveGameMode}-${this.randomClassicLevelTubeNum}_${this.randomClassicLevelTubeVol}`,
             );
         } else {
             const tubes2Save = this.level.getTubes();
             const tubeNum = tubes2Save.length;
             const tubeVol = tubes2Save[0]["volume"];
 
-            download(tubes2Save, `Tubes-${gameModeFileName}-${tubeNum}_${tubeVol}`);
+            download(tubes2Save, `Tubes-${saveGameMode}-${tubeNum}_${tubeVol}`);
         }
     }
 
