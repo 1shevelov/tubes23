@@ -129,7 +129,10 @@ export class TubeView extends Phaser.GameObjects.Container {
     public reset(): PortionView[] {
         if (this.tubeSprite) this.tubeSprite.setVisible(false);
         if (this.hotkeyLabel) this.hotkeyLabel.setVisible(false);
-        if (this.interactiveLayer) this.interactiveLayer.disableInteractive();
+        if (this.interactiveLayer) {
+            this.interactiveLayer.disableInteractive();
+            this.interactiveLayer.setVisible(false);
+        }
         this.deactivate();
         for (let i = 0; i < this.portions.length; i++) {
             this.portions[i].hide();
@@ -202,6 +205,9 @@ export class TubeView extends Phaser.GameObjects.Container {
                 this.gameEvents.emit(ViewEvents.TubeClicked, this.tubeNumber);
             });
             this.add(this.interactiveLayer);
+        } else {
+            this.interactiveLayer.setPosition(this.tubeSprite.x, this.tubeSprite.y);
+            this.interactiveLayer.setVisible(true);
         }
         this.interactiveLayer.setScale(
             this.tubeSprite.width * this.tubeSprite.scaleX * 1.2,

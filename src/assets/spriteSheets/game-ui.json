@@ -4,11 +4,32 @@
 			"image": "game-ui.png",
 			"format": "RGBA8888",
 			"size": {
-				"w": 312,
-				"h": 327
+				"w": 468,
+				"h": 320
 			},
 			"scale": 1,
 			"frames": [
+				{
+					"filename": "bubble2-150.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 150,
+						"h": 151
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 150,
+						"h": 151
+					},
+					"frame": {
+						"x": 3,
+						"y": 3,
+						"w": 150,
+						"h": 151
+					}
+				},
 				{
 					"filename": "glass-ball2-150.png",
 					"rotated": false,
@@ -24,7 +45,7 @@
 						"h": 151
 					},
 					"frame": {
-						"x": 3,
+						"x": 159,
 						"y": 3,
 						"w": 150,
 						"h": 151
@@ -45,8 +66,29 @@
 						"h": 150
 					},
 					"frame": {
+						"x": 3,
+						"y": 160,
+						"w": 150,
+						"h": 150
+					}
+				},
+				{
+					"filename": "bubble-150.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 150,
+						"h": 150
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 150,
+						"h": 150
+					},
+					"frame": {
 						"x": 159,
-						"y": 3,
+						"y": 160,
 						"w": 150,
 						"h": 150
 					}
@@ -66,8 +108,8 @@
 						"h": 148
 					},
 					"frame": {
-						"x": 159,
-						"y": 159,
+						"x": 315,
+						"y": 3,
 						"w": 150,
 						"h": 148
 					}
@@ -87,8 +129,8 @@
 						"h": 150
 					},
 					"frame": {
-						"x": 3,
-						"y": 160,
+						"x": 315,
+						"y": 157,
 						"w": 150,
 						"h": 150
 					}
@@ -129,8 +171,8 @@
 						"h": 1
 					},
 					"frame": {
-						"x": 3,
-						"y": 323,
+						"x": 10,
+						"y": 316,
 						"w": 1,
 						"h": 1
 					}
