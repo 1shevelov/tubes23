@@ -7,14 +7,7 @@ import { GameView } from "../views/GameView";
 import { UIView } from "../views/UIView";
 import { Level } from "../components/Level";
 import * as GAME from "../configs/GameConfig";
-import {
-    download,
-    fixValue,
-    getRandomSeed,
-    getRandomPositiveInt,
-    checkUploadedGameFile,
-    // processGameSave,
-} from "../services/Utilities";
+import { fixValue, getRandomSeed, getRandomPositiveInt } from "../services/Utilities";
 import * as FILES from "../services/Files";
 import { GameEvents, UiEvents } from "../configs/Events";
 import { AoccPalette } from "../configs/UiConfig";
@@ -75,8 +68,10 @@ export default class MainScene extends Phaser.Scene {
         this.add.existing(this.gameView);
         // this.cameras.main.setRoundPixels(true);
         this.scale.on("resize", () => {
-            this.gameView.reset();
-            this.gameView.createClassicGame(this.level.getTubes());
+            if (this.gameState === GameStates.Game) {
+                this.gameView.reset();
+                this.gameView.createClassicGame(this.level.getTubes());
+            }
         });
     }
 
@@ -140,7 +135,7 @@ export default class MainScene extends Phaser.Scene {
             if (key === "load_file") gameFile = value;
         }
 
-        if (checkUploadedGameFile(gameFile)) {
+        if (FILES.checkUploadedGameFile(gameFile)) {
             const fReader = new FileReader();
             fReader.readAsText(gameFile);
             let json = {};
@@ -313,7 +308,7 @@ export default class MainScene extends Phaser.Scene {
                 [FILES.SaveFile.Volume]: this.randomClassicLevelTubeVol,
                 [FILES.SaveFile.Seed]: this.randomLevelSeed,
             };
-            download(
+            FILES.download(
                 saveStruct,
                 `tubes-${saveGameMode}-${this.randomClassicLevelTubeNum}_${this.randomClassicLevelTubeVol}`,
             );
@@ -322,7 +317,7 @@ export default class MainScene extends Phaser.Scene {
             const tubeNum = tubes2Save.length;
             const tubeVol = tubes2Save[0]["volume"];
 
-            download(tubes2Save, `tubes-${saveGameMode}-${tubeNum}_${tubeVol}`);
+            FILES.download(tubes2Save, `tubes-${saveGameMode}-${tubeNum}_${tubeVol}`);
         }
     }
 
