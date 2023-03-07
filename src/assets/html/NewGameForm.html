@@ -5,7 +5,7 @@
         border-radius: 6px;
         height: 500px;
         margin: 20px auto 0;
-        width: 298px;
+        width: 400px;
     }
     .new-game h1 {
         background-image: linear-gradient(top, #f1f3f3, #d4dae0);
@@ -22,7 +22,7 @@
         text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2), 0 1px 0 #fff;
     }
     .new-game-elements {
-        color: #b2b4b6;
+        color: #929496;
         display: block;
         /* height: 43px; */
         font: 600 16px/1 "Open Sans", sans-serif;
@@ -130,7 +130,7 @@ input[type="checkbox"]:checked {
 
 <form name="form">
     <div class="new-game">
-        <h1 align="center">New game</h1>
+        <h1>New game</h1>
         <fieldset class="new-game-elements">
             <label for="tubes-num-select">
                 <!-- align="center" style="font-size: 1rem; padding-right: 10px;" -->
@@ -191,12 +191,15 @@ input[type="checkbox"]:checked {
         <fieldset class="new-game-elements">
             <!-- <legend align="center">Load game:</legend> -->
             <div>
-                <label for="load-file">Choose a game save:</label>
-                <p><input type="file" id="load-file" name="load_file" accept=".txt, .json" /></p>
+                <label for="load-file">Choose a game save file:</label>
+                <p>
+                    <input type="file" id="load-file" name="load_file" accept=".txt, .json" />
+                    <button name="clear_button" style="visibility: hidden">x</button>
+                </p>
             </div>
         </fieldset>
 
-        <input type="submit" value="Start" name="start_button" />
+        <input type="submit" value="New random game" name="start_button" />
     </div>
     <div class="shadow"></div>
 </form>

@@ -149,6 +149,28 @@ export class UIView extends Phaser.GameObjects.Container {
             });
             event.preventDefault();
         });
+        const fileLoadInput = this.newLevelForm.getChildByName("load_file");
+        const startButton = this.newLevelForm.getChildByName("start_button");
+        const clearButton = this.newLevelForm.getChildByName("clear_button");
+        fileLoadInput.addEventListener("input", (event) => {
+            console.log("File load input event: ", event);
+            const target = event.target as HTMLInputElement;
+            if (target) {
+                if (target.files?.length === 1) {
+                    (startButton as HTMLButtonElement).value = "Load game";
+                    (clearButton as HTMLButtonElement).style.visibility = "visible";
+                } else {
+                    (startButton as HTMLButtonElement).value = "New random game";
+                    (clearButton as HTMLButtonElement).style.visibility = "hidden";
+                }
+            }
+        });
+        clearButton.addEventListener("click", (event) => {
+            (fileLoadInput as HTMLInputElement).value = "";
+            (startButton as HTMLButtonElement).value = "New random game";
+            (clearButton as HTMLButtonElement).style.visibility = "hidden";
+            event.preventDefault();
+        });
     }
 
     // private makeNewLevelPopup(): void {
