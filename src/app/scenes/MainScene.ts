@@ -218,6 +218,9 @@ export default class MainScene extends Phaser.Scene {
 
         this.gameView.createClassicGame(this.level.getTubes());
 
+        this.moveCounter = 0;
+        this.uiView.setCounter(this.moveCounter);
+        this.uiView.hideWin();
         this.uiView.showGameUi();
         this.gameState = GameStates.Game;
     }
@@ -244,6 +247,9 @@ export default class MainScene extends Phaser.Scene {
 
         this.gameView.createClassicGame(this.level.getTubes());
 
+        this.moveCounter = 0;
+        this.uiView.setCounter(this.moveCounter);
+        this.uiView.hideWin();
         this.uiView.showGameUi();
         this.gameState = GameStates.Game;
     }
@@ -262,7 +268,6 @@ export default class MainScene extends Phaser.Scene {
     }
 
     private addEmptyTube(): void {
-        console.log("+1");
         if (!this.level.addEmptyTube()) {
             console.error("Error while trying to add an empty tube");
             return;
@@ -272,7 +277,6 @@ export default class MainScene extends Phaser.Scene {
     }
 
     private removeEmptyTube(): void {
-        console.log("-1");
         if (!this.level.removeEmptyTube()) {
             console.error("Error while trying to remove an empty tube");
             return;
@@ -331,6 +335,7 @@ export default class MainScene extends Phaser.Scene {
         this.moveCounter = 0;
         this.uiView.setCounter(this.moveCounter);
         this.uiView.hideWin();
+        this.gameState = GameStates.Game;
     }
 
     private undoMove(): void {
@@ -341,6 +346,7 @@ export default class MainScene extends Phaser.Scene {
         this.moveCounter--;
         this.uiView.setCounter(this.moveCounter);
         this.uiView.hideWin();
+        this.gameState = GameStates.Game;
     }
 
     private setHotKeyHandlers(): void {

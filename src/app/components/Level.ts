@@ -50,9 +50,15 @@ export class Level {
             console.error("Min number of tubes reached. Cannot remove more");
             return false;
         }
-        // search for empty tubes from the end of this.tubes
-        // remove the first found
-        // or return false if not found
+        let emptyTubeIndex = GAME.ErrorValues.InvalidTubeIndex;
+        this.tubes.forEach((tube, index) => {
+            if (tube.content.length === 0) emptyTubeIndex = index;
+        });
+        if (emptyTubeIndex === GAME.ErrorValues.InvalidTubeIndex) {
+            console.error("No empty tubes found");
+            return false;
+        }
+        this.tubes.splice(emptyTubeIndex, 1);
         return true;
     }
 
@@ -258,6 +264,9 @@ export class Level {
     public reset(): void {
         // this.tubes = [];
         // console.log("tubes BEFORE:" + JSON.stringify(this.tubes));
+        this.tubes.forEach((tube) => {
+            tube.content = [];
+        });
         this.startingTubesContent.forEach((startingContent, i) => {
             this.tubes[i].content = [...startingContent];
         });
