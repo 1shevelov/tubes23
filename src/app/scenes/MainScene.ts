@@ -1,5 +1,5 @@
 // import { IocContext } from "power-di";
-import * as Stats from "stats.js";
+// import * as Stats from "stats.js";
 import { SceneNames } from "../enums/Scenes";
 // import { PopupService } from "../services/PopupService";
 import { ForegroundView } from "../views/ForegroundView";
@@ -102,17 +102,17 @@ export default class MainScene extends Phaser.Scene {
     //     this.popupService.initialize();
     // }
 
-    private initStatJS(): void {
-        const stats = new Stats();
-        stats.showPanel(0);
-        const update = (): void => {
-            stats.begin();
-            stats.end();
-            requestAnimationFrame(update);
-        };
-        update();
-        document.body.appendChild(stats.dom);
-    }
+    // private initStatJS(): void {
+    //     const stats = new Stats();
+    //     stats.showPanel(0);
+    //     const update = (): void => {
+    //         stats.begin();
+    //         stats.end();
+    //         requestAnimationFrame(update);
+    //     };
+    //     update();
+    //     document.body.appendChild(stats.dom);
+    // }
 
     // private create(): void {
     //     this.startGame();
@@ -124,7 +124,7 @@ export default class MainScene extends Phaser.Scene {
         this.gameState = GameStates.NoGame;
         this.uiView.hideGameUi();
         this.gameView.reset();
-        this.uiView.showNewLevelForm();
+        this.uiView.showForm("start");
     }
 
     private initNewGame(newGameObj: FormData): void {

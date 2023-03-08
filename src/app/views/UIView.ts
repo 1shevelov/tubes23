@@ -16,8 +16,8 @@ export class UIView extends Phaser.GameObjects.Container {
     private buttonRestart: Phaser.GameObjects.Container;
     private buttonUndo: Phaser.GameObjects.Container;
 
-    private newLevelForm: Phaser.GameObjects.DOMElement;
-    // private dropDownDom:
+    private newGameForm: Phaser.GameObjects.DOMElement;
+    private endGameForm: Phaser.GameObjects.DOMElement;
 
     private wi: number;
     private he: number;
@@ -31,9 +31,12 @@ export class UIView extends Phaser.GameObjects.Container {
         this.makeWinMessage();
         this.makeButtons();
         // this.makeNewLevelPopup();
-        this.makeNewLevelForm();
+        this.makeNewGameForm();
+        this.makeEndGameForm();
         this.makeGoalMessage();
-        this.showNewLevelForm();
+        //this.showForm("start");
+        // Debug
+        this.showForm("end");
     }
 
     public showGameUi(): void {
@@ -98,12 +101,16 @@ export class UIView extends Phaser.GameObjects.Container {
         this.counter.setText(newVal.toString());
     }
 
-    public showNewLevelForm(): void {
+    public showForm(gameMoment: "start" | "end"): void {
+        let form: Phaser.GameObjects.DOMElement;
+        if (gameMoment === "start") form = this.newGameForm;
+        else form = this.endGameForm;
+
         const animationDuration = 1500;
-        this.newLevelForm.setVisible(true);
+        form.setVisible(true);
         this.scene.tweens.add({
-            targets: this.newLevelForm,
-            y: 300,
+            targets: form,
+            y: this.he / 2,
             alpha: 1.0,
             duration: animationDuration,
             ease: "Power3",
@@ -118,37 +125,60 @@ export class UIView extends Phaser.GameObjects.Container {
         this.uiEvents = new Phaser.Events.EventEmitter();
     }
 
-    private makeNewLevelForm(): void {
+    private makeNewGameForm(): void {
         const animationDuration = 1500;
 
-        this.newLevelForm = this.scene.add
+        this.newGameForm = this.scene.add
             .dom(this.wi / 2, this.he)
             .createFromCache("NewGameForm");
-        this.newLevelForm.setPerspective(800);
+        this.newGameForm.setPerspective(800);
 
-        // element.on("submit", (event) => {
-        //     const form = element.getChildByName("form");
-        //     const data = new FormData(form as HTMLFormElement);
-        //     console.log("Form data: ", data);
-        //     event.preventDefault();
-        // });
-        const form = this.newLevelForm.getChildByName("form");
+        const form = this.newGameForm.getChildByName("form");
         (form as HTMLFormElement).addEventListener("submit", (event) => {
             const data = new FormData(form as HTMLFormElement);
             this.scene.tweens.add({
-                targets: this.newLevelForm,
+                targets: this.newGameForm,
                 y: -300,
                 alpha: 0.5,
                 duration: animationDuration,
                 ease: "Power3",
                 onComplete: () => {
                     this.uiEvents.emit(UiEvents.NewGameSettingsSubmitted, data);
-                    this.newLevelForm.setVisible(false);
-                    this.newLevelForm.setY(this.he);
+                    this.newGameForm.setVisible(false);
+                    this.newGameForm.setY(this.he);
                 },
             });
             event.preventDefault();
         });
+        this.newGameForm.setVisible(false);
+    }
+
+    private makeEndGameForm(): void {
+        const animationDuration = 1500;
+
+        this.endGameForm = this.scene.add
+            .dom(this.wi / 2, this.he)
+            .createFromCache("EndGameForm");
+        this.endGameForm.setPerspective(800);
+
+        const form = this.endGameForm.getChildByName("form");
+        (form as HTMLFormElement).addEventListener("submit", (event) => {
+            const data = new FormData(form as HTMLFormElement);
+            this.scene.tweens.add({
+                targets: this.newGameForm,
+                y: -300,
+                alpha: 0.5,
+                duration: animationDuration,
+                ease: "Power3",
+                onComplete: () => {
+                    this.uiEvents.emit(UiEvents.EndGameClosed, data);
+                    this.endGameForm.setVisible(false);
+                    this.endGameForm.setY(this.he);
+                },
+            });
+            event.preventDefault();
+        });
+        this.endGameForm.setVisible(false);
     }
 
     // private makeNewLevelPopup(): void {

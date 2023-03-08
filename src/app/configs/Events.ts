@@ -2,6 +2,7 @@ export enum UiEvents {
     ButtonRestartClicked = "ButtonRestartClicked",
     ButtonUndoClicked = "ButtonUndoClicked",
     NewGameSettingsSubmitted = "NewGameSettingsSubmitted",
+    EndGameClosed = "EndGameClosed",
 }
 
 export enum GameEvents {

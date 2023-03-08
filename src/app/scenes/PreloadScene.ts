@@ -18,7 +18,7 @@ export default class PreloadScene extends Phaser.Scene {
         // this.loadAudio();
         // this.loadSpines();
         // this.loadShaders();
-        this.load.html("NewGameForm", "assets/html/NewGameForm.html");
+        this.loadHtml();
     }
 
     private init(): void {
@@ -28,6 +28,11 @@ export default class PreloadScene extends Phaser.Scene {
     private create(): void {
         // console.log("Asset loading is completed");
         this.scene.start(SceneNames.Main);
+    }
+
+    private loadHtml(): void {
+        this.load.html("NewGameForm", "assets/html/NewGameForm.html");
+        this.load.html("EndGameForm", "assets/html/EndGameForm.html");
     }
 
     private loadAssets(): void {
