@@ -1,13 +1,13 @@
 <style>
-    .new-game {
+    .end-game {
         background: #eceeee;
         border: 1px solid #42464b;
         border-radius: 6px;
-        height: 500px;
+        height: 240px;
         margin: 20px auto 0;
-        width: 298px;
+        width: 280px;
     }
-    .new-game h1 {
+    .end-game h1 {
         background-image: linear-gradient(top, #f1f3f3, #d4dae0);
         border-bottom: 1px solid #a6abaf;
         border-radius: 6px 6px 0 0;
@@ -129,65 +129,24 @@ input[type="checkbox"]:checked {
 </style>
 
 <form name="form">
-    <div class="new-game">
-        <h1 align="center">Game results:</h1>
+    <div class="end-game">
+        <h1 align="center">Game result: <span name="game_result"></span></h1>
         <fieldset class="new-game-elements">
-            <label for="tubes-num-select">
-                <!-- align="center" style="font-size: 1rem; padding-right: 10px;" -->
+            <!-- <label for="moves-done">
                 Choose number of tubes:
-            </label>
-            <p>
-                <select name="tubes_number" id="tubes-num-select">
-                    <!-- align="center" style="font-size: 0.9rem; padding: 2px 5px;" -->
-                    <option value="0" selected>Random (8-12)</option>
-                    <option value="4">4 / 2 colors</option>
-                    <option value="5">5 / 3 colors</option>
-                    <option value="6">6 / 4 colors</option>
-                    <option value="7">7 / 5 colors</option>
-                    <option value="8">8 / 6 colors</option>
-                    <option value="9">9 / 7 colors</option>
-                    <option value="10">10 / 8 colors</option>
-                    <option value="11">11 / 9 colors</option>
-                    <option value="12">12 / 10 colors</option>
-                </select>
+            </label> -->
+            <p id="moves-done">
+                <span>Moves used: </span>
+                <span name="moves_used"></span>
             </p>
         </fieldset>
 
-        <fieldset class="new-game-elements">
-            <label for="tubes-vol-select"> Choose tubes' volume: </label>
-            <p>
-                <select name="tubes_volume" id="tubes-vol-select">
-                    <option value="0" selected>Random (3-5)</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="6">6</option>
-                    <option value="7">7</option>
-                    <option value="8">8</option>
-                </select>
-            </p>
-        </fieldset>
-
-        <fieldset class="new-game-elements">
-            <legend align="center">Game mode:</legend>
-            <div>
-                <input
-                    type="radio"
-                    id="mode-classic"
-                    name="game_mode"
-                    value="classic"
-                    checked
-                />
-                <label for="mode-classic">Classic</label>
-            </div>
-
-            <div>
-                <input type="radio" id="mode-uno" name="game_mode" value="uno" />
-                <label for="mode-uno">Uno</label>
-            </div>
-        </fieldset>
-
-        <input type="submit" value="Start" name="start_button" />
+        <p>
+            <input type="submit" value="Replay" name="replay_button" />
+        </p>
+        <p>
+            <input type="submit" value="New game" name="new_game_button" />
+        </p>
     </div>
     <div class="shadow"></div>
 </form>

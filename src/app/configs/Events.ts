@@ -1,8 +1,13 @@
 export enum UiEvents {
     ButtonRestartClicked = "ButtonRestartClicked",
     ButtonUndoClicked = "ButtonUndoClicked",
-    NewGameSettingsSubmitted = "NewGameSettingsSubmitted",
-    EndGameClosed = "EndGameClosed",
+    NewGameSettingsSubmitted = "NewGameSettingsSubmitted", // sending new game form data
+    EndGameClosed = "EndGameClosed", // sending one of EndGameClosedActions
+}
+
+export enum EndGameClosedActions {
+    Replay = "Replay",
+    NewGame = "New game",
 }
 
 export enum GameEvents {

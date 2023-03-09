@@ -1,7 +1,7 @@
 // import { CounterComponent } from "../components/CounterComponent";
 import { UIService } from "../services/UIService";
 import * as UI_CONFIG from "../configs/UiConfig";
-import { UiEvents } from "../configs/Events";
+import { UiEvents, EndGameClosedActions } from "../configs/Events";
 
 interface XY {
     x: number;
@@ -34,9 +34,9 @@ export class UIView extends Phaser.GameObjects.Container {
         this.makeNewGameForm();
         this.makeEndGameForm();
         this.makeGoalMessage();
-        //this.showForm("start");
+        this.showForm("start");
         // Debug
-        this.showForm("end");
+        // this.showForm("end");
     }
 
     public showGameUi(): void {
@@ -150,37 +150,9 @@ export class UIView extends Phaser.GameObjects.Container {
             });
             event.preventDefault();
         });
-        this.newGameForm.setVisible(false);
-    }
-
-    private makeEndGameForm(): void {
-        const animationDuration = 1500;
-
-        this.endGameForm = this.scene.add
-            .dom(this.wi / 2, this.he)
-            .createFromCache("EndGameForm");
-        this.endGameForm.setPerspective(800);
-
-        const form = this.endGameForm.getChildByName("form");
-        (form as HTMLFormElement).addEventListener("submit", (event) => {
-            const data = new FormData(form as HTMLFormElement);
-            this.scene.tweens.add({
-                targets: this.newGameForm,
-                y: -300,
-                alpha: 0.5,
-                duration: animationDuration,
-                ease: "Power3",
-                onComplete: () => {
-                    this.uiEvents.emit(UiEvents.EndGameClosed, data);
-                    this.endGameForm.setVisible(false);
-                    this.endGameForm.setY(this.he);
-                },
-            });
-            event.preventDefault();
-        });
-        const fileLoadInput = this.newLevelForm.getChildByName("load_file");
-        const startButton = this.newLevelForm.getChildByName("start_button");
-        const clearButton = this.newLevelForm.getChildByName("clear_button");
+        const fileLoadInput = this.newGameForm.getChildByName("load_file");
+        const startButton = this.newGameForm.getChildByName("start_button");
+        const clearButton = this.newGameForm.getChildByName("clear_button");
         fileLoadInput.addEventListener("input", (event) => {
             console.log("File load input event: ", event);
             const target = event.target as HTMLInputElement;
@@ -200,6 +172,47 @@ export class UIView extends Phaser.GameObjects.Container {
             (clearButton as HTMLButtonElement).style.visibility = "hidden";
             event.preventDefault();
         });
+        this.newGameForm.setVisible(false);
+    }
+
+    private makeEndGameForm(): void {
+        this.endGameForm = this.scene.add
+            .dom(this.wi / 2, this.he)
+            .createFromCache("EndGameForm");
+        this.endGameForm.setPerspective(800);
+
+        (
+            this.endGameForm.getChildByName("replay_button") as HTMLButtonElement
+        ).addEventListener("click", (event: MouseEvent) => {
+            this.endGameCloseAnimation(EndGameClosedActions.Replay);
+            event.preventDefault();
+        });
+        (
+            this.endGameForm.getChildByName("new_game_button") as HTMLButtonElement
+        ).addEventListener("click", (event: MouseEvent) => {
+            this.endGameCloseAnimation(EndGameClosedActions.NewGame);
+            event.preventDefault();
+        });
+
+        this.endGameForm.setVisible(false);
+    }
+
+    private endGameCloseAnimation(signalData: string): void {
+        const animationDuration = 1500;
+
+        this.scene.tweens.add({
+            targets: this.endGameForm,
+            y: -300,
+            alpha: 0.5,
+            duration: animationDuration,
+            ease: "Power3",
+            onComplete: () => {
+                this.uiEvents.emit(UiEvents.EndGameClosed, signalData);
+                this.endGameForm.setVisible(false);
+                this.endGameForm.setY(this.he);
+            },
+        });
+
         this.endGameForm.setVisible(false);
     }
 

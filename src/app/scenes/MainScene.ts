@@ -9,7 +9,7 @@ import { Level } from "../components/Level";
 import * as GAME from "../configs/GameConfig";
 import { fixValue, getRandomSeed, getRandomPositiveInt } from "../services/Utilities";
 import * as FILES from "../services/Files";
-import { GameEvents, UiEvents } from "../configs/Events";
+import { GameEvents, UiEvents, EndGameClosedActions } from "../configs/Events";
 import { AoccPalette } from "../configs/UiConfig";
 
 enum GameStates {
@@ -83,6 +83,12 @@ export default class MainScene extends Phaser.Scene {
         uiEvents.on(UiEvents.ButtonRestartClicked, this.resetGame, this);
         uiEvents.on(UiEvents.ButtonUndoClicked, this.undoMove, this);
         uiEvents.on(UiEvents.NewGameSettingsSubmitted, this.initNewGame, this);
+        uiEvents.on(UiEvents.EndGameClosed, (action: string) => {
+            if (action === EndGameClosedActions.Replay) this.resetGame();
+            else if (action === EndGameClosedActions.NewGame)
+                this.uiView.showForm("start");
+            else console.error(`Unknown End Game closed action: "${action}"`);
+        });
     }
 
     private initForegroundView(): void {
@@ -291,8 +297,9 @@ export default class MainScene extends Phaser.Scene {
     private endGame(): void {
         this.uiView.showWin();
         console.log(`You win in ${this.moveCounter} moves!`);
-        console.log('Press "N" or reload to PLAY AGAIN');
+        // console.log('Press "N" or reload to PLAY AGAIN');
         this.gameState = GameStates.GameFinished;
+        this.uiView.showForm("end");
     }
 
     private saveLevel(): void {
