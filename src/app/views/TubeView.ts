@@ -23,7 +23,7 @@ import { PortionView } from "./PortionView";
 import { ViewEvents } from "../configs/Events";
 
 export class TubeView extends Phaser.GameObjects.Container {
-    private tubeSprite: Phaser.GameObjects.Rectangle;
+    private tubeSprite: Phaser.GameObjects.Sprite;
     private interactiveLayer: Phaser.GameObjects.Sprite;
     private hotkeyLabel: Phaser.GameObjects.Text;
 
@@ -223,17 +223,25 @@ export class TubeView extends Phaser.GameObjects.Container {
     }
 
     private create(): void {
-        const INIT_PORTION_SIZE = 100;
-        this.tubeSprite = new Phaser.GameObjects.Rectangle(
+        // const INIT_PORTION_SIZE = 100;
+        // this.tubeSprite = new Phaser.GameObjects.Rectangle(
+        //     this.scene,
+        //     0,
+        //     0,
+        //     INIT_PORTION_SIZE,
+        //     INIT_PORTION_SIZE * GAME.MIN_VOLUME,
+        //     0x111b11,
+        //     0.0,
+        // );
+        // this.tubeSprite.setStrokeStyle(2.5, 0xdddddd, 1.0);
+        this.tubeSprite = new Phaser.GameObjects.Sprite(
             this.scene,
             0,
             0,
-            INIT_PORTION_SIZE,
-            INIT_PORTION_SIZE * GAME.MIN_VOLUME,
-            0x111b11,
-            0.0,
+            "game-ui",
+            "tube.png",
         );
-        this.tubeSprite.setStrokeStyle(2.5, 0xdddddd, 1.0);
+        this.tubeSprite.setOrigin(0.5, 0.5);
         this.tubeSprite.setVisible(false);
         this.add(this.tubeSprite);
     }

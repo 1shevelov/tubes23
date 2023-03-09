@@ -1,3 +1,6 @@
+// to make the script work in Windows
+// replace all "/" with "\\"
+
 const texturePacker = require("free-tex-packer-core");
 const fs = require("fs").promises;
 const { join } = require("path");
@@ -69,7 +72,7 @@ let options = {
 // }
 
 function getFileNameWithExtension(path) {
-    return path.slice(path.lastIndexOf("\\") + 1, path.length);
+    return path.slice(path.lastIndexOf("/") + 1, path.length);
 }
 
 function getFileExtensionFromPath(path) {
@@ -125,12 +128,12 @@ async function getFolderContent(
                 await getFilesRecursively(newPath);
             } else {
                 if (shorterPath) {
-                    const dir = newPath.split("\\");
+                    const dir = newPath.split("/");
                     const fileDir = dir.slice(
                         dir.indexOf(shortenFromFolder) + 1,
                         dir.length,
                     );
-                    newPath = fileDir.join("\\");
+                    newPath = fileDir.join("/");
                 }
                 result.push(newPath);
             }
