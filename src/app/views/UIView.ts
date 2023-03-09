@@ -39,6 +39,18 @@ export class UIView extends Phaser.GameObjects.Container {
         // this.showForm("end");
     }
 
+    public resizeUi(): void {
+        const { width, height } = this.scene.scale.gameSize;
+        this.wi = width;
+        this.he = height;
+
+        if (this.newGameForm.visible)
+            this.newGameForm.setPosition(this.wi / 2, this.he / 2);
+        if (this.endGameForm.visible)
+            this.endGameForm.setPosition(this.wi / 2, this.he / 2);
+        // TODO: else update starting position
+    }
+
     public showGameUi(): void {
         this.buttonRestart.setVisible(true);
         this.buttonUndo.setVisible(true);
@@ -101,10 +113,14 @@ export class UIView extends Phaser.GameObjects.Container {
         this.counter.setText(newVal.toString());
     }
 
-    public showForm(gameMoment: "start" | "end"): void {
+    public showForm(gameMoment: "start" | "end", _data = {}): void {
         let form: Phaser.GameObjects.DOMElement;
         if (gameMoment === "start") form = this.newGameForm;
-        else form = this.endGameForm;
+        else {
+            form = this.endGameForm;
+            if (Object.keys(_data).length > 0 && _data.hasOwnProperty("counter"))
+                form.getChildByID("moves_used").textContent = _data["counter"].toString();
+        }
 
         const animationDuration = 1500;
         form.setVisible(true);
@@ -154,7 +170,7 @@ export class UIView extends Phaser.GameObjects.Container {
         const startButton = this.newGameForm.getChildByName("start_button");
         const clearButton = this.newGameForm.getChildByName("clear_button");
         fileLoadInput.addEventListener("input", (event) => {
-            console.log("File load input event: ", event);
+            // console.log("File load input event: ", event);
             const target = event.target as HTMLInputElement;
             if (target) {
                 if (target.files?.length === 1) {

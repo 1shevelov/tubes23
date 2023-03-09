@@ -89,6 +89,10 @@ export default class MainScene extends Phaser.Scene {
                 this.uiView.showForm("start");
             else console.error(`Unknown End Game closed action: "${action}"`);
         });
+
+        this.scale.on("resize", () => {
+            this.uiView.resizeUi();
+        });
     }
 
     private initForegroundView(): void {
@@ -152,12 +156,14 @@ export default class MainScene extends Phaser.Scene {
                     // console.log("result JSON: ", JSON.stringify(json));
                     this.loadGame(json);
                 } catch (error) {
-                    console.error(error);
+                    // console.error(error);
                     console.error(
                         "Error loading saved game JSON. LOAD another save or START a new game",
                     );
-                    // throw new Error('Error occured: ', e);
                     this.showNewGameForm();
+                    // throw new Error(
+                    //     "Error loading saved game JSON. LOAD another save or START a new game",
+                    // );
                 }
             };
             fReader.onerror = (error) => {
@@ -296,10 +302,11 @@ export default class MainScene extends Phaser.Scene {
 
     private endGame(): void {
         this.uiView.showWin();
-        console.log(`You win in ${this.moveCounter} moves!`);
+        // console.log(`You win in ${this.moveCounter} moves!`);
         // console.log('Press "N" or reload to PLAY AGAIN');
         this.gameState = GameStates.GameFinished;
-        this.uiView.showForm("end");
+        // TODO: sent status WIN/LOSE
+        this.uiView.showForm("end", { counter: this.moveCounter });
     }
 
     private saveLevel(): void {
