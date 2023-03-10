@@ -14,7 +14,7 @@ export enum ErrorValues {
 }
 
 // move helper enabled
-export const HELPER_ENABLED = true;
+export const HELPER_ENABLED = false;
 
 // show tube labels for hotkeys
 export const SHOW_TUBE_HOTKEY = true;

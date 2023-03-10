@@ -243,10 +243,10 @@ export class GameView extends Phaser.GameObjects.Container {
             return;
         }
         const { x, y } = this.tubes[this.recipientTube].getTopPosition();
-        // portion.animateTo(x, y, 200);
-        portion.changeXPos(x);
-        portion.changeYPos(y);
-        this.tubes[this.recipientTube].addToTop(portion);
+        portion.curveAnimateTo(x, y, 200);
+        // portion.changeXPos(x);
+        // portion.changeYPos(y);
+        // this.tubes[this.recipientTube].addToTop(portion);
         this.resetSource();
         this.recipientTube = this.NO_TUBE;
     }
