@@ -93,6 +93,22 @@ export class PortionView extends Phaser.GameObjects.Container {
         const pathVisual = this.scene.add.graphics();
         pathVisual.lineStyle(1, 0x55ff55, 1);
         path.draw(pathVisual, 128);
+
+        const portionFollower = this.scene.add.follower(
+            path,
+            50,
+            500,
+            "game-ui",
+            "bubble-150.png",
+        );
+
+        portionFollower.startFollow({
+            duration: 1000,
+            // yoyo: false,
+            // repeat: 0,
+            // rotateToPath: true,
+            // verticalAdjust: true,
+        });
     }
 
     // private init(x: number, y: number, size: number, color: number): void {
