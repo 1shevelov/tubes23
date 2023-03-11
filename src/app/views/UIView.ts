@@ -2,6 +2,7 @@
 import { UIService } from "../services/UIService";
 import * as UI_CONFIG from "../configs/UiConfig";
 import { UiEvents, EndGameClosedActions } from "../configs/Events";
+import { PortionView } from "./PortionView";
 
 interface XY {
     x: number;
@@ -23,6 +24,7 @@ export class UIView extends Phaser.GameObjects.Container {
     private he: number;
 
     private uiEvents: Phaser.Events.EventEmitter;
+    private unoMessagePortion: PortionView;
 
     public constructor(public scene: Phaser.Scene) {
         super(scene);
@@ -63,6 +65,7 @@ export class UIView extends Phaser.GameObjects.Container {
         this.buttonUndo.setVisible(false);
         this.counter.setVisible(false);
         this.goalMessage.setVisible(false);
+        if (this.unoMessagePortion) this.unoMessagePortion.hide();
         this.hideWin();
     }
 
@@ -72,8 +75,19 @@ export class UIView extends Phaser.GameObjects.Container {
 
     // for game mode Uno
     public setUnoGoalMessage(winColor: number): void {
+        if (!this.unoMessagePortion) {
+            this.unoMessagePortion = new PortionView(this.scene);
+            this.add(this.unoMessagePortion);
+            this.unoMessagePortion.changeSize(
+                this.he > this.wi ? this.wi / 25 : this.he / 25,
+            );
+            this.unoMessagePortion.changeXPos(this.goalMessage.x - 200);
+            this.unoMessagePortion.changeYPos(this.goalMessage.y);
+        }
         this.goalMessage.setText("Gather this color only to win");
         this.goalMessage.setTint(winColor);
+        this.unoMessagePortion.changeColor(winColor);
+        this.unoMessagePortion.show();
     }
 
     public setClassicGoalMessage(): void {
