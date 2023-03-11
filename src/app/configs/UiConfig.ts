@@ -33,17 +33,19 @@ export const uiButtonLabelStyle: Phaser.Types.GameObjects.Text.TextStyle = {
 //         alpha: 1,
 //     },
 // }
-// export const PortionStyle = {
-//     lineStyle: {
-//         width: 1.5,
-//         color: 0xffffff,
-//         alpha: 1,
-//     },
-//     fillStyle: {
-//         color: 0xffffff,
-//         alpha: 1,
-//     },
-// }
+
+// in Fog of War mode
+export const PortionFogStyle = {
+    lineStyle: {
+        width: 2,
+        color: 0xaaaaaa,
+        alpha: 0.3,
+    },
+    fillStyle: {
+        color: 0xffffff,
+        alpha: 1,
+    },
+};
 
 /* eslint-disable prettier/prettier */
 export const AoccPalette = [
