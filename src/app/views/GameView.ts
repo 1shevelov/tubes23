@@ -171,6 +171,9 @@ export class GameView extends Phaser.GameObjects.Container {
                 }
             }
             this.tubes[i].fillPortions(portions);
+            if (GAME.FOG_OF_WAR_MODE) {
+                for (let p = 0; p < portions.length - 1; p++) portions[p].setFog();
+            }
         }
     }
 
@@ -247,6 +250,7 @@ export class GameView extends Phaser.GameObjects.Container {
         portion.changeXPos(x);
         portion.changeYPos(y);
         this.tubes[this.recipientTube].addToTop(portion);
+        if (GAME.FOG_OF_WAR_MODE) this.tubes[this.sourceTube].removeFogFromTopPortion();
         this.resetSource();
         this.recipientTube = this.NO_TUBE;
     }

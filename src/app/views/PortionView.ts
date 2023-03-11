@@ -8,8 +8,11 @@
 // public changeXPos(x), changeYPos(y) - on window resize
 // public animateTo(x, y, trajectory) - trajectory: "straight" | "curve"
 
+import { PortionFogStyle, uiWinMessageStyle } from "../configs/UiConfig";
+
 export class PortionView extends Phaser.GameObjects.Container {
     private portionSprite: Phaser.GameObjects.Sprite;
+    private fog: Phaser.GameObjects.Container;
     private readonly portionSizeCoeff = 0.8;
 
     public constructor(
@@ -25,8 +28,28 @@ export class PortionView extends Phaser.GameObjects.Container {
         this.add(this.portionSprite);
     }
 
+    public setFog(): void {
+        this.fog = this.makeFog(
+            this.portionSprite.x,
+            this.portionSprite.y,
+            this.portionSprite.width > this.portionSprite.height
+                ? (this.portionSprite.width * this.portionSprite.scaleX) / 2
+                : (this.portionSprite.height * this.portionSprite.scaleY) / 2,
+        );
+        this.add(this.fog);
+        this.fog.setVisible(true);
+    }
+
+    public removeFog(): void {
+        if (this.fog) {
+            this.fog.setVisible(false);
+            this.fog.destroy();
+        }
+    }
+
     public hide(): void {
         if (this.portionSprite !== undefined) this.portionSprite.setVisible(false);
+        if (this.fog) this.fog.setVisible(false);
     }
 
     public show(): void {
@@ -178,30 +201,32 @@ export class PortionView extends Phaser.GameObjects.Container {
     //     return golfBall;
     // }
 
-    // private drawCircle(
-    //     portionContainer: Phaser.GameObjects.Container,
-    //     x: number,
-    //     y: number,
-    //     num: number,
-    //     color: number,
-    // ): void {
-    //     const filling = new Phaser.GameObjects.Graphics(this.scene);
-    //     filling.setDefaultStyles(COLORS.PortionsStyle);
-    //     filling.fillStyle(color, 1);
-    //     filling.fillCircle(
-    //         x + this.portionSquareSize * 0.5,
-    //         y + this.portionSquareSize * (num + 0.5),
-    //         (this.portionSquareSize * this.portionSizeCoeff) / 2,
-    //     );
-    //     portionContainer.add(filling);
+    // Fog of War mode
+    private makeFog(x: number, y: number, radius: number): Phaser.GameObjects.Container {
+        const fog = new Phaser.GameObjects.Container(this.scene);
+        const circle = new Phaser.GameObjects.Graphics(this.scene);
+        circle.setDefaultStyles(PortionFogStyle);
+        // filling.fillStyle(color, 1);
+        circle.fillCircle(x, y, radius);
+        // circle.setVisible(false);
+        fog.add(circle);
 
-    //     const stroking = new Phaser.GameObjects.Graphics(this.scene);
-    //     stroking.setDefaultStyles(COLORS.PortionsStyle);
-    //     stroking.strokeCircle(
-    //         x + this.portionSquareSize * 0.5,
-    //         y + this.portionSquareSize * (num + 0.5),
-    //         (this.portionSquareSize * this.portionSizeCoeff) / 2,
-    //     );
-    //     portionContainer.add(stroking);
-    // }
+        const stroking = new Phaser.GameObjects.Graphics(this.scene);
+        stroking.setDefaultStyles(PortionFogStyle);
+        stroking.strokeCircle(x, y, radius + 1);
+        fog.add(stroking);
+
+        const label = new Phaser.GameObjects.Text(
+            this.scene,
+            x,
+            y,
+            "?",
+            uiWinMessageStyle,
+        );
+        label.setOrigin(0.5, 0.5);
+        label.setColor("0xaa5555");
+        fog.add(label);
+
+        return fog;
+    }
 }

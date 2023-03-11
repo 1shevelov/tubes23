@@ -216,7 +216,12 @@ export class TubeView extends Phaser.GameObjects.Container {
         this.interactiveLayer.setInteractive();
     }
 
+    public removeFogFromTopPortion(): void {
+        if (this.getTopPortion()) this.getTopPortion()?.removeFog();
+    }
+
     // to activate/deactivate
+    // and remove fog of war
     private getTopPortion(): PortionView | undefined {
         if (this.isEmpty()) return undefined;
         return this.portions[this.portions.length - 1];
