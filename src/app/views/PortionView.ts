@@ -66,20 +66,32 @@ export class PortionView extends Phaser.GameObjects.Container {
 
     public curveAnimateTo(x: number, y: number, _duration: number): void {
         // console.log(`${this.portionSprite.x}/${this.portionSprite.y} to ${x}/${y}`);
+        // console.log(
+        //     `${Math.abs((x + this.portionSprite.x) / 2)}, ${Math.abs(
+        //         (y + this.portionSprite.y) / 2,
+        //     )}`,
+        // );
         const path = new Phaser.Curves.Path(this.portionSprite.x, this.portionSprite.y);
-        path.ellipseTo(
-            (x - this.portionSprite.x) / 2,
-            (y - this.portionSprite.y) / 2,
-            100,
-            250,
-            false,
-            0,
-        );
-        const endPoint = this.scene.add.graphics();
-        endPoint.lineStyle(1, 0x55ff55, 1);
-        endPoint.fillCircle(x, y, 10);
+        let radX =
+            Math.sqrt(
+                Math.pow(x - this.portionSprite.x, 2) +
+                    Math.pow(y - this.portionSprite.y, 2),
+            ) / 2;
+        const angle =
+            (Math.atan((y - this.portionSprite.y) / (x - this.portionSprite.x)) * 180) /
+            Math.PI;
+        let clockWise = false;
+        if (x < this.portionSprite.x) {
+            radX = -radX;
+            clockWise = true;
+        }
+        path.ellipseTo(radX, radX * 0.5, 180, 0, clockWise, angle);
+
+        // const endPoint = this.scene.add.graphics();
+        // endPoint.lineStyle(1, 0xaaffaa, 1);
+        // endPoint.fillCircle(x, y, 10);
         const pathVisual = this.scene.add.graphics();
-        pathVisual.lineStyle(1, 0xffffff, 1);
+        pathVisual.lineStyle(1, 0x55ff55, 1);
         path.draw(pathVisual, 128);
     }
 
