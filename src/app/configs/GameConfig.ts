@@ -16,9 +16,6 @@ export enum ErrorValues {
 // move helper enabled
 export const HELPER_ENABLED = true;
 
-// hide all portions, except top
-export const FOG_OF_WAR_MODE = true;
-
 // show tube labels for hotkeys
 export const SHOW_TUBE_HOTKEY = true;
 

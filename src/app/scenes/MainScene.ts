@@ -39,6 +39,7 @@ export default class MainScene extends Phaser.Scene {
     private randomClassicLevelTubeVol: number;
 
     private isWinningColor = GAME.ErrorValues.InvalidColorIndex;
+    private isFogOfWar = false;
 
     public constructor() {
         super({ key: SceneNames.Main });
@@ -137,12 +138,14 @@ export default class MainScene extends Phaser.Scene {
         let tubesVol: number = GAME.ErrorValues.InvalidTubeVolume;
         let gameMode = "";
         let gameFile: any;
+        let gameFoW = "";
         for (const [key, value] of newGameObj) {
             // console.log(`${key}: ${value}`);
             if (key === "tubes_number") tubesNum = Number(value);
             if (key === "tubes_volume") tubesVol = Number(value);
             if (key === "game_mode") gameMode = value.toString();
             if (key === "load_file") gameFile = value;
+            if (key === "fog_of_war") gameFoW = value.toString();
         }
 
         if (FILES.checkUploadedGameFile(gameFile)) {
@@ -197,6 +200,9 @@ export default class MainScene extends Phaser.Scene {
                 );
                 gameMode = "classic";
             }
+            // TODO do I need global var or can just send the value to this.startGame() ?
+            // probably need this also for Level to check in moveHelper
+            this.isFogOfWar = gameFoW === "true";
             this.startGame(gameMode);
         }
     }
@@ -252,6 +258,7 @@ export default class MainScene extends Phaser.Scene {
             this.uiView.setClassicGoalMessage();
         }
 
+        this.gameView.isFogOfWar = this.isFogOfWar;
         this.gameView.createClassicGame(this.level.getTubes());
 
         this.moveCounter = 0;

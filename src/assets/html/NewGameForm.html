@@ -3,7 +3,7 @@
         background: #eceeee;
         border: 1px solid #42464b;
         border-radius: 6px;
-        height: 500px;
+        height: 580px;
         margin: 20px auto 0;
         width: 400px;
     }
@@ -187,6 +187,19 @@ input[type="checkbox"]:checked {
             </div>
         </fieldset>
 
+        <fieldset class="new-game-elements">
+            <legend align="center">Fog of war:</legend>
+            <div>
+                <input
+                  type="checkbox"
+                  id="fog-of-war"
+                  name="fog_of_war"
+                  value="true"
+                />
+                <label for="fog-of-war"> activate Fog of war mode</label>
+            </div>
+        </fieldset>
+
         <h1>...or load a game</h1>
         <fieldset class="new-game-elements">
             <!-- <legend align="center">Load game:</legend> -->
@@ -199,7 +212,7 @@ input[type="checkbox"]:checked {
             </div>
         </fieldset>
 
-        <input type="submit" value="New random game" name="start_button" />
+        <p><input type="submit" value="New random game" name="start_button" /></p>
     </div>
     <div class="shadow"></div>
 </form>

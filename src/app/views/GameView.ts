@@ -7,6 +7,8 @@ import { fixValue } from "../services/Utilities";
 import { GameEvents, ViewEvents } from "../configs/Events";
 
 export class GameView extends Phaser.GameObjects.Container {
+    public isFogOfWar = false;
+
     // max number of tubes for each row
     private readonly HOR_ROWS = [8, 16, 24, GAME.MAX_TUBES];
     private readonly PORT_ROWS = [5, 10, 18, 28, GAME.MAX_TUBES];
@@ -174,7 +176,7 @@ export class GameView extends Phaser.GameObjects.Container {
                 }
             }
             this.tubes[i].fillPortions(portions);
-            if (GAME.FOG_OF_WAR_MODE) {
+            if (this.isFogOfWar) {
                 for (let p = 0; p < portions.length - 1; p++) portions[p].setFog();
             }
         }
@@ -261,9 +263,8 @@ export class GameView extends Phaser.GameObjects.Container {
     }
 
     private finishTransferPortion(portion: PortionView): void {
-        console.log(portion);
         this.tubes[this.recipientTube].addToTop(portion);
-        if (GAME.FOG_OF_WAR_MODE) this.tubes[this.sourceTube].removeFogFromTopPortion();
+        if (this.isFogOfWar) this.tubes[this.sourceTube].removeFogFromTopPortion();
         this.resetSource();
         this.recipientTube = this.NO_TUBE; // TODO: why NO-TUBE? why not take from game consts
     }
