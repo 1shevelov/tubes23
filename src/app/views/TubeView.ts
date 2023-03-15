@@ -97,7 +97,7 @@ export class TubeView extends Phaser.GameObjects.Container {
         topPortion.animateTo(
             this.positions[this.volume][0],
             this.positions[this.volume][1],
-            100,
+            GAME.PORTION_READY_ANIMATION_SPEED,
         );
         this.isActivated = true;
     }
@@ -110,7 +110,7 @@ export class TubeView extends Phaser.GameObjects.Container {
         topPortion.animateTo(
             this.positions[this.portions.length - 1][0],
             this.positions[this.portions.length - 1][1],
-            100,
+            GAME.PORTION_READY_ANIMATION_SPEED,
         );
         this.isActivated = false;
     }

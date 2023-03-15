@@ -8,7 +8,9 @@
 // public changeXPos(x), changeYPos(y) - on window resize
 // public animateTo(x, y, trajectory) - trajectory: "straight" | "curve"
 
+import PathFollower from "phaser3-rex-plugins/plugins/pathfollower.js";
 import { PortionFogStyle, uiWinMessageStyle } from "../configs/UiConfig";
+import { ViewEvents } from "../configs/Events";
 
 export class PortionView extends Phaser.GameObjects.Container {
     private portionSprite: Phaser.GameObjects.Sprite;
@@ -72,6 +74,11 @@ export class PortionView extends Phaser.GameObjects.Container {
         this.portionSprite.setY(y);
     }
 
+    // DEBUG only
+    // public getPos(): { x: number; y: number } {
+    //     return { x: this.portionSprite.x, y: this.portionSprite.y };
+    // }
+
     public animateTo(x: number, y: number, duration: number): void {
         // console.log(`${this.portionSprite.x}/${this.portionSprite.y} to ${x}/${y}`);
         const distanceX = "+=" + (this.portionSprite.x - x).toString();
@@ -87,7 +94,12 @@ export class PortionView extends Phaser.GameObjects.Container {
         });
     }
 
-    public curveAnimateTo(x: number, y: number, _duration: number): void {
+    public pathAnimateTo(
+        x: number,
+        y: number,
+        moveDuration: number,
+        evEmitter: Phaser.Events.EventEmitter,
+    ): void {
         // console.log(`${this.portionSprite.x}/${this.portionSprite.y} to ${x}/${y}`);
         // console.log(
         //     `${Math.abs((x + this.portionSprite.x) / 2)}, ${Math.abs(
@@ -108,30 +120,33 @@ export class PortionView extends Phaser.GameObjects.Container {
             radX = -radX;
             clockWise = true;
         }
-        path.ellipseTo(radX, radX * 0.5, 180, 0, clockWise, angle);
+        path.ellipseTo(radX, radX * 0.25, 180, 0, clockWise, angle);
 
+        const portionPathFollower = new PathFollower(this.portionSprite, {
+            path: path,
+            t: 0,
+        });
+        //     rotateToPath: true
+
+        this.scene.tweens.add({
+            targets: portionPathFollower,
+            t: 1,
+            ease: "Linear", // 'Cubic', 'Elastic', 'Bounce', 'Back'
+            duration: moveDuration,
+            repeat: 0,
+            yoyo: false,
+            onComplete: () => {
+                evEmitter.emit(ViewEvents.PortionAnimationFinished, this);
+            },
+        });
+
+        // VISUAL PATH DEBUG
         // const endPoint = this.scene.add.graphics();
         // endPoint.lineStyle(1, 0xaaffaa, 1);
         // endPoint.fillCircle(x, y, 10);
-        const pathVisual = this.scene.add.graphics();
-        pathVisual.lineStyle(1, 0x55ff55, 1);
-        path.draw(pathVisual, 128);
-
-        const portionFollower = this.scene.add.follower(
-            path,
-            50,
-            500,
-            "game-ui",
-            "bubble-150.png",
-        );
-
-        portionFollower.startFollow({
-            duration: 1000,
-            // yoyo: false,
-            // repeat: 0,
-            // rotateToPath: true,
-            // verticalAdjust: true,
-        });
+        // const pathVisual = this.scene.add.graphics();
+        // pathVisual.lineStyle(1, 0x55ff55, 1);
+        // path.draw(pathVisual, 128);
     }
 
     // private init(x: number, y: number, size: number, color: number): void {

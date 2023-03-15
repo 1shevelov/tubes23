@@ -24,3 +24,6 @@ export const SHOW_TUBE_HOTKEY = true;
 
 // save randomly generated classic level without actual tube content
 export const SAVE_WITH_RANDOM_SEED = true;
+
+export const PORTION_MOVE_ANIMATION_SPEED = 300; // between tubes
+export const PORTION_READY_ANIMATION_SPEED = 150; // to&from top position in tube

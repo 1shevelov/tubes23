@@ -221,6 +221,12 @@ export class GameView extends Phaser.GameObjects.Container {
         this.scene.scale.on("resize", this.updateWindowSize, this);
 
         this.gameEvents.on(ViewEvents.TubeClicked, this.handleClick, this);
+        this.gameEvents.on(
+            ViewEvents.PortionAnimationFinished,
+            (portion: PortionView) => {
+                this.finishTransferPortion(portion);
+            },
+        );
         // TODO: should call these methods directly from MS
         this.gameEvents.on(GameEvents.MoveFailed, this.resetSource, this);
         this.gameEvents.on(GameEvents.MoveSucceeded, this.move, this);
@@ -246,13 +252,17 @@ export class GameView extends Phaser.GameObjects.Container {
             return;
         }
         const { x, y } = this.tubes[this.recipientTube].getTopPosition();
-        portion.curveAnimateTo(x, y, 200);
-        portion.changeXPos(x);
-        portion.changeYPos(y);
+        portion.pathAnimateTo(x, y, GAME.PORTION_MOVE_ANIMATION_SPEED, this.gameEvents);
+
+        // wait for PortionAnimationFinished signal
+    }
+
+    private finishTransferPortion(portion: PortionView): void {
+        console.log(portion);
         this.tubes[this.recipientTube].addToTop(portion);
         if (GAME.FOG_OF_WAR_MODE) this.tubes[this.sourceTube].removeFogFromTopPortion();
         this.resetSource();
-        this.recipientTube = this.NO_TUBE;
+        this.recipientTube = this.NO_TUBE; // TODO: why NO-TUBE? why not take from game consts
     }
 
     private updateWindowSize(): void {
