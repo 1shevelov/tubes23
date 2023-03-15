@@ -117,7 +117,10 @@ export class GameView extends Phaser.GameObjects.Container {
         //     return;
         // }
         this.recipientTube = recipient;
-        this.transferPortion();
+        this.tubes[this.sourceTube].activate();
+        setTimeout(() => {
+            this.transferPortion();
+        }, GAME.PORTION_READY_ANIMATION_SPEED);
     }
 
     private setAndPlaceTubes(tubes: object[]): void {
