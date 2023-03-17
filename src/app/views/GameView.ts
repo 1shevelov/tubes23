@@ -257,6 +257,10 @@ export class GameView extends Phaser.GameObjects.Container {
             return;
         }
         const { x, y } = this.tubes[this.recipientTube].getTopPosition();
+        this.gameEvents.emit(
+            ViewEvents.MoveAnimationStarted,
+            GAME.PORTION_MOVE_ANIMATION_SPEED,
+        );
         portion.pathAnimateTo(x, y, GAME.PORTION_MOVE_ANIMATION_SPEED, this.gameEvents);
 
         // wait for PortionAnimationFinished signal

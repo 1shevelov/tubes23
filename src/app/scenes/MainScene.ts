@@ -9,12 +9,18 @@ import { Level } from "../components/Level";
 import * as GAME from "../configs/GameConfig";
 import { fixValue, getRandomSeed, getRandomPositiveInt } from "../services/Utilities";
 import * as FILES from "../services/Files";
-import { GameEvents, UiEvents, EndGameClosedActions } from "../configs/Events";
+import {
+    GameEvents,
+    UiEvents,
+    EndGameClosedActions,
+    ViewEvents,
+} from "../configs/Events";
 import { AoccPalette } from "../configs/UiConfig";
 
 enum GameStates {
     NoGame,
     Game,
+    GameBusy,
     GameFinished,
 }
 
@@ -74,7 +80,21 @@ export default class MainScene extends Phaser.Scene {
                 this.gameView.createClassicGame(this.level.getTubes());
             }
         });
+        this.gameEvents.on(ViewEvents.MoveAnimationStarted, (duration: number) => {
+            this.gameState = GameStates.GameBusy;
+            setTimeout(() => {
+                this.gameState = GameStates.Game;
+            }, duration);
+        });
     }
+
+    // TODO check how to call it
+    // private setViewBusy(duration: number): void {
+    //     this.gameState = GameStates.GameBusy;
+    //     setTimeout(() => {
+    //         this.gameState = GameStates.Game;
+    //     }, duration);
+    // }
 
     private initUIView(): void {
         this.uiView = new UIView(this);
@@ -308,10 +328,8 @@ export default class MainScene extends Phaser.Scene {
     }
 
     private endGame(): void {
-        this.uiView.showWin();
-        // console.log(`You win in ${this.moveCounter} moves!`);
-        // console.log('Press "N" or reload to PLAY AGAIN');
         this.gameState = GameStates.GameFinished;
+        this.uiView.showWin();
         // TODO: sent status WIN/LOSE
         this.uiView.showForm("end", { counter: this.moveCounter });
     }
@@ -377,19 +395,12 @@ export default class MainScene extends Phaser.Scene {
                     if (this.gameState === GameStates.NoGame) return;
                     this.resetGame();
                     break;
-                // case Phaser.Input.Keyboard.KeyCodes.L: // load
-                //     if (this.gameState === GameStates.NoGame) return;
-                //     console.log("loading not implemented");
-                //     // this.level.load();
-                //     // this.gameView.reset();
-                //     // this.gameView.createClassicGame(this.level.getTubes());
-                //     // this.moveCounter = 0;
-                //     break;
                 case Phaser.Input.Keyboard.KeyCodes.U: // undo
-                    if (this.gameState === GameStates.NoGame) return;
+                    if (this.gameState !== GameStates.Game) return;
                     this.undoMove();
                     break;
                 case Phaser.Input.Keyboard.KeyCodes.N: // new game
+                case Phaser.Input.Keyboard.KeyCodes.L: // load
                     if (this.gameState === GameStates.NoGame) return;
                     this.showNewGameForm();
                     break;

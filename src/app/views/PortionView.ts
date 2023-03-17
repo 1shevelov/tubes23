@@ -13,7 +13,7 @@ import { PortionFogStyle, uiWinMessageStyle } from "../configs/UiConfig";
 import { ViewEvents } from "../configs/Events";
 
 export class PortionView extends Phaser.GameObjects.Container {
-    private portionSprite: Phaser.GameObjects.Sprite;
+    private readonly portionSprite: Phaser.GameObjects.Sprite;
     private fog: Phaser.GameObjects.Container;
     private readonly portionSizeCoeff = 0.8;
 

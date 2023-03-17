@@ -20,4 +20,5 @@ export enum GameEvents {
 export enum ViewEvents {
     TubeClicked = "TubeClicked", // TubeView -> GV
     PortionAnimationFinished = "PortionAnimationFinished", // PortionView -> GV
+    MoveAnimationStarted = "MoveAnimationStarted", // GV -> MS
 }
