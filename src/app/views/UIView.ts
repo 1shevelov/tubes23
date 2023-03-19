@@ -81,17 +81,17 @@ export class UIView extends Phaser.GameObjects.Container {
             this.unoMessagePortion.changeSize(
                 this.he > this.wi ? this.wi / 25 : this.he / 25,
             );
-            this.unoMessagePortion.changeXPos(this.goalMessage.x - 200);
+            this.unoMessagePortion.changeXPos(this.goalMessage.x - 167);
             this.unoMessagePortion.changeYPos(this.goalMessage.y);
         }
-        this.goalMessage.setText("Gather this color only to win");
-        this.goalMessage.setTint(winColor);
+        this.goalMessage.setText("Gather    this color only in one tube to win");
+        // this.goalMessage.setTint(winColor);
         this.unoMessagePortion.changeColor(winColor);
         this.unoMessagePortion.show();
     }
 
     public setClassicGoalMessage(): void {
-        this.goalMessage.setText("Gather all colors to win");
+        this.goalMessage.setText("Gather all colors in their own tube to win");
         this.goalMessage.setTint(0xffffff);
     }
 
@@ -420,7 +420,7 @@ export class UIView extends Phaser.GameObjects.Container {
             this.wi / 2,
             this.he / 1.05,
             "",
-            UI_CONFIG.uiButtonLabelStyle,
+            UI_CONFIG.uiGoalMessageStyle,
         );
         this.goalMessage.setOrigin(0.5, 0.5);
         this.goalMessage.setVisible(false);

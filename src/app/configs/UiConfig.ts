@@ -21,6 +21,13 @@ export const uiButtonLabelStyle: Phaser.Types.GameObjects.Text.TextStyle = {
     // fontStyle: "bold",
     align: "center",
 };
+export const uiGoalMessageStyle: Phaser.Types.GameObjects.Text.TextStyle = {
+    fontSize: "20px",
+    // fontStyle: "bold",
+    align: "center",
+    stroke: "#ffffff",
+    strokeThickness: 1,
+};
 
 // export const TubeStyle = {
 //     lineStyle: {
