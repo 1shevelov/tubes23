@@ -1,6 +1,6 @@
 import { Tube } from "./Tube";
 import * as GAME from "../configs/GameConfig";
-import { fixValue } from "../services/Utilities";
+import { checkIfFaulty, fixValue } from "../services/Utilities";
 import { GameEvents } from "../configs/Events";
 
 enum WinConditions {
@@ -174,8 +174,10 @@ export class Level {
     // should find only one target tube for the portion
     // or return -1
     public tryToHelperMove(sourceTubeIndex: number): number {
-        // TODO: check number
-        if (!this.tubes[sourceTubeIndex].canDrain()) {
+        if (
+            checkIfFaulty(sourceTubeIndex, 0, this.tubes.length - 1) ||
+            !this.tubes[sourceTubeIndex].canDrain()
+        ) {
             console.error("Can't drain from tube #", sourceTubeIndex);
             this.gameEvents.emit(GameEvents.MoveFailed);
             return GAME.ErrorValues.InvalidTubeIndex;
@@ -201,7 +203,7 @@ export class Level {
         if (targetTubesIndices.length === 1) recipientTubeIndex = targetTubesIndices[0];
         // if array.length > 1
         else {
-            // if there is a recepient tube with only source color then return it
+            // if there is a recipient tube with only source color then return it
             for (let i = 0; i < targetTubesIndices.length; i++) {
                 if (
                     this.tubes[targetTubesIndices[i]].getDrainColor() ===
@@ -221,7 +223,6 @@ export class Level {
                 }
                 recipientTubeIndex = targetTubesIndices[0];
             }
-            // TODO: rename all "recepeints"
         }
         const isAddingSuccessful = this.tubes[recipientTubeIndex].tryToAdd(
             this.tubes[sourceTubeIndex].getDrainColor(),

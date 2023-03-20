@@ -24,9 +24,8 @@ export class GameView extends Phaser.GameObjects.Container {
     private tubeCache: TubeView[] = [];
     private portionCache: PortionView[] = [];
 
-    private gameEvents: Phaser.Events.EventEmitter;
+    private readonly gameEvents: Phaser.Events.EventEmitter;
 
-    private readonly NO_TUBE = -1;
     private sourceTube: number;
     private recipientTube: number;
 
@@ -38,8 +37,8 @@ export class GameView extends Phaser.GameObjects.Container {
     }
 
     public reset(): void {
-        this.sourceTube = this.NO_TUBE;
-        this.recipientTube = this.NO_TUBE;
+        this.sourceTube = GAME.ErrorValues.InvalidTubeIndex;
+        this.recipientTube = GAME.ErrorValues.InvalidTubeIndex;
 
         if (this.tubes.length !== 0) {
             for (let i = this.tubes.length - 1; i >= 0; i--) {
@@ -76,7 +75,10 @@ export class GameView extends Phaser.GameObjects.Container {
             console.warn(`No tube #${tubeNum + 1}`);
             return;
         }
-        if (this.sourceTube === this.NO_TUBE && !this.tubes[tubeNum].isEmpty()) {
+        if (
+            this.sourceTube === GAME.ErrorValues.InvalidTubeIndex &&
+            !this.tubes[tubeNum].isEmpty()
+        ) {
             this.sourceTube = tubeNum;
             this.tubes[this.sourceTube].activate();
             if (GAME.HELPER_ENABLED)
@@ -88,12 +90,18 @@ export class GameView extends Phaser.GameObjects.Container {
             this.resetSource();
             return;
         }
-        if (this.sourceTube !== this.NO_TUBE && this.tubes[tubeNum].isFull()) {
+        if (
+            this.sourceTube !== GAME.ErrorValues.InvalidTubeIndex &&
+            this.tubes[tubeNum].isFull()
+        ) {
             // source is full - reset activated tube
             this.resetSource();
             return;
         }
-        if (this.sourceTube !== this.NO_TUBE && !this.tubes[tubeNum].isFull()) {
+        if (
+            this.sourceTube !== GAME.ErrorValues.InvalidTubeIndex &&
+            !this.tubes[tubeNum].isFull()
+        ) {
             // try to move
             this.recipientTube = tubeNum;
             this.gameEvents.emit(
@@ -105,7 +113,7 @@ export class GameView extends Phaser.GameObjects.Container {
     }
 
     public helperMove(recipient: number): void {
-        if (this.sourceTube === this.NO_TUBE) {
+        if (this.sourceTube === GAME.ErrorValues.InvalidTubeIndex) {
             console.error(`Source tube for helper move is unknown`);
             return;
         }
@@ -239,11 +247,14 @@ export class GameView extends Phaser.GameObjects.Container {
 
     private resetSource(): void {
         this.tubes[this.sourceTube].deactivate();
-        this.sourceTube = this.NO_TUBE;
+        this.sourceTube = GAME.ErrorValues.InvalidTubeIndex;
     }
 
     private move(): void {
-        if (this.sourceTube === this.NO_TUBE || this.recipientTube === this.NO_TUBE) {
+        if (
+            this.sourceTube === GAME.ErrorValues.InvalidTubeIndex ||
+            this.recipientTube === GAME.ErrorValues.InvalidTubeIndex
+        ) {
             console.error(`Source or recipient tube for the move is unknown`);
             return;
         }
@@ -259,7 +270,7 @@ export class GameView extends Phaser.GameObjects.Container {
         const { x, y } = this.tubes[this.recipientTube].getTopPosition();
         this.gameEvents.emit(
             ViewEvents.MoveAnimationStarted,
-            GAME.PORTION_MOVE_ANIMATION_SPEED,
+            GAME.PORTION_MOVE_ANIMATION_SPEED + GAME.PORTION_READY_ANIMATION_SPEED,
         );
         portion.pathAnimateTo(x, y, GAME.PORTION_MOVE_ANIMATION_SPEED, this.gameEvents);
 
@@ -270,7 +281,7 @@ export class GameView extends Phaser.GameObjects.Container {
         this.tubes[this.recipientTube].addToTop(portion);
         if (this.isFogOfWar) this.tubes[this.sourceTube].removeFogFromTopPortion();
         this.resetSource();
-        this.recipientTube = this.NO_TUBE; // TODO: why NO-TUBE? why not take from game consts
+        this.recipientTube = GAME.ErrorValues.InvalidTubeIndex;
     }
 
     private updateWindowSize(): void {

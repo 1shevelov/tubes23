@@ -88,14 +88,6 @@ export default class MainScene extends Phaser.Scene {
         });
     }
 
-    // TODO check how to call it
-    // private setViewBusy(duration: number): void {
-    //     this.gameState = GameStates.GameBusy;
-    //     setTimeout(() => {
-    //         this.gameState = GameStates.Game;
-    //     }, duration);
-    // }
-
     private initUIView(): void {
         this.uiView = new UIView(this);
         this.add.existing(this.uiView);
@@ -373,8 +365,12 @@ export default class MainScene extends Phaser.Scene {
     }
 
     private undoMove(): void {
-        if (this.moveCounter === 0) return;
-        // TODO: if gameState = win return;
+        if (
+            this.moveCounter === 0 ||
+            this.gameState === GameStates.GameBusy ||
+            this.gameState == GameStates.GameFinished
+        )
+            return;
         const lastMove = this.level.undoMove();
         this.gameView.undoMove(lastMove);
         this.moveCounter--;
