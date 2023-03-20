@@ -212,8 +212,6 @@ export default class MainScene extends Phaser.Scene {
                 );
                 gameMode = "classic";
             }
-            // TODO do I need global var or can just send the value to this.startGame() ?
-            // probably need this also for Level to check in moveHelper
             this.isFogOfWar = gameFoW === "true";
             this.startGame(gameMode);
         }
@@ -271,6 +269,7 @@ export default class MainScene extends Phaser.Scene {
         }
 
         this.gameView.isFogOfWar = this.isFogOfWar;
+        // TODO check duplicate
         this.gameView.createClassicGame(this.level.getTubes());
 
         this.moveCounter = 0;
@@ -315,7 +314,8 @@ export default class MainScene extends Phaser.Scene {
         this.moveCounter++;
         this.uiView.setCounter(this.moveCounter);
         if (this.isWinningColor === GAME.ErrorValues.InvalidColorIndex) {
-            if (this.level.isWonClassic()) this.endGame(); // gather all colors to win
+            if (this.level.isWonClassic() && !this.gameView.areFoggedPortionsPresent())
+                this.endGame();
         } else if (this.level.isWonOneColor(this.isWinningColor)) this.endGame();
     }
 

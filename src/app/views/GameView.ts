@@ -7,6 +7,7 @@ import { fixValue } from "../services/Utilities";
 import { GameEvents, ViewEvents } from "../configs/Events";
 
 export class GameView extends Phaser.GameObjects.Container {
+    // TODO check if it needs to be public
     public isFogOfWar = false;
 
     // max number of tubes for each row
@@ -60,6 +61,13 @@ export class GameView extends Phaser.GameObjects.Container {
         this.createResources(tubeNum, portionNum);
         this.setAndPlaceTubes(tubes);
         this.fillTubes(tubes);
+    }
+
+    public areFoggedPortionsPresent(): boolean {
+        if (!this.isFogOfWar) return false;
+        // check if there is still fogged portions
+        // need to have portions property is Fogged or can know it from PV.fog ??
+        return true;
     }
 
     public undoMove(tubePair: number[]): void {
@@ -240,7 +248,6 @@ export class GameView extends Phaser.GameObjects.Container {
                 this.finishTransferPortion(portion);
             },
         );
-        // TODO: should call these methods directly from MS
         this.gameEvents.on(GameEvents.MoveFailed, this.resetSource, this);
         this.gameEvents.on(GameEvents.MoveSucceeded, this.move, this);
     }

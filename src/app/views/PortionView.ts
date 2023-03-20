@@ -15,6 +15,7 @@ import { ViewEvents } from "../configs/Events";
 export class PortionView extends Phaser.GameObjects.Container {
     private readonly portionSprite: Phaser.GameObjects.Sprite;
     private fog: Phaser.GameObjects.Container;
+    // TODO: check why portionSizeCoeff is not used
     private readonly portionSizeCoeff = 0.8;
 
     public constructor(
