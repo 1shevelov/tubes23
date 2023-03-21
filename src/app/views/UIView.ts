@@ -418,7 +418,7 @@ export class UIView extends Phaser.GameObjects.Container {
         this.goalMessage = UIService.createText(
             this.scene,
             this.wi / 2,
-            this.he / 1.05,
+            this.he / 1.03,
             "",
             UI_CONFIG.uiGoalMessageStyle,
         );

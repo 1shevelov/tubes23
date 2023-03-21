@@ -160,14 +160,14 @@ export class GameView extends Phaser.GameObjects.Container {
             tubesInRows[i - 1]++;
         }
         // console.log(tubesInRows);
-        const tubeSizeY = this.he / (rows + 1) / 1.25;
+        const tubeSizeY = this.he / (rows + 1) / 1.3;
         // console.log(`he: ${this.he}: tubeSizeY: ${tubeSizeY}`);
 
-        let tubeGap = 0;
+        let tubeXGap = 0;
         let tubeCounter = 0;
         let aTube: TubeView | undefined;
         tubesInRows.forEach((tubesInThisRow, row) => {
-            tubeGap = this.wi / (tubesInThisRow + 1);
+            tubeXGap = this.wi / (tubesInThisRow + 1);
             for (let i = 1; i <= tubesInThisRow; i++) {
                 // this.drawTube(i * tubeGap, (row + 1) * rowGap + rowLower, volume);
                 aTube = this.tubeCache.pop();
@@ -175,8 +175,8 @@ export class GameView extends Phaser.GameObjects.Container {
                     aTube.setNumber(tubeCounter);
                     aTube.setVolumeAndSize(tubes[tubeCounter]["volume"], tubeSizeY);
                     aTube.place(
-                        i * tubeGap,
-                        ((1.15 * row + 1) * this.he) / (rows + 1), // + this.he * 0.02,
+                        i * tubeXGap,
+                        ((1.12 * row + 1) * this.he) / (rows + 1) - 10, // + this.he * 0.02,
                     );
                     this.add(aTube);
                     this.tubes.push(aTube);
