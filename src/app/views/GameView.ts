@@ -1,9 +1,8 @@
 import { TubeView } from "./TubeView";
 import * as GAME from "../configs/GameConfig";
-// import { fixValue } from "../services/Utilities";
 import { PortionView } from "./PortionView";
 import { CurrentPalette } from "../configs/UiConfig";
-import { fixValue } from "../services/Utilities";
+import { checkIfFaulty } from "../services/Utilities";
 import { GameEvents, ViewEvents } from "../configs/Events";
 
 export class GameView extends Phaser.GameObjects.Container {
@@ -132,15 +131,14 @@ export class GameView extends Phaser.GameObjects.Container {
             console.error(`Source tube for helper move is unknown`);
             return;
         }
-        recipient = fixValue(recipient, 0, this.tubes.length - 1);
+        if (checkIfFaulty(recipient, 0, this.tubes.length - 1)) {
+            console.error(`Recipient tube for helper move is wrong: ${recipient}`);
+            return;
+        }
         if (this.tubes[recipient].isFull()) {
             console.error(`Recipient tube for helper move is full`);
             return;
         }
-        // if (this.recipientTube !== this.NO_TUBE) {
-        //     console.error(`Recipient tube for the move has been choosen`);
-        //     return;
-        // }
         this.recipientTube = recipient;
         this.tubes[this.sourceTube].activate();
         setTimeout(() => {
