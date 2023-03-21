@@ -65,9 +65,16 @@ export class GameView extends Phaser.GameObjects.Container {
 
     public areFoggedPortionsPresent(): boolean {
         if (!this.isFogOfWar) return false;
-        // check if there is still fogged portions
-        // need to have portions property is Fogged or can know it from PV.fog ??
-        return true;
+        for (let i = 0; i < this.tubes.length; i++) {
+            if (this.tubes[i].isAnyFogged()) return true;
+        }
+        return false;
+    }
+
+    public clearFogOnUnoColor(winPortions: number[][]): void {
+        winPortions.forEach((portion) => {
+            this.tubes[portion[0]].removeFogFromPortion(portion[1]);
+        });
     }
 
     public undoMove(tubePair: number[]): void {

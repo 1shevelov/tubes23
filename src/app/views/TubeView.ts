@@ -18,9 +18,9 @@
 import * as GAME from "../configs/GameConfig";
 import { UIService } from "../services/UIService";
 import * as UI_CONFIG from "../configs/UiConfig";
-// import { fixValue } from "../services/Utilities";
 import { PortionView } from "./PortionView";
 import { ViewEvents } from "../configs/Events";
+import { checkIfFaulty } from "../services/Utilities";
 
 export class TubeView extends Phaser.GameObjects.Container {
     private tubeSprite: Phaser.GameObjects.Sprite;
@@ -83,6 +83,14 @@ export class TubeView extends Phaser.GameObjects.Container {
 
     public isEmpty(): boolean {
         return this.portions.length === 0;
+    }
+
+    public isAnyFogged(): boolean {
+        if (this.isEmpty()) return false;
+        for (let i = 0; i < this.portions.length; i++) {
+            if (this.portions[i].isFogged()) return true;
+        }
+        return false;
     }
 
     public isFull(): boolean {
@@ -218,6 +226,16 @@ export class TubeView extends Phaser.GameObjects.Container {
 
     public removeFogFromTopPortion(): void {
         if (this.getTopPortion()) this.getTopPortion()?.removeFog();
+    }
+
+    public removeFogFromPortion(portionNum: number): void {
+        if (checkIfFaulty(portionNum, 0, this.portions.length - 1)) {
+            console.error(
+                `Trying to defog portion #${portionNum}, while there are only ${this.portions.length} of them`,
+            );
+            return;
+        }
+        this.portions[portionNum].removeFog();
     }
 
     // to activate/deactivate

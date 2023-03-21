@@ -293,6 +293,17 @@ export class Level {
         return lastMove;
     }
 
+    public getAllOfColor(color: number): number[][] {
+        if (checkIfFaulty(color, 0, GAME.MAX_COLORS)) return [];
+        const result: number[][] = [];
+        this.tubes.forEach((tube, tIndex) => {
+            tube.content.forEach((portion, pIndex) => {
+                if (portion === color) result.push([tIndex, pIndex]);
+            });
+        });
+        return result;
+    }
+
     private init(): void {
         // this.gameEvents.on(GAME.EventTubesClicked, this.tryToMove, this);
     }

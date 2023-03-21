@@ -271,6 +271,10 @@ export default class MainScene extends Phaser.Scene {
         this.gameView.isFogOfWar = this.isFogOfWar;
         // TODO check duplicate
         this.gameView.createClassicGame(this.level.getTubes());
+        if (this.isFogOfWar && gameMode === "uno")
+            this.gameView.clearFogOnUnoColor(
+                this.level.getAllOfColor(this.isWinningColor),
+            );
 
         this.moveCounter = 0;
         this.uiView.setCounter(this.moveCounter);
