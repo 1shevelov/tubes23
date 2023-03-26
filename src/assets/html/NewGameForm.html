@@ -178,25 +178,42 @@ input[type="checkbox"]:checked {
                     value="classic"
                     checked
                 />
-                <label for="mode-classic">Classic</label>
+                <label class="tooltip" for="mode-classic">
+                    Classic
+                    <span class="tooltiptext tooltip-right">
+                        All tubes are of the same volume,<br />
+                        two of them are empty.<br />
+                        Gather all portions of every color<br />
+                        in a separate containers to win</span>
+                </label>
             </div>
 
             <div>
                 <input type="radio" id="mode-uno" name="game_mode" value="uno" />
-                <label for="mode-uno">Uno</label>
+                <label class="tooltip" for="mode-uno">
+                    Uno
+                    <span class="tooltiptext tooltip-right">
+                        Same as Classic,<br />
+                        but you need to gather portions<br />
+                        of only one color<br />
+                        in a container to win.</span>
+                </label>
             </div>
         </fieldset>
 
         <fieldset class="new-game-elements">
             <legend align="center">Fog of war:</legend>
-            <div>
+            <div class="tooltip">
                 <input
                   type="checkbox"
                   id="fog-of-war"
                   name="fog_of_war"
                   value="true"
                 />
-                <label for="fog-of-war"> activate Fog of war mode</label>
+                <label for="fog-of-war">activate Fog of war mode</label>
+                <span class="tooltiptext tooltip-down">
+                    All portions' (except top) colors,<br />
+                    are hidden.</span>
             </div>
         </fieldset>
 
