@@ -97,7 +97,7 @@ input[type="checkbox"]:checked {
         text-decoration: none;
         text-transform: uppercase;
         text-align: center;
-        text-shadow: 1px 1px 0px #37a69b;
+        text-shadow: 1px 1px 0 #37a69b;
         padding-top: 6px;
         margin: 5px auto;
         position: relative;
@@ -105,11 +105,8 @@ input[type="checkbox"]:checked {
         border: none;
         background-color: #37a69b;
         background-image: linear-gradient(top, #3db0a6, #3111);
-        border-top-left-radius: 5px;
-        border-top-right-radius: 5px;
-        border-bottom-right-radius: 5px;
-        border-bottom-left-radius: 5px;
-        box-shadow: inset 0px 1px 0px #2ab7ec, 0px 5px 0px 0px #497a78, 0px 5px 5px #999;
+        border-radius: 5px;
+        box-shadow: inset 0 1px 0 #2ab7ec, 0 5px 0 0 #497a78, 0 5px 5px #999;
     }
 
     .shadow {
@@ -124,13 +121,13 @@ input[type="checkbox"]:checked {
 
     input[type="submit"]:active {
         top: 3px;
-        box-shadow: inset 0px 1px 0px #2ab7ec, 0px 2px 0px 0px #31524d, 0px 5px 3px #999;
+        box-shadow: inset 0 1px 0 #2ab7ec, 0 2px 0 0 #31524d, 0 5px 3px #999;
     }
 </style>
 
 <form name="form">
     <div class="end-game">
-        <h1 align="center">Game result: <span id="game_result"></span></h1>
+        <h1>Game result: <span id="game_result"></span></h1>
         <fieldset class="new-game-elements">
             <!-- <label for="moves-done">
                 Choose number of tubes:

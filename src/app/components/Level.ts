@@ -129,7 +129,7 @@ export class Level {
 
     // true if
     // each tube contains portions of one color
-    // and no two tubes contain the same color, e.g. each color is in it's own container
+    // and no two tubes contain the same color, e.g. each color is in its own container
     public isWonClassic(): boolean {
         const colors: number[] = [];
         for (let i = 0; i < this.tubes.length; i++) {

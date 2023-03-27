@@ -119,14 +119,12 @@ export class Tube {
 
     public canAdd(): boolean {
         if (this.drains === Drains.None || this.drains === Drains.Bottom) return false;
-        if (this._volume <= this._content.length) return false;
-        return true;
+        return this._volume > this._content.length;
     }
 
     public canDrain(): boolean {
         if (this.drains === Drains.None) return false;
-        if (this._content.length === 0) return false;
-        return true;
+        return this._content.length !== 0;
     }
 
     public getDrainColor(): number {

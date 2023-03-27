@@ -4,7 +4,7 @@
     /* border-bottom: 1px dotted black; */
 }
 
-.tooltip .tooltiptext {
+.tooltip .tooltip-text {
     visibility: hidden;
     width: 270px;
     background-color: darkslategray;
@@ -32,6 +32,6 @@
     margin-left: -135px; /* half of the width, to center the tooltip */
 }
 
-.tooltip:hover .tooltiptext {
+.tooltip:hover .tooltip-text {
     visibility: visible;
 }

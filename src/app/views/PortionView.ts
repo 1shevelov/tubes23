@@ -32,8 +32,7 @@ export class PortionView extends Phaser.GameObjects.Container {
     }
 
     public isFogged(): boolean {
-        if (this.fog && this.fog.visible) return true;
-        return false;
+        return this.fog && this.fog.visible;
     }
 
     public setFog(): void {
