@@ -26,6 +26,8 @@ export class UIView extends Phaser.GameObjects.Container {
     private uiEvents: Phaser.Events.EventEmitter;
     private unoMessagePortion: PortionView;
 
+    private gameVersion: string;
+
     public constructor(public scene: Phaser.Scene) {
         super(scene);
         this.init();
@@ -153,6 +155,9 @@ export class UIView extends Phaser.GameObjects.Container {
         this.he = height;
 
         this.uiEvents = new Phaser.Events.EventEmitter();
+        // add current month number and date number
+        this.gameVersion =
+            "v0." + new Date().getMonth().toString() + new Date().getDate().toString();
     }
 
     private makeNewGameForm(): void {
