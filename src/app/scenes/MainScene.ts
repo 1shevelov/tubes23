@@ -52,6 +52,7 @@ export default class MainScene extends Phaser.Scene {
         super({ key: SceneNames.Main });
     }
 
+    //noinspection unused,JSUnusedLocalSymbols
     private init(): void {
         this.gameEvents = new Phaser.Events.EventEmitter();
         // this.initServices();

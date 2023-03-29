@@ -20,6 +20,7 @@ export class UIView extends Phaser.GameObjects.Container {
     private newGameHtmlForm: Phaser.GameObjects.DOMElement;
     private endGameHtmlForm: Phaser.GameObjects.DOMElement;
     private versionHtmlElement: Phaser.GameObjects.DOMElement;
+    private formBack: Phaser.GameObjects.Sprite;
 
     private wi: number;
     private he: number;
@@ -36,6 +37,7 @@ export class UIView extends Phaser.GameObjects.Container {
         this.makeWinMessage();
         this.makeButtons();
         // this.makeNewLevelPopup();
+        this.makeFormBack();
         this.makeDivVersion();
         this.makeNewGameForm();
         this.makeEndGameForm();
@@ -132,6 +134,7 @@ export class UIView extends Phaser.GameObjects.Container {
     }
 
     public showForm(gameMoment: "start" | "end", _data = {}): void {
+        this.formBack.setVisible(true);
         let form: Phaser.GameObjects.DOMElement;
         if (gameMoment === "start") form = this.newGameHtmlForm;
         else {
@@ -148,7 +151,9 @@ export class UIView extends Phaser.GameObjects.Container {
             alpha: 1.0,
             duration: animationDuration,
             ease: "Power3",
-            onComplete: () => this.versionHtmlElement.setVisible(true),
+            onComplete: () => {
+                this.versionHtmlElement.setVisible(true);
+            },
         });
     }
 
@@ -158,6 +163,20 @@ export class UIView extends Phaser.GameObjects.Container {
         this.he = height;
 
         this.uiEvents = new Phaser.Events.EventEmitter();
+    }
+
+    private makeFormBack(): void {
+        this.formBack = new Phaser.GameObjects.Sprite(
+            this.scene,
+            this.wi / 2,
+            this.he / 2,
+            "game-ui",
+            "1x1.png",
+        );
+        this.formBack.setInteractive();
+        this.formBack.setVisible(false);
+        this.formBack.setScale(this.wi, this.he);
+        this.add(this.formBack);
     }
 
     private makeNewGameForm(): void {
@@ -184,6 +203,7 @@ export class UIView extends Phaser.GameObjects.Container {
                     this.newGameHtmlForm.setY(this.he);
                     if (this.versionHtmlElement)
                         this.versionHtmlElement.setVisible(false);
+                    this.formBack.setVisible(false);
                 },
             });
             event.preventDefault();
@@ -264,6 +284,7 @@ export class UIView extends Phaser.GameObjects.Container {
                 this.endGameHtmlForm.setVisible(false);
                 this.endGameHtmlForm.setY(this.he);
                 if (this.versionHtmlElement) this.versionHtmlElement.setVisible(false);
+                this.formBack.setVisible(false);
             },
         });
 
