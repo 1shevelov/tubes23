@@ -3,6 +3,7 @@ import "phaser/plugins/spine/dist/SpinePlugin";
 import BootScene from "./app/scenes/BootScene";
 import MainScene from "./app/scenes/MainScene";
 import PreloadScene from "./app/scenes/PreloadScene";
+import * as UiConfig from "./app/configs/UiConfig";
 
 const config = {
     transparent: false,
@@ -12,6 +13,7 @@ const config = {
     type: Phaser.WEBGL,
     width: 2000,
     height: 1400,
+    backgroundColor: UiConfig.DarkBackground,
     input: {
         mouse: {
             preventDefaultWheel: false,

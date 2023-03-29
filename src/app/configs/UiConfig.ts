@@ -1,5 +1,5 @@
-export const WhiteBackground = "#ffffff";
-export const BlackBackground = "#000000";
+export const LightBackground = "#839496"; // Solarized Base0
+export const DarkBackground = "#002b36"; // Solarized Base03
 
 export const TubeLabelStyle: Phaser.Types.GameObjects.Text.TextStyle = {
     fontSize: "22px",

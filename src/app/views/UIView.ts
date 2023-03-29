@@ -17,8 +17,9 @@ export class UIView extends Phaser.GameObjects.Container {
     private buttonRestart: Phaser.GameObjects.Container;
     private buttonUndo: Phaser.GameObjects.Container;
 
-    private newGameForm: Phaser.GameObjects.DOMElement;
-    private endGameForm: Phaser.GameObjects.DOMElement;
+    private newGameHtmlForm: Phaser.GameObjects.DOMElement;
+    private endGameHtmlForm: Phaser.GameObjects.DOMElement;
+    private versionHtmlElement: Phaser.GameObjects.DOMElement;
 
     private wi: number;
     private he: number;
@@ -35,6 +36,7 @@ export class UIView extends Phaser.GameObjects.Container {
         this.makeWinMessage();
         this.makeButtons();
         // this.makeNewLevelPopup();
+        this.makeDivVersion();
         this.makeNewGameForm();
         this.makeEndGameForm();
         this.makeGoalMessage();
@@ -48,10 +50,10 @@ export class UIView extends Phaser.GameObjects.Container {
         this.wi = width;
         this.he = height;
 
-        if (this.newGameForm.visible)
-            this.newGameForm.setPosition(this.wi / 2, this.he / 2);
-        if (this.endGameForm.visible)
-            this.endGameForm.setPosition(this.wi / 2, this.he / 2);
+        if (this.newGameHtmlForm.visible)
+            this.newGameHtmlForm.setPosition(this.wi / 2, this.he / 2);
+        if (this.endGameHtmlForm.visible)
+            this.endGameHtmlForm.setPosition(this.wi / 2, this.he / 2);
         // TODO: else update starting position
     }
 
@@ -131,9 +133,9 @@ export class UIView extends Phaser.GameObjects.Container {
 
     public showForm(gameMoment: "start" | "end", _data = {}): void {
         let form: Phaser.GameObjects.DOMElement;
-        if (gameMoment === "start") form = this.newGameForm;
+        if (gameMoment === "start") form = this.newGameHtmlForm;
         else {
-            form = this.endGameForm;
+            form = this.endGameHtmlForm;
             if (Object.keys(_data).length > 0 && _data.hasOwnProperty("counter"))
                 form.getChildByID("moves_used").textContent = _data["counter"].toString();
         }
@@ -147,6 +149,7 @@ export class UIView extends Phaser.GameObjects.Container {
             duration: animationDuration,
             ease: "Power3",
         });
+        this.versionHtmlElement.setVisible(true);
     }
 
     private init(): void {
@@ -155,39 +158,39 @@ export class UIView extends Phaser.GameObjects.Container {
         this.he = height;
 
         this.uiEvents = new Phaser.Events.EventEmitter();
-        // add current month number and date number
-        this.gameVersion =
-            "v0." + new Date().getMonth().toString() + new Date().getDate().toString();
     }
 
     private makeNewGameForm(): void {
         const animationDuration = 1500;
 
-        this.newGameForm = this.scene.add
+        this.newGameHtmlForm = this.scene.add
             .dom(this.wi / 2, this.he)
             .createFromCache("NewGameForm");
-        this.newGameForm.setPerspective(800);
+        this.newGameHtmlForm.setPerspective(800);
+        this.newGameHtmlForm.setVisible(false);
 
-        const form = this.newGameForm.getChildByName("form");
+        const form = this.newGameHtmlForm.getChildByName("form");
         (form as HTMLFormElement).addEventListener("submit", (event) => {
             const data = new FormData(form as HTMLFormElement);
             this.scene.tweens.add({
-                targets: this.newGameForm,
+                targets: this.newGameHtmlForm,
                 y: -300,
                 alpha: 0.5,
                 duration: animationDuration,
                 ease: "Power3",
                 onComplete: () => {
                     this.uiEvents.emit(UiEvents.NewGameSettingsSubmitted, data);
-                    this.newGameForm.setVisible(false);
-                    this.newGameForm.setY(this.he);
+                    this.newGameHtmlForm.setVisible(false);
+                    this.newGameHtmlForm.setY(this.he);
+                    if (this.versionHtmlElement)
+                        this.versionHtmlElement.setVisible(false);
                 },
             });
             event.preventDefault();
         });
-        const fileLoadInput = this.newGameForm.getChildByName("load_file");
-        const startButton = this.newGameForm.getChildByName("start_button");
-        const clearButton = this.newGameForm.getChildByName("clear_button");
+        const fileLoadInput = this.newGameHtmlForm.getChildByName("load_file");
+        const startButton = this.newGameHtmlForm.getChildByName("start_button");
+        const clearButton = this.newGameHtmlForm.getChildByName("clear_button");
         fileLoadInput.addEventListener("input", (event) => {
             // console.log("File load input event: ", event);
             const target = event.target as HTMLInputElement;
@@ -207,48 +210,64 @@ export class UIView extends Phaser.GameObjects.Container {
             (clearButton as HTMLButtonElement).style.visibility = "hidden";
             event.preventDefault();
         });
-        this.newGameForm.setVisible(false);
     }
 
     private makeEndGameForm(): void {
-        this.endGameForm = this.scene.add
+        this.endGameHtmlForm = this.scene.add
             .dom(this.wi / 2, this.he)
             .createFromCache("EndGameForm");
-        this.endGameForm.setPerspective(800);
+        this.endGameHtmlForm.setPerspective(800);
+        this.endGameHtmlForm.setVisible(false);
 
         (
-            this.endGameForm.getChildByName("replay_button") as HTMLButtonElement
+            this.endGameHtmlForm.getChildByName("replay_button") as HTMLButtonElement
         ).addEventListener("click", (event: MouseEvent) => {
             this.endGameCloseAnimation(EndGameClosedActions.Replay);
             event.preventDefault();
         });
         (
-            this.endGameForm.getChildByName("new_game_button") as HTMLButtonElement
+            this.endGameHtmlForm.getChildByName("new_game_button") as HTMLButtonElement
         ).addEventListener("click", (event: MouseEvent) => {
             this.endGameCloseAnimation(EndGameClosedActions.NewGame);
             event.preventDefault();
         });
+    }
 
-        this.endGameForm.setVisible(false);
+    private makeDivVersion(): void {
+        this.versionHtmlElement = this.scene.add
+            .dom(this.wi, this.he)
+            .createFromCache("DivVersion");
+        this.versionHtmlElement.setPerspective(800);
+        this.versionHtmlElement.setVisible(false);
+
+        this.gameVersion =
+            "v 0." +
+            (new Date().getMonth() + 1).toString() +
+            new Date().getDate().toString() +
+            "." +
+            new Date().getHours().toString();
+        (this.versionHtmlElement.getChildByID("version") as HTMLDivElement).textContent =
+            this.gameVersion;
     }
 
     private endGameCloseAnimation(signalData: string): void {
         const animationDuration = 1500;
 
         this.scene.tweens.add({
-            targets: this.endGameForm,
+            targets: this.endGameHtmlForm,
             y: -300,
             alpha: 0.5,
             duration: animationDuration,
             ease: "Power3",
             onComplete: () => {
                 this.uiEvents.emit(UiEvents.EndGameClosed, signalData);
-                this.endGameForm.setVisible(false);
-                this.endGameForm.setY(this.he);
+                this.endGameHtmlForm.setVisible(false);
+                this.endGameHtmlForm.setY(this.he);
+                if (this.versionHtmlElement) this.versionHtmlElement.setVisible(false);
             },
         });
 
-        this.endGameForm.setVisible(false);
+        // this.endGameHtmlForm.setVisible(false);
     }
 
     // private makeNewLevelPopup(): void {
