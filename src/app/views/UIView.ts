@@ -148,8 +148,8 @@ export class UIView extends Phaser.GameObjects.Container {
             alpha: 1.0,
             duration: animationDuration,
             ease: "Power3",
+            onComplete: () => this.versionHtmlElement.setVisible(true),
         });
-        this.versionHtmlElement.setVisible(true);
     }
 
     private init(): void {

@@ -44,6 +44,7 @@ export default class MainScene extends Phaser.Scene {
     private randomClassicLevelTubeNum: number;
     private randomClassicLevelTubeVol: number;
 
+    private gameMode = ""; // TODO: update type to enum
     private isWinningColor = GAME.ErrorValues.InvalidColorIndex;
     private isFogOfWar = false;
 
@@ -132,12 +133,6 @@ export default class MainScene extends Phaser.Scene {
     //     document.body.appendChild(stats.dom);
     // }
 
-    // private create(): void {
-    //     this.startGame();
-    //     this.uiView.showGameUi();
-    //     this.gameState = GameStates.Game;
-    // }
-
     private showNewGameForm(): void {
         this.gameState = GameStates.NoGame;
         this.uiView.hideGameUi();
@@ -148,14 +143,13 @@ export default class MainScene extends Phaser.Scene {
     private initNewGame(newGameObj: FormData): void {
         let tubesNum: number = GAME.ErrorValues.InvalidTubeIndex;
         let tubesVol: number = GAME.ErrorValues.InvalidTubeVolume;
-        let gameMode = "";
         let gameFile: any;
         let gameFoW = "";
         for (const [key, value] of newGameObj) {
             // console.log(`${key}: ${value}`);
             if (key === "tubes_number") tubesNum = Number(value);
             if (key === "tubes_volume") tubesVol = Number(value);
-            if (key === "game_mode") gameMode = value.toString();
+            if (key === "game_mode") this.gameMode = value.toString();
             if (key === "load_file") gameFile = value;
             if (key === "fog_of_war") gameFoW = value.toString();
         }
@@ -206,14 +200,24 @@ export default class MainScene extends Phaser.Scene {
                 GAME.MIN_VOLUME,
                 GAME.MAX_VOLUME,
             );
-            if (gameMode !== "classic" && gameMode !== "uno") {
+            if (this.gameMode !== "classic" && this.gameMode !== "uno") {
                 console.error(
-                    `Unknown game mode \"${gameMode}\", setting to \"classic\"`,
+                    `Unknown game mode \"${this.gameMode}\", setting to \"classic\"`,
                 );
-                gameMode = "classic";
+                this.gameMode = "classic";
             }
             this.isFogOfWar = gameFoW === "true";
-            this.startGame(gameMode);
+
+            this.level = new Level(this.gameEvents);
+            this.level.setRandomClassicLevel(
+                this.randomClassicLevelTubeNum,
+                this.randomClassicLevelTubeVol,
+                0, // enum Drains
+                this.rng,
+            );
+            // this.level.setClassicTubes([[0, 1, 2], [3, 4, 5, 6], [7], []], 4);
+            // console.log(JSON.stringify(this.level.getTubes()));
+            this.startGame();
         }
     }
 
@@ -230,37 +234,14 @@ export default class MainScene extends Phaser.Scene {
             0, // enum Drains
             this.rng,
         );
-        // setting winning color
-        if (gameObj[FILES.SaveFile.Mode] === FILES.GameModes.UnoClassicRandom) {
-            this.isWinningColor = this.level.getTubes()[0]["content"][0];
-            this.uiView.setUnoGoalMessage(AoccPalette[this.isWinningColor]);
-            // console.log(this.isWinningColor);
-        } else {
-            this.uiView.setClassicGoalMessage();
-        }
+        // TODO: load and set isFogOfWar
 
-        this.gameView.createClassicGame(this.level.getTubes());
-
-        this.moveCounter = 0;
-        this.uiView.setCounter(this.moveCounter);
-        this.uiView.hideWin();
-        this.uiView.showGameUi();
-        this.gameState = GameStates.Game;
+        this.gameMode = gameObj[FILES.SaveFile.Mode];
+        this.startGame();
     }
 
-    private startGame(gameMode: string): void {
-        this.level = new Level(this.gameEvents);
-        this.level.setRandomClassicLevel(
-            this.randomClassicLevelTubeNum,
-            this.randomClassicLevelTubeVol,
-            0, // enum Drains
-            this.rng,
-        );
-        // this.level.setClassicTubes([[0, 1, 2], [3, 4, 5, 6], [7], []], 4);
-        // console.log(JSON.stringify(this.level.getTubes()));
-
-        // setting winning color
-        if (gameMode === "uno") {
+    private startGame(): void {
+        if (this.gameMode === "uno") {
             this.isWinningColor = this.level.getTubes()[0]["content"][0];
             this.uiView.setUnoGoalMessage(AoccPalette[this.isWinningColor]);
             // console.log(this.isWinningColor);
@@ -271,7 +252,7 @@ export default class MainScene extends Phaser.Scene {
         this.gameView.isFogOfWar = this.isFogOfWar;
         // TODO check duplicate
         this.gameView.createClassicGame(this.level.getTubes());
-        if (this.isFogOfWar && gameMode === "uno")
+        if (this.isFogOfWar && this.gameMode === "uno")
             this.gameView.clearFogOnUnoColor(
                 this.level.getAllOfColor(this.isWinningColor),
             );
@@ -361,11 +342,7 @@ export default class MainScene extends Phaser.Scene {
         console.log("Level reset");
         this.level.reset();
         this.gameView.reset();
-        this.gameView.createClassicGame(this.level.getTubes());
-        this.moveCounter = 0;
-        this.uiView.setCounter(this.moveCounter);
-        this.uiView.hideWin();
-        this.gameState = GameStates.Game;
+        this.startGame();
     }
 
     private undoMove(): void {
