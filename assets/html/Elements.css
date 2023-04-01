@@ -1,0 +1,7 @@
+.version {
+    color: #657b83; /* Solarized base00 */
+    height: 35px;
+    font: 400 14px/1 "Open Sans", sans-serif;
+    margin-right: 10em;
+    text-align: right;
+}
