@@ -11,6 +11,8 @@ interface XY {
 }
 
 export class UIView extends Phaser.GameObjects.Container {
+    private readonly FORM_ANIMATION_DURATION = 1500;
+
     // private counter: CounterComponent;
     private counter: Phaser.GameObjects.Text;
     private winMessage: Phaser.GameObjects.Text;
@@ -43,7 +45,7 @@ export class UIView extends Phaser.GameObjects.Container {
         this.makeNewGameForm();
         this.makeEndGameForm();
         this.makeGoalMessage();
-        this.showForm("start");
+        this.showForm(UI_CONFIG.FORMS.START);
         // Debug
         // this.showForm("end");
     }
@@ -134,23 +136,23 @@ export class UIView extends Phaser.GameObjects.Container {
         this.counter.setText(newVal.toString());
     }
 
-    public showForm(gameMoment: "start" | "end", _data = {}): void {
+    public showForm(form: UI_CONFIG.FORMS, _data = {}): void {
         this.formBack.setVisible(true);
-        let form: Phaser.GameObjects.DOMElement;
-        if (gameMoment === "start") form = this.newGameHtmlForm;
+        let htmlForm: Phaser.GameObjects.DOMElement;
+        if (form === UI_CONFIG.FORMS.START) htmlForm = this.newGameHtmlForm;
         else {
-            form = this.endGameHtmlForm;
+            htmlForm = this.endGameHtmlForm;
             if (Object.keys(_data).length > 0 && _data.hasOwnProperty("counter"))
-                form.getChildByID("moves_used").textContent = _data["counter"].toString();
+                htmlForm.getChildByID("moves_used").textContent =
+                    _data["counter"].toString();
         }
 
-        const animationDuration = 1500;
-        form.setVisible(true);
+        htmlForm.setVisible(true);
         this.scene.tweens.add({
-            targets: form,
+            targets: htmlForm,
             y: this.he / 2,
             alpha: 1.0,
-            duration: animationDuration,
+            duration: this.FORM_ANIMATION_DURATION,
             ease: "Power3",
             onComplete: () => {
                 this.versionHtmlElement.setVisible(true);
@@ -181,13 +183,12 @@ export class UIView extends Phaser.GameObjects.Container {
     }
 
     private makeNewGameForm(): void {
-        const animationDuration = 1500;
-
         this.newGameHtmlForm = this.scene.add
             .dom(this.wi / 2, this.he)
             .createFromCache("NewGameForm");
         this.newGameHtmlForm.setPerspective(800);
         this.newGameHtmlForm.setVisible(false);
+        this.newGameHtmlForm.setName(UI_CONFIG.FORMS.START);
 
         const form = this.newGameHtmlForm.getChildByName("form");
         (form as HTMLFormElement).addEventListener("submit", (event) => {
@@ -196,16 +197,9 @@ export class UIView extends Phaser.GameObjects.Container {
                 targets: this.newGameHtmlForm,
                 y: -300,
                 alpha: 0.5,
-                duration: animationDuration,
+                duration: this.FORM_ANIMATION_DURATION,
                 ease: "Power3",
-                onComplete: () => {
-                    this.uiEvents.emit(UiEvents.NewGameSettingsSubmitted, data);
-                    this.newGameHtmlForm.setVisible(false);
-                    this.newGameHtmlForm.setY(this.he);
-                    if (this.versionHtmlElement)
-                        this.versionHtmlElement.setVisible(false);
-                    this.formBack.setVisible(false);
-                },
+                onComplete: () => this.closeForm(UI_CONFIG.FORMS.START, data),
             });
             event.preventDefault();
         });
@@ -239,17 +233,18 @@ export class UIView extends Phaser.GameObjects.Container {
             .createFromCache("EndGameForm");
         this.endGameHtmlForm.setPerspective(800);
         this.endGameHtmlForm.setVisible(false);
+        this.endGameHtmlForm.setName(UI_CONFIG.FORMS.END);
 
         (
             this.endGameHtmlForm.getChildByName("replay_button") as HTMLButtonElement
         ).addEventListener("click", (event: MouseEvent) => {
-            this.endGameCloseAnimation(EndGameClosedActions.Replay);
+            this.closeForm(UI_CONFIG.FORMS.END, EndGameClosedActions.Replay);
             event.preventDefault();
         });
         (
             this.endGameHtmlForm.getChildByName("new_game_button") as HTMLButtonElement
         ).addEventListener("click", (event: MouseEvent) => {
-            this.endGameCloseAnimation(EndGameClosedActions.NewGame);
+            this.closeForm(UI_CONFIG.FORMS.END, EndGameClosedActions.NewGame);
             event.preventDefault();
         });
     }
@@ -271,90 +266,29 @@ export class UIView extends Phaser.GameObjects.Container {
             this.gameVersion;
     }
 
-    private endGameCloseAnimation(signalData: string): void {
-        const animationDuration = 1500;
-
+    private closeForm(form: UI_CONFIG.FORMS, signalData: any): void {
+        const htmlForm: Phaser.GameObjects.DOMElement =
+            form === UI_CONFIG.FORMS.START ? this.newGameHtmlForm : this.endGameHtmlForm;
         this.scene.tweens.add({
-            targets: this.endGameHtmlForm,
+            targets: htmlForm,
             y: -300,
             alpha: 0.5,
-            duration: animationDuration,
+            duration: this.FORM_ANIMATION_DURATION,
             ease: "Power3",
             onComplete: () => {
-                this.uiEvents.emit(UiEvents.EndGameClosed, signalData);
-                this.endGameHtmlForm.setVisible(false);
-                this.endGameHtmlForm.setY(this.he);
+                htmlForm.setVisible(false);
+                htmlForm.setY(this.he);
                 if (this.versionHtmlElement) this.versionHtmlElement.setVisible(false);
                 this.formBack.setVisible(false);
+
+                let event: UiEvents;
+                if (form === UI_CONFIG.FORMS.START)
+                    event = UiEvents.NewGameSettingsSubmitted;
+                else event = UiEvents.EndGameClosed;
+                this.uiEvents.emit(event, signalData);
             },
         });
-
-        // this.endGameHtmlForm.setVisible(false);
     }
-
-    // private makeNewLevelPopup(): void {
-    //     const popupWidth = this.wi * 0.8;
-    //     const popupHeight = this.he * 0.8;
-    //     this.newLevelPopup = new Phaser.GameObjects.Container(
-    //         this.scene,
-    //         this.wi / 2,
-    //         this.he / 2,
-    //     );
-
-    //     const back = new Phaser.GameObjects.Rectangle(
-    //         this.scene,
-    //         0, //this.newLevelPopup.x - popupWidth / 2,
-    //         0, //this.newLevelPopup.y - popupHeight / 2,
-    //         popupWidth,
-    //         popupHeight,
-    //         0x111b11,
-    //         1.0,
-    //     );
-    //     back.setStrokeStyle(1.5, 0x99ff99, 1.0);
-    //     this.newLevelPopup.add(back);
-
-    //     const title = UIService.createText(
-    //         this.scene,
-    //         0,
-    //         -popupHeight / 2 + this.he / 20,
-    //         "New game",
-    //         COLORS.uiWinMessageStyle,
-    //     );
-    //     this.newLevelPopup.add(title);
-
-    //     const startButton = this.makeButton(
-    //         "GO",
-    //         { x: 0, y: this.he / 8 },
-    //         { x: 120, y: 70 },
-    //     );
-    //     startButton.setInteractive();
-    //     startButton.on("pointerup", () => this.newLevelPopup.setVisible(false));
-    //     this.newLevelPopup.add(startButton);
-
-    //     // this.makeLevelSizeDropdown(this.newLevelPopup, popupHeight);
-
-    //     this.newLevelPopup.setVisible(false);
-    //     this.add(this.newLevelPopup);
-    // }
-
-    // private makeLevelSizeDropdown(
-    //     parentCont: Phaser.GameObjects.Container,
-    //     parentContHeight: number,
-    // ): void {
-    //     const dropDown = this.scene.add
-    //         .dom(0, -parentContHeight / 3)
-    //         .createFromCache("TubesNumDropdown");
-    //     // dropDown.setVisible(false);
-    //     dropDown.addListener("click");
-    //     dropDown.on("click", function (event) {
-    //         if (event.target.name === "tubes-number") {
-    //             console.log("Tubes number clicked!");
-    //         } else {
-    //             console.log("Something else clicked: ", event.target);
-    //         }
-    //     });
-    //     parentCont.add(dropDown);
-    // }
 
     private makeCounter(): void {
         this.counter = UIService.createText(

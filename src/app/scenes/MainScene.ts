@@ -7,15 +7,15 @@ import { GameView } from "../views/GameView";
 import { UIView } from "../views/UIView";
 import { Level } from "../components/Level";
 import * as GAME from "../configs/GameConfig";
-import { fixValue, getRandomSeed, getRandomPositiveInt } from "../services/Utilities";
+import { fixValue, getRandomPositiveInt, getRandomSeed } from "../services/Utilities";
 import * as FILES from "../services/Files";
 import {
+    EndGameClosedActions,
     GameEvents,
     UiEvents,
-    EndGameClosedActions,
     ViewEvents,
 } from "../configs/Events";
-import { AoccPalette } from "../configs/UiConfig";
+import { AoccPalette, FORMS } from "../configs/UiConfig";
 
 enum GameStates {
     NoGame,
@@ -101,7 +101,7 @@ export default class MainScene extends Phaser.Scene {
         uiEvents.on(UiEvents.EndGameClosed, (action: string) => {
             if (action === EndGameClosedActions.Replay) this.resetGame();
             else if (action === EndGameClosedActions.NewGame)
-                this.uiView.showForm("start");
+                this.uiView.showForm(FORMS.START);
             else console.error(`Unknown End Game closed action: "${action}"`);
         });
 
@@ -138,7 +138,7 @@ export default class MainScene extends Phaser.Scene {
         this.gameState = GameStates.NoGame;
         this.uiView.hideGameUi();
         this.gameView.reset();
-        this.uiView.showForm("start");
+        this.uiView.showForm(FORMS.START);
     }
 
     private initNewGame(newGameObj: FormData): void {
@@ -238,6 +238,7 @@ export default class MainScene extends Phaser.Scene {
         // TODO: load and set isFogOfWar
 
         this.gameMode = gameObj[FILES.SaveFile.Mode];
+        if (gameObj[FILES.SaveFile.Fog]) this.isFogOfWar = true;
         this.startGame();
     }
 
@@ -309,7 +310,7 @@ export default class MainScene extends Phaser.Scene {
         this.gameState = GameStates.GameFinished;
         this.uiView.showWin();
         // TODO: sent status WIN/LOSE
-        this.uiView.showForm("end", { counter: this.moveCounter });
+        this.uiView.showForm(FORMS.END, { counter: this.moveCounter });
     }
 
     private saveLevel(): void {
@@ -325,6 +326,7 @@ export default class MainScene extends Phaser.Scene {
                 [FILES.SaveFile.Volume]: this.randomClassicLevelTubeVol,
                 [FILES.SaveFile.Seed]: this.randomLevelSeed,
             };
+            if (this.isFogOfWar) saveStruct[FILES.SaveFile.Fog] = "true";
             FILES.download(
                 saveStruct,
                 `tubes-${saveGameMode}-${this.randomClassicLevelTubeNum}_${this.randomClassicLevelTubeVol}`,

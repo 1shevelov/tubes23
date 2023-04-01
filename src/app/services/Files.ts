@@ -3,7 +3,8 @@ export enum SaveFile {
     Volume = "volume",
     Seed = "seed",
     Mode = "mode",
-    Best = "best", // least amount of moves to save
+    Fog = "fog",
+    // Best = "best", // least amount of moves to save
 }
 
 export enum GameModes {

@@ -1,6 +1,11 @@
 export const LightBackground = "#839496"; // Solarized Base0
 export const DarkBackground = "#002b36"; // Solarized Base03
 
+export enum FORMS {
+    START = "start",
+    END = "end",
+}
+
 export const TubeLabelStyle: Phaser.Types.GameObjects.Text.TextStyle = {
     fontSize: "22px",
     fontStyle: "bold",
