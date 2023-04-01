@@ -1,6 +1,7 @@
 // import { CounterComponent } from "../components/CounterComponent";
 import { UIService } from "../services/UIService";
 import * as UI_CONFIG from "../configs/UiConfig";
+import { BUILD_VER } from "../configs/GameConfig";
 import { UiEvents, EndGameClosedActions } from "../configs/Events";
 import { PortionView } from "./PortionView";
 
@@ -260,12 +261,12 @@ export class UIView extends Phaser.GameObjects.Container {
         this.versionHtmlElement.setPerspective(800);
         this.versionHtmlElement.setVisible(false);
 
-        this.gameVersion =
-            "v 0." +
-            (new Date().getMonth() + 1).toString() +
-            new Date().getDate().toString() +
-            "." +
-            new Date().getHours().toString();
+        this.gameVersion = BUILD_VER;
+        // "v 0." +
+        // (new Date().getMonth() + 1).toString() +
+        // new Date().getDate().toString() +
+        // "." +
+        // new Date().getHours().toString();
         (this.versionHtmlElement.getChildByID("version") as HTMLDivElement).textContent =
             this.gameVersion;
     }
