@@ -8,6 +8,7 @@ export enum UiEvents {
 export enum EndGameClosedActions {
     Replay = "Replay",
     NewGame = "New game",
+    Close = "Close", // in case action was called with a hotkey
 }
 
 export enum GameEvents {

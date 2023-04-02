@@ -136,11 +136,21 @@ export class UIView extends Phaser.GameObjects.Container {
         this.counter.setText(newVal.toString());
     }
 
+    // TODO: should I remove newGameHtmlForm hiding here?
+    public closeForms(): void {
+        if (this.newGameHtmlForm.visible) this.newGameHtmlForm.setVisible(false);
+        if (this.endGameHtmlForm.visible)
+            this.closeForm(UI_CONFIG.FORMS.END, EndGameClosedActions.Close);
+    }
+
     public showForm(form: UI_CONFIG.FORMS, _data = {}): void {
         this.formBack.setVisible(true);
         let htmlForm: Phaser.GameObjects.DOMElement;
-        if (form === UI_CONFIG.FORMS.START) htmlForm = this.newGameHtmlForm;
-        else {
+        if (form === UI_CONFIG.FORMS.START) {
+            htmlForm = this.newGameHtmlForm;
+            if (this.endGameHtmlForm.visible)
+                this.closeForm(UI_CONFIG.FORMS.END, EndGameClosedActions.Close);
+        } else {
             htmlForm = this.endGameHtmlForm;
             if (Object.keys(_data).length > 0 && _data.hasOwnProperty("counter"))
                 htmlForm.getChildByID("moves_used").textContent =

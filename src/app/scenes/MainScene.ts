@@ -102,7 +102,10 @@ export default class MainScene extends Phaser.Scene {
             if (action === EndGameClosedActions.Replay) this.resetGame();
             else if (action === EndGameClosedActions.NewGame)
                 this.uiView.showForm(FORMS.START);
-            else console.error(`Unknown End Game closed action: "${action}"`);
+            // else if (
+            //     action === EndGameClosedActions.Close
+            // ); // do nothing
+            // else console.error(`Unknown End Game closed action: "${action}"`);
         });
 
         this.scale.on("resize", () => {
@@ -365,6 +368,7 @@ export default class MainScene extends Phaser.Scene {
         if (this.moveCounter === 0) return;
         console.log("Level reset");
         this.level.reset();
+        this.uiView.closeForms();
         this.startGame();
     }
 
