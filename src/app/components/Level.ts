@@ -25,6 +25,15 @@ export class Level {
         this.init();
     }
 
+    public destroy(): void {
+        this.tubes.forEach((tube) => {
+            tube.content = [];
+        });
+        this.startingTubesContent = [];
+        this.tubes = [];
+        this.moves = [];
+    }
+
     public getTubes(): object[] {
         const tubes: object[] = [];
         this.tubes.forEach((tube) => {

@@ -266,7 +266,10 @@ export class UIView extends Phaser.GameObjects.Container {
             this.gameVersion;
     }
 
-    private closeForm(form: UI_CONFIG.FORMS, signalData: any): void {
+    private closeForm(
+        form: UI_CONFIG.FORMS,
+        signalData: FormData | EndGameClosedActions,
+    ): void {
         const htmlForm: Phaser.GameObjects.DOMElement =
             form === UI_CONFIG.FORMS.START ? this.newGameHtmlForm : this.endGameHtmlForm;
         this.scene.tweens.add({

@@ -209,7 +209,8 @@ export default class MainScene extends Phaser.Scene {
             }
             this.isFogOfWar = gameFoW === "true";
 
-            this.level = new Level(this.gameEvents);
+            if (this.level) this.level.destroy();
+            else this.level = new Level(this.gameEvents);
             this.level.setRandomClassicLevel(
                 this.randomClassicLevelTubeNum,
                 this.randomClassicLevelTubeVol,
@@ -225,7 +226,8 @@ export default class MainScene extends Phaser.Scene {
     private loadGame(gameObj: object): void {
         // console.log("Will try to init a game from this data a bit later");
         console.log(JSON.stringify(gameObj));
-        this.level = new Level(this.gameEvents);
+        if (this.level) this.level.destroy();
+        else this.level = new Level(this.gameEvents);
 
         // if randomly generated level
         this.rng = this.SEEDED_RANDOM_LIB(gameObj[FILES.SaveFile.Seed]);
@@ -243,6 +245,7 @@ export default class MainScene extends Phaser.Scene {
     }
 
     private startGame(): void {
+        this.gameView.reset();
         if (this.gameMode === "uno") {
             this.isWinningColor = this.level.getTubes()[0]["content"][0];
             this.uiView.setUnoGoalMessage(AoccPalette[this.isWinningColor]);
@@ -344,7 +347,6 @@ export default class MainScene extends Phaser.Scene {
         if (this.moveCounter === 0) return;
         console.log("Level reset");
         this.level.reset();
-        this.gameView.reset();
         this.startGame();
     }
 
