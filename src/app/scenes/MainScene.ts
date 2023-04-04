@@ -262,6 +262,7 @@ export default class MainScene extends Phaser.Scene {
 
         this.gameMode = gameObj[FILES.SaveFile.Mode];
         if (gameObj[FILES.SaveFile.Fog]) this.isFogOfWar = true;
+        else this.isFogOfWar = false;
         this.startGame();
     }
 
@@ -272,6 +273,7 @@ export default class MainScene extends Phaser.Scene {
             this.uiView.setUnoGoalMessage(AoccPalette[this.isWinningColor]);
             // console.log(this.isWinningColor);
         } else {
+            this.isWinningColor = GAME.ErrorValues.InvalidColorIndex;
             this.uiView.setClassicGoalMessage();
         }
 

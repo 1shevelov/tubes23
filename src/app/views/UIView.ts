@@ -100,6 +100,7 @@ export class UIView extends Phaser.GameObjects.Container {
     }
 
     public setClassicGoalMessage(): void {
+        if (this.unoMessagePortion) this.unoMessagePortion.hide();
         this.goalMessage.setText("Gather all colors in their own tube to win");
         this.goalMessage.setTint(0xffffff);
     }
