@@ -15,5 +15,9 @@ Move helper makes the best move for the selected tube's top ball.
 The game field is responsive to the window size.  
 The game supports mouse, touch and can be played with keyboard only.
 
+Try the prototype here: [1shevelov.github.io/tubes23/](https://1shevelov.github.io/tubes23/)
+
+---------
+
 The game is build with TS and wonderful [Phaser 3](https://github.com/photonstorm/phaser) by Photonstorm and based on Arsen Mazmanyan's [starting template](https://github.com/arsenmazmanyan/phaser3-starting-template).
 
