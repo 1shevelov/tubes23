@@ -22,7 +22,6 @@ export class UIView extends Phaser.GameObjects.Container {
 
     private newGameHtmlForm: Phaser.GameObjects.DOMElement;
     private endGameHtmlForm: Phaser.GameObjects.DOMElement;
-    private versionHtmlElement: Phaser.GameObjects.DOMElement;
     private formBack: Phaser.GameObjects.Sprite;
 
     private wi: number;
@@ -30,8 +29,6 @@ export class UIView extends Phaser.GameObjects.Container {
 
     private uiEvents: Phaser.Events.EventEmitter;
     private unoMessagePortion: PortionView;
-
-    private gameVersion: string;
 
     public constructor(public scene: Phaser.Scene) {
         super(scene);
@@ -41,7 +38,6 @@ export class UIView extends Phaser.GameObjects.Container {
         this.makeButtons();
         // this.makeNewLevelPopup();
         this.makeFormBack();
-        this.makeDivVersion();
         this.makeNewGameForm();
         this.makeEndGameForm();
         this.makeGoalMessage();
@@ -165,9 +161,6 @@ export class UIView extends Phaser.GameObjects.Container {
             alpha: 1.0,
             duration: this.FORM_ANIMATION_DURATION,
             ease: "Power3",
-            onComplete: () => {
-                this.versionHtmlElement.setVisible(true);
-            },
         });
     }
 
@@ -236,6 +229,14 @@ export class UIView extends Phaser.GameObjects.Container {
             (clearButton as HTMLButtonElement).style.visibility = "hidden";
             event.preventDefault();
         });
+
+        // "v 0." +
+        // (new Date().getMonth() + 1).toString() +
+        // new Date().getDate().toString() +
+        // "." +
+        // new Date().getHours().toString();
+        (this.newGameHtmlForm.getChildByID("version") as HTMLDivElement).textContent =
+            BUILD_VER;
     }
 
     private makeEndGameForm(): void {
@@ -260,23 +261,6 @@ export class UIView extends Phaser.GameObjects.Container {
         });
     }
 
-    private makeDivVersion(): void {
-        this.versionHtmlElement = this.scene.add
-            .dom(this.wi, this.he)
-            .createFromCache("DivVersion");
-        this.versionHtmlElement.setPerspective(800);
-        this.versionHtmlElement.setVisible(false);
-
-        this.gameVersion = BUILD_VER;
-        // "v 0." +
-        // (new Date().getMonth() + 1).toString() +
-        // new Date().getDate().toString() +
-        // "." +
-        // new Date().getHours().toString();
-        (this.versionHtmlElement.getChildByID("version") as HTMLDivElement).textContent =
-            this.gameVersion;
-    }
-
     private closeForm(
         form: UI_CONFIG.FORMS,
         signalData: FormData | EndGameClosedActions,
@@ -292,7 +276,6 @@ export class UIView extends Phaser.GameObjects.Container {
             onComplete: () => {
                 htmlForm.setVisible(false);
                 htmlForm.setY(this.he);
-                if (this.versionHtmlElement) this.versionHtmlElement.setVisible(false);
                 this.formBack.setVisible(false);
 
                 let event: UiEvents;

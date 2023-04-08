@@ -1,25 +1,7 @@
 <style>
-    .new-game {
-        background: #eceeee;
-        border: 1px solid #42464b;
-        border-radius: 6px;
+    .new-game-form {
         height: 580px;
-        margin: 20px auto 0;
         width: 400px;
-    }
-    .new-game h1 {
-        background-image: linear-gradient(top, #f1f3f3, #d4dae0);
-        border-bottom: 1px solid #a6abaf;
-        border-radius: 6px 6px 0 0;
-        box-sizing: border-box;
-        color: #727678;
-        display: block;
-        height: 43px;
-        font: 600 20px/1 "Open Sans", sans-serif;
-        padding-top: 14px;
-        margin: 0;
-        text-align: center;
-        text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2), 0 1px 0 #fff;
     }
     .new-game-elements {
         color: #929496;
@@ -126,7 +108,7 @@ input[type="checkbox"]:checked {
 </style>
 
 <form name="form">
-    <div class="new-game">
+    <div class="new-game-form whole-form">
         <h1>New game</h1>
         <fieldset class="new-game-elements">
             <label for="tubes-num-select">
@@ -227,5 +209,5 @@ input[type="checkbox"]:checked {
 
         <p><input type="submit" value="New random game" name="start_button" /></p>
     </div>
-    <div class="shadow"></div>
 </form>
+<div id ="version" class="version"></div>

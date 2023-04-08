@@ -1,0 +1,64 @@
+<form name="settings">
+    <div class="end-game">
+        <h1>Settings:</h1>
+
+        <fieldset class="settings-element">
+            <legend>Move helper:</legend>
+            <div>
+                <input
+                  type="radio"
+                  id="move-helper-on"
+                  name="move_helper_on"
+                  value="on"
+                  checked
+                />
+                <label class="tooltip" for="move-helper-on">
+                    On
+                    <span class="tooltip-text tooltip-right">
+                        Move helper chooses best destination<br />
+                        for chosen tube's top portion.</span>
+                </label>
+            </div>
+
+            <div>
+                <input type="radio" id="move-helper-off" name="move_helper_off" value="off" />
+                <label class="tooltip" for="move-helper-off">
+                    Uno
+                    <span class="tooltip-text tooltip-right">
+                        Manual moves.</span>
+                </label>
+            </div>
+        </fieldset>
+
+        <fieldset class="settings-element">
+            <legend>Hide tubes labels:</legend>
+            <div>
+                <input
+                  type="radio"
+                  id="tube-labels-on"
+                  name="tube_labels_on"
+                  value="on"
+                  checked
+                />
+                <label class="tooltip" for="tube-labels-on">
+                    On
+                    <span class="tooltip-text tooltip-right">
+                        Tubes hotkey labels are shown.</span>
+                </label>
+            </div>
+
+            <div>
+                <input type="radio" id="tube-labels-off" name="tube_labels_off" value="off" />
+                <label class="tooltip" for="move-helper-off">
+                    Uno
+                    <span class="tooltip-text tooltip-right">
+                        Tubes hotkey labels are hidden.</span>
+                </label>
+            </div>
+        </fieldset>
+
+        <p>
+            <input type="submit" value="Save & close" name="close_button" />
+        </p>
+    </div>
+</form>
