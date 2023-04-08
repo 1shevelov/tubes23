@@ -18,6 +18,43 @@
     text-align: center;
     text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2), 0 1px 0 #fff;
 }
+.form-element {
+    color: #929496;
+    display: block;
+    /* height: 43px; */
+    font: 600 16px/1 "Open Sans", sans-serif;
+    padding-top: 10px;
+    /* padding-bottom: 10px; */
+    margin: 0;
+    text-align: center;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2), 0 1px 0 #fff;
+}
+input[type="submit"] {
+    width: 240px;
+    height: 35px;
+    display: block;
+    font-family: Arial, "Helvetica", sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    text-decoration: none;
+    text-transform: uppercase;
+    text-align: center;
+    text-shadow: 1px 1px 0 #37a69b;
+    padding-top: 6px;
+    margin: 5px auto;
+    position: relative;
+    cursor: pointer;
+    border: none;
+    background-color: #37a69b;
+    background-image: linear-gradient(top, #3db0a6, #3111);
+    border-radius: 5px;
+    /*box-shadow: inset 0 1px 0 #2ab7ec, 0 5px 0 0 #497a78, 0 5px 5px #999;*/
+}
+input[type="submit"]:active {
+    top: 3px;
+    /*box-shadow: inset 0 1px 0 #2ab7ec, 0 2px 0 0 #31524d, 0 5px 3px #999;*/
+}
 .version {
     color: #657b83; /* Solarized base00 */
     height: 35px;
