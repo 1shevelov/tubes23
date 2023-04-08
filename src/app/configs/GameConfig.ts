@@ -25,4 +25,4 @@ export const SAVE_WITH_RANDOM_SEED = true;
 export const PORTION_MOVE_ANIMATION_SPEED = 250; // between tubes
 export const PORTION_READY_ANIMATION_SPEED = 80; // to&from top position in tube
 
-export const BUILD_VER = "0.0407.18";
+export const BUILD_VER = "0407.18";

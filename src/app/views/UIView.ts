@@ -236,7 +236,7 @@ export class UIView extends Phaser.GameObjects.Container {
         // "." +
         // new Date().getHours().toString();
         (this.newGameHtmlForm.getChildByID("version") as HTMLDivElement).textContent =
-            BUILD_VER;
+            "v. " + BUILD_VER;
     }
 
     private makeEndGameForm(): void {
