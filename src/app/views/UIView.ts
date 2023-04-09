@@ -22,6 +22,7 @@ export class UIView extends Phaser.GameObjects.Container {
 
     private newGameHtmlForm: Phaser.GameObjects.DOMElement;
     private endGameHtmlForm: Phaser.GameObjects.DOMElement;
+    private settingsHtmlForm: Phaser.GameObjects.DOMElement;
     private formBack: Phaser.GameObjects.Sprite;
 
     private wi: number;
@@ -40,6 +41,7 @@ export class UIView extends Phaser.GameObjects.Container {
         this.makeFormBack();
         this.makeNewGameForm();
         this.makeEndGameForm();
+        this.makeSettingsForm();
         this.makeGoalMessage();
         this.showForm(UI_CONFIG.FORMS.START);
         // Debug
@@ -197,14 +199,7 @@ export class UIView extends Phaser.GameObjects.Container {
         const form = this.newGameHtmlForm.getChildByName("form");
         (form as HTMLFormElement).addEventListener("submit", (event) => {
             const data = new FormData(form as HTMLFormElement);
-            this.scene.tweens.add({
-                targets: this.newGameHtmlForm,
-                y: -300,
-                alpha: 0.5,
-                duration: this.FORM_ANIMATION_DURATION,
-                ease: "Power3",
-                onComplete: () => this.closeForm(UI_CONFIG.FORMS.START, data),
-            });
+            this.closeForm(UI_CONFIG.FORMS.START, data);
             event.preventDefault();
         });
         const fileLoadInput = this.newGameHtmlForm.getChildByName("load_file");
@@ -259,6 +254,15 @@ export class UIView extends Phaser.GameObjects.Container {
             this.closeForm(UI_CONFIG.FORMS.END, EndGameClosedActions.NewGame);
             event.preventDefault();
         });
+    }
+
+    private makeSettingsForm(): void {
+        this.settingsHtmlForm = this.scene.add
+            .dom(this.wi / 2, this.he)
+            .createFromCache("SettingsForm");
+        this.settingsHtmlForm.setPerspective(800);
+        this.settingsHtmlForm.setVisible(false);
+        this.settingsHtmlForm.setName(UI_CONFIG.FORMS.SETTINGS);
     }
 
     private closeForm(
