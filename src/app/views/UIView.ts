@@ -45,7 +45,7 @@ export class UIView extends Phaser.GameObjects.Container {
         this.makeGoalMessage();
         this.showForm(UI_CONFIG.FORMS.START);
         // Debug
-        // this.showForm("end");
+        // this.showForm(UI_CONFIG.FORMS.SETTINGS);
     }
 
     public resizeUi(): void {
@@ -145,15 +145,22 @@ export class UIView extends Phaser.GameObjects.Container {
     public showForm(form: UI_CONFIG.FORMS, _data = {}): void {
         this.formBack.setVisible(true);
         let htmlForm: Phaser.GameObjects.DOMElement;
-        if (form === UI_CONFIG.FORMS.START) {
-            htmlForm = this.newGameHtmlForm;
-            if (this.endGameHtmlForm.visible)
-                this.closeForm(UI_CONFIG.FORMS.END, EndGameClosedActions.Close);
-        } else {
-            htmlForm = this.endGameHtmlForm;
-            if (Object.keys(_data).length > 0 && _data.hasOwnProperty("counter"))
-                htmlForm.getChildByID("moves_used").textContent =
-                    _data["counter"].toString();
+        switch (form) {
+            case UI_CONFIG.FORMS.START:
+                htmlForm = this.newGameHtmlForm;
+                if (this.endGameHtmlForm.visible)
+                    this.closeForm(UI_CONFIG.FORMS.END, EndGameClosedActions.Close);
+                break;
+            case UI_CONFIG.FORMS.END:
+                htmlForm = this.endGameHtmlForm;
+                if (Object.keys(_data).length > 0 && _data.hasOwnProperty("counter"))
+                    htmlForm.getChildByID("moves_used").textContent =
+                        _data["counter"].toString();
+                break;
+            case UI_CONFIG.FORMS.SETTINGS:
+                htmlForm = this.settingsHtmlForm;
+                if (this.endGameHtmlForm.visible)
+                    this.closeForm(UI_CONFIG.FORMS.END, EndGameClosedActions.Close);
         }
 
         htmlForm.setVisible(true);
@@ -263,14 +270,38 @@ export class UIView extends Phaser.GameObjects.Container {
         this.settingsHtmlForm.setPerspective(800);
         this.settingsHtmlForm.setVisible(false);
         this.settingsHtmlForm.setName(UI_CONFIG.FORMS.SETTINGS);
+
+        const form = this.settingsHtmlForm.getChildByName("settings");
+        (form as HTMLFormElement).addEventListener("submit", (event) => {
+            const data = new FormData(form as HTMLFormElement);
+            this.closeForm(UI_CONFIG.FORMS.SETTINGS, data);
+            event.preventDefault();
+        });
     }
 
     private closeForm(
         form: UI_CONFIG.FORMS,
         signalData: FormData | EndGameClosedActions,
     ): void {
-        const htmlForm: Phaser.GameObjects.DOMElement =
-            form === UI_CONFIG.FORMS.START ? this.newGameHtmlForm : this.endGameHtmlForm;
+        let htmlForm: Phaser.GameObjects.DOMElement;
+        let event: UiEvents;
+        switch (form) {
+            case UI_CONFIG.FORMS.START:
+                htmlForm = this.newGameHtmlForm;
+                event = UiEvents.NewGameSettingsSubmitted;
+                break;
+            case UI_CONFIG.FORMS.END:
+                htmlForm = this.endGameHtmlForm;
+                event = UiEvents.EndGameClosed;
+                break;
+            case UI_CONFIG.FORMS.SETTINGS:
+                htmlForm = this.settingsHtmlForm;
+                event = UiEvents.SettingsSubmitted;
+                break;
+            default:
+                throw new Error("Unknown form: " + form);
+        }
+
         this.scene.tweens.add({
             targets: htmlForm,
             y: -300,
@@ -281,11 +312,6 @@ export class UIView extends Phaser.GameObjects.Container {
                 htmlForm.setVisible(false);
                 htmlForm.setY(this.he);
                 this.formBack.setVisible(false);
-
-                let event: UiEvents;
-                if (form === UI_CONFIG.FORMS.START)
-                    event = UiEvents.NewGameSettingsSubmitted;
-                else event = UiEvents.EndGameClosed;
                 this.uiEvents.emit(event, signalData);
             },
         });

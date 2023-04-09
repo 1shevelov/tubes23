@@ -107,6 +107,7 @@ export default class MainScene extends Phaser.Scene {
             // ); // do nothing
             // else console.error(`Unknown End Game closed action: "${action}"`);
         });
+        uiEvents.on(UiEvents.SettingsSubmitted, this.setSettings, this);
 
         this.scale.on("resize", () => {
             this.uiView.resizeUi();
@@ -387,6 +388,21 @@ export default class MainScene extends Phaser.Scene {
         this.uiView.setCounter(this.moveCounter);
         this.uiView.hideWin();
         this.gameState = GameStates.Game;
+    }
+
+    private setSettings(settingsData: FormData): void {
+        let isMoveHelperEnabled = false;
+        let isTubesLabelsEnabled = false;
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        for (const [key, value] of settingsData) {
+            // console.log(`${key}: ${value}`);
+            if (key === "move_helper") isMoveHelperEnabled = true;
+            if (key === "tubes_labels") isTubesLabelsEnabled = true;
+        }
+        // set game config HELPER_ENABLED
+        console.log("Move helper: " + isMoveHelperEnabled);
+        // show/hide gameView Tubes Labels
+        console.log("Tubes labels: " + isTubesLabelsEnabled);
     }
 
     private setHotKeyHandlers(): void {
