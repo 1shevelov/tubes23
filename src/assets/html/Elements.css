@@ -2,7 +2,7 @@
     background: #eceeee;
     border: 1px solid #42464b;
     border-radius: 6px;
-    margin: 20px auto 0;
+    margin: 10px auto 0;
 }
 .whole-form h1 {
     background-image: linear-gradient(top, #f1f3f3, #d4dae0);
@@ -30,7 +30,7 @@
     text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2), 0 1px 0 #fff;
 }
 input[type="submit"] {
-    width: 240px;
+    width: 200px;
     height: 35px;
     display: block;
     font-family: Arial, "Helvetica", sans-serif;
@@ -54,6 +54,28 @@ input[type="submit"] {
 input[type="submit"]:active {
     top: 3px;
     /*box-shadow: inset 0 1px 0 #2ab7ec, 0 2px 0 0 #31524d, 0 5px 3px #999;*/
+}
+.ui-button {
+    background-color: #3db0a6;
+    width: 100px;
+    height: 40px;
+    display: block;
+    font-family: Arial, "Helvetica", sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    text-decoration: none;
+    text-transform: uppercase;
+    text-align: center;
+    text-shadow: 1px 1px 0 #37a69b;
+    padding-top: 6px;
+    margin: 5px auto;
+    position: relative;
+    cursor: pointer;
+    border: none;
+    background-image: linear-gradient(top, #3db0a6, #3111);
+    border-radius: 5px;
+    /*box-shadow: inset 0 1px 0 #2ab7ec, 0 5px 0 0 #497a78, 0 5px 5px #999;*/
 }
 .version {
     color: #657b83; /* Solarized base00 */

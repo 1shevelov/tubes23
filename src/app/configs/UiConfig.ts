@@ -4,7 +4,15 @@ export const DarkBackground = "#002b36"; // Solarized Base03
 export enum FORMS {
     START = "start",
     END = "end",
+    MENU = "menu",
     SETTINGS = "settings",
+}
+
+export enum MENU {
+    NEWGAME,
+    RESET,
+    EXPORT,
+    SETTINGS,
 }
 
 export const TubeLabelStyle: Phaser.Types.GameObjects.Text.TextStyle = {

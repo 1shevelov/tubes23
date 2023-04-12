@@ -1,6 +1,7 @@
 export enum UiEvents {
-    ButtonRestartClicked = "ButtonRestartClicked",
+    ResetCalled = "ResetCalled",
     ButtonUndoClicked = "ButtonUndoClicked",
+    ExportCalled = "ExportCalled",
     NewGameSettingsSubmitted = "NewGameSettingsSubmitted", // sending new game data
     SettingsSubmitted = "SettingsSubmitted", // sending settings data
     EndGameClosed = "EndGameClosed", // sending one of EndGameClosedActions

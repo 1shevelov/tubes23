@@ -17,13 +17,15 @@ export class UIView extends Phaser.GameObjects.Container {
     private counter: Phaser.GameObjects.Text;
     private winMessage: Phaser.GameObjects.Text;
     private goalMessage: Phaser.GameObjects.Text;
-    private buttonRestart: Phaser.GameObjects.Container;
+    // private buttonRestart: Phaser.GameObjects.Container;
     private buttonUndo: Phaser.GameObjects.Container;
 
     private newGameHtmlForm: Phaser.GameObjects.DOMElement;
     private endGameHtmlForm: Phaser.GameObjects.DOMElement;
+    private menuHtml: Phaser.GameObjects.DOMElement;
     private settingsHtmlForm: Phaser.GameObjects.DOMElement;
     private formBack: Phaser.GameObjects.Sprite;
+    private menuButton: Phaser.GameObjects.DOMElement;
 
     private wi: number;
     private he: number;
@@ -42,10 +44,12 @@ export class UIView extends Phaser.GameObjects.Container {
         this.makeNewGameForm();
         this.makeEndGameForm();
         this.makeSettingsForm();
+        this.makeMenu();
         this.makeGoalMessage();
         this.showForm(UI_CONFIG.FORMS.START);
         // Debug
-        // this.showForm(UI_CONFIG.FORMS.SETTINGS);
+        // this.showForm(UI_CONFIG.FORMS.MENU);
+        // this.menuButton.setVisible(true);
     }
 
     public resizeUi(): void {
@@ -61,19 +65,21 @@ export class UIView extends Phaser.GameObjects.Container {
     }
 
     public showGameUi(): void {
-        this.buttonRestart.setVisible(true);
+        // this.buttonRestart.setVisible(true);
         this.buttonUndo.setVisible(true);
         this.counter.setVisible(true);
         this.goalMessage.setVisible(true);
+        this.menuButton.setVisible(true);
     }
 
     public hideGameUi(): void {
-        this.buttonRestart.setVisible(false);
+        // this.buttonRestart.setVisible(false);
         this.buttonUndo.setVisible(false);
         this.counter.setVisible(false);
         this.goalMessage.setVisible(false);
         if (this.unoMessagePortion) this.unoMessagePortion.hide();
         this.hideWin();
+        this.menuButton.setVisible(false);
     }
 
     public getUiEvents(): Phaser.Events.EventEmitter {
@@ -157,10 +163,14 @@ export class UIView extends Phaser.GameObjects.Container {
                     htmlForm.getChildByID("moves_used").textContent =
                         _data["counter"].toString();
                 break;
+            case UI_CONFIG.FORMS.MENU:
+                this.menuHtml.setVisible(true);
+                return;
             case UI_CONFIG.FORMS.SETTINGS:
                 htmlForm = this.settingsHtmlForm;
-                if (this.endGameHtmlForm.visible)
-                    this.closeForm(UI_CONFIG.FORMS.END, EndGameClosedActions.Close);
+                break;
+            default:
+                return;
         }
 
         htmlForm.setVisible(true);
@@ -261,6 +271,49 @@ export class UIView extends Phaser.GameObjects.Container {
             this.closeForm(UI_CONFIG.FORMS.END, EndGameClosedActions.NewGame);
             event.preventDefault();
         });
+    }
+
+    private makeMenu(): void {
+        this.menuHtml = this.scene.add.dom(110, 0).createFromCache("MenuHtml");
+        this.menuHtml.setOrigin(0, 0);
+        this.menuHtml.setPerspective(800);
+        this.menuHtml.setVisible(false);
+        this.menuHtml.setName(UI_CONFIG.FORMS.MENU);
+
+        (this.menuHtml.getChildByID("new-game") as HTMLLIElement).addEventListener(
+            "click",
+            (event: MouseEvent) => {
+                this.menuHtml.setVisible(false);
+                this.showForm(UI_CONFIG.FORMS.START);
+                event.preventDefault();
+            },
+        );
+        (this.menuHtml.getChildByID("reset") as HTMLLIElement).addEventListener(
+            "click",
+            (event: MouseEvent) => {
+                this.menuHtml.setVisible(false);
+                this.uiEvents.emit(UiEvents.ResetCalled);
+                event.preventDefault();
+            },
+        );
+        (this.menuHtml.getChildByID("export") as HTMLLIElement).addEventListener(
+            "click",
+            (event: MouseEvent) => {
+                this.menuHtml.setVisible(false);
+                // send event to main scene
+                event.preventDefault();
+            },
+        );
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        (this.menuHtml.getChildByID("settings") as HTMLLIElement).addEventListener(
+            "click",
+            (event: MouseEvent) => {
+                this.menuHtml.setVisible(false);
+                this.showForm(UI_CONFIG.FORMS.SETTINGS);
+                event.preventDefault();
+            },
+        );
     }
 
     private makeSettingsForm(): void {
@@ -382,17 +435,17 @@ export class UIView extends Phaser.GameObjects.Container {
         const buttonWidth = 150 > this.wi / 3.7 ? this.wi / 3.7 : 150;
         const buttonHeight = buttonWidth / 2.4;
 
-        this.buttonRestart = this.makeButton(
-            "(R)estart",
-            { x: this.wi * 0.07, y: buttonHeight / 3 },
-            { x: buttonWidth, y: buttonHeight },
-        );
-        // this.buttonRestart.setVisible(true);
-        this.buttonRestart.on("pointerup", () =>
-            this.uiEvents.emit(UiEvents.ButtonRestartClicked),
-        );
-        this.buttonRestart.setVisible(false);
-        this.add(this.buttonRestart);
+        // this.buttonRestart = this.makeButton(
+        //     "(R)estart",
+        //     { x: this.wi * 0.07, y: buttonHeight / 3 },
+        //     { x: buttonWidth, y: buttonHeight },
+        // );
+        // // this.buttonRestart.setVisible(true);
+        // this.buttonRestart.on("pointerup", () =>
+        //     this.uiEvents.emit(UiEvents.ResetCalled),
+        // );
+        // this.buttonRestart.setVisible(false);
+        // this.add(this.buttonRestart);
 
         // console.log(this.wi / 2, this.he);
         this.buttonUndo = this.makeButton(
@@ -405,6 +458,20 @@ export class UIView extends Phaser.GameObjects.Container {
             this.uiEvents.emit(UiEvents.ButtonUndoClicked),
         );
         this.add(this.buttonUndo);
+
+        this.menuButton = this.scene.add.dom(5, 5).createFromCache("ButtonHtml");
+        this.menuButton.setOrigin(0, 0);
+        this.menuButton.setPerspective(800);
+        this.menuButton.setVisible(false);
+        (this.menuButton.getChildByName("button") as HTMLButtonElement).innerText =
+            "Menu";
+        (this.menuButton.getChildByName("button") as HTMLButtonElement).addEventListener(
+            "click",
+            (event: MouseEvent) => {
+                this.menuHtml.setVisible(true);
+                event.preventDefault();
+            },
+        );
     }
 
     private makeWinMessage(): void {

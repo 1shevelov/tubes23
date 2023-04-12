@@ -95,7 +95,7 @@ export default class MainScene extends Phaser.Scene {
         this.add.existing(this.uiView);
 
         const uiEvents = this.uiView.getUiEvents();
-        uiEvents.on(UiEvents.ButtonRestartClicked, this.resetGame, this);
+        uiEvents.on(UiEvents.ResetCalled, this.resetGame, this);
         uiEvents.on(UiEvents.ButtonUndoClicked, this.undoMove, this);
         uiEvents.on(UiEvents.NewGameSettingsSubmitted, this.initNewGame, this);
         uiEvents.on(UiEvents.EndGameClosed, (action: string) => {
@@ -108,6 +108,10 @@ export default class MainScene extends Phaser.Scene {
             // else console.error(`Unknown End Game closed action: "${action}"`);
         });
         uiEvents.on(UiEvents.SettingsSubmitted, this.setSettings, this);
+        uiEvents.on(UiEvents.ExportCalled, () => {
+            if (this.gameState === GameStates.NoGame) return;
+            this.saveLevel();
+        });
 
         this.scale.on("resize", () => {
             this.uiView.resizeUi();
