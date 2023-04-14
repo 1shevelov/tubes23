@@ -95,8 +95,7 @@ export class GameView extends Phaser.GameObjects.Container {
         ) {
             this.sourceTube = tubeNum;
             this.tubes[this.sourceTube].activate();
-            if (GAME.HELPER_ENABLED)
-                this.gameEvents.emit(GameEvents.SourceTubeChoosen, this.sourceTube);
+            this.gameEvents.emit(GameEvents.SourceTubeChoosen, this.sourceTube);
             return;
         }
         if (this.sourceTube === tubeNum) {

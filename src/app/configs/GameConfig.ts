@@ -13,9 +13,6 @@ export enum ErrorValues {
     InvalidColorIndex = -1,
 }
 
-// move helper enabled
-export const HELPER_ENABLED = true;
-
 // show tube labels for hotkeys
 export const SHOW_TUBE_HOTKEY = true;
 

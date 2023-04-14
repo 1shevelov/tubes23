@@ -48,6 +48,8 @@ export default class MainScene extends Phaser.Scene {
     private isWinningColor = GAME.ErrorValues.InvalidColorIndex;
     private isFogOfWar = false;
 
+    private isMoveHelperEnabled = true;
+
     public constructor() {
         super({ key: SceneNames.Main });
     }
@@ -303,6 +305,8 @@ export default class MainScene extends Phaser.Scene {
     }
 
     private helperMove(source: number): void {
+        if (!this.isMoveHelperEnabled) return;
+
         const theOnlyRecipientTubeIndex = this.level.tryToHelperMove(source);
         if (theOnlyRecipientTubeIndex !== GAME.ErrorValues.InvalidTubeIndex) {
             this.gameView.helperMove(theOnlyRecipientTubeIndex);
@@ -395,16 +399,19 @@ export default class MainScene extends Phaser.Scene {
     }
 
     private setSettings(settingsData: FormData): void {
-        let isMoveHelperEnabled = false;
+        let isMoveHelperEnabledOption = false;
         let isTubesLabelsEnabled = false;
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         for (const [key, value] of settingsData) {
             // console.log(`${key}: ${value}`);
-            if (key === "move_helper") isMoveHelperEnabled = true;
+            if (key === "move_helper") isMoveHelperEnabledOption = true;
             if (key === "tubes_labels") isTubesLabelsEnabled = true;
         }
-        // set game config HELPER_ENABLED
-        console.log("Move helper: " + isMoveHelperEnabled);
+        console.log(
+            "Move helper changed: ",
+            isMoveHelperEnabledOption !== this.isMoveHelperEnabled,
+        );
+        this.isMoveHelperEnabled = isMoveHelperEnabledOption;
         // show/hide gameView Tubes Labels
         console.log("Tubes labels: " + isTubesLabelsEnabled);
     }
