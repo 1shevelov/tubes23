@@ -419,7 +419,10 @@ export default class MainScene extends Phaser.Scene {
     private setHotKeyHandlers(): void {
         this.input.keyboard.on("keydown", (event) => {
             switch (event.keyCode) {
-                case Phaser.Input.Keyboard.KeyCodes.S: // save
+                case Phaser.Input.Keyboard.KeyCodes.S: // settings
+                    if (this.gameState !== GameStates.Game) return;
+                    this.uiView.showForm(FORMS.SETTINGS);
+                    break;
                 case Phaser.Input.Keyboard.KeyCodes.X: // export
                     if (this.gameState === GameStates.NoGame) return;
                     this.saveLevel();
