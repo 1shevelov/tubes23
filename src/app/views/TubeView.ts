@@ -97,6 +97,14 @@ export class TubeView extends Phaser.GameObjects.Container {
         return this.volume === this.portions.length;
     }
 
+    public showLabel(): void {
+        this.hotkeyLabel.setVisible(true);
+    }
+
+    public hideLabel(): void {
+        this.hotkeyLabel.setVisible(false);
+    }
+
     public activate(): void {
         if (this.isActivated) return;
         const topPortion = this.getTopPortion();
@@ -161,45 +169,42 @@ export class TubeView extends Phaser.GameObjects.Container {
     }
 
     public addInteractivity(): void {
-        if (GAME.SHOW_TUBE_HOTKEY) {
-            let label = (this.tubeNumber + 1).toString();
-            switch (label) {
-                case "10":
-                    label = "A";
-                    break;
-                case "11":
-                    label = "B";
-                    break;
-                case "12":
-                    label = "C";
-                    break;
-                case "13":
-                    label = "D";
-                    break;
-                case "14":
-                    label = "E";
-                    break;
-                case "15":
-                    label = "F";
-            }
-            if (!this.hotkeyLabel) {
-                this.hotkeyLabel = UIService.createText(
-                    this.scene,
-                    0,
-                    0,
-                    "",
-                    UI_CONFIG.TubeLabelStyle,
-                );
-                this.add(this.hotkeyLabel);
-            }
-            this.hotkeyLabel.setPosition(
-                this.tubeSprite.x,
-                this.tubeSprite.y +
-                    (this.tubeSprite.height * this.tubeSprite.scaleY) / 1.6,
-            );
-            this.hotkeyLabel.setText(label);
-            this.hotkeyLabel.setVisible(true);
+        let label = (this.tubeNumber + 1).toString();
+        switch (label) {
+            case "10":
+                label = "A";
+                break;
+            case "11":
+                label = "B";
+                break;
+            case "12":
+                label = "C";
+                break;
+            case "13":
+                label = "D";
+                break;
+            case "14":
+                label = "E";
+                break;
+            case "15":
+                label = "F";
         }
+        if (!this.hotkeyLabel) {
+            this.hotkeyLabel = UIService.createText(
+                this.scene,
+                0,
+                0,
+                "",
+                UI_CONFIG.TubeLabelStyle,
+            );
+            this.add(this.hotkeyLabel);
+        }
+        this.hotkeyLabel.setPosition(
+            this.tubeSprite.x,
+            this.tubeSprite.y + (this.tubeSprite.height * this.tubeSprite.scaleY) / 1.6,
+        );
+        this.hotkeyLabel.setText(label);
+        if (!GAME.DEFAULT_TUBE_HOTKEY_LABEL_SHOW) this.hotkeyLabel.setVisible(false);
 
         if (!this.interactiveLayer) {
             this.interactiveLayer = new Phaser.GameObjects.Sprite(

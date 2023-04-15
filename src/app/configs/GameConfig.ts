@@ -14,7 +14,7 @@ export enum ErrorValues {
 }
 
 // show tube labels for hotkeys
-export const SHOW_TUBE_HOTKEY = true;
+export const DEFAULT_TUBE_HOTKEY_LABEL_SHOW = true;
 
 // save randomly generated classic level without actual tube content
 export const SAVE_WITH_RANDOM_SEED = true;

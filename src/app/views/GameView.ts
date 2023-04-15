@@ -62,6 +62,11 @@ export class GameView extends Phaser.GameObjects.Container {
         this.fillTubes(tubes);
     }
 
+    public switchTubesLabels(show: boolean): void {
+        if (show) this.tubes.forEach((tube) => tube.showLabel());
+        else this.tubes.forEach((tube) => tube.hideLabel());
+    }
+
     public areFoggedPortionsPresent(): boolean {
         if (!this.isFogOfWar) return false;
         for (let i = 0; i < this.tubes.length; i++) {

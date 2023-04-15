@@ -407,13 +407,13 @@ export default class MainScene extends Phaser.Scene {
             if (key === "move_helper") isMoveHelperEnabledOption = true;
             if (key === "tubes_labels") isTubesLabelsEnabled = true;
         }
-        console.log(
-            "Move helper changed: ",
-            isMoveHelperEnabledOption !== this.isMoveHelperEnabled,
-        );
+        // console.log(
+        //     "Move helper changed: ",
+        //     isMoveHelperEnabledOption !== this.isMoveHelperEnabled,
+        // );
         this.isMoveHelperEnabled = isMoveHelperEnabledOption;
-        // show/hide gameView Tubes Labels
-        console.log("Tubes labels: " + isTubesLabelsEnabled);
+        // console.log("Tubes labels: " + isTubesLabelsEnabled);
+        this.gameView.switchTubesLabels(isTubesLabelsEnabled);
     }
 
     private setHotKeyHandlers(): void {
