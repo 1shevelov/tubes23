@@ -163,6 +163,7 @@ export class UIView extends Phaser.GameObjects.Container {
                 if (Object.keys(_data).length > 0 && _data.hasOwnProperty("counter"))
                     htmlForm.getChildByID("moves_used").textContent =
                         _data["counter"].toString();
+                this.hideGameUi();
                 break;
             case UI_CONFIG.FORMS.MENU:
                 this.menuHtml.setVisible(true);
@@ -198,7 +199,7 @@ export class UIView extends Phaser.GameObjects.Container {
             this.wi / 2,
             this.he / 2,
             "game-ui",
-            "1x1.png",
+            "1x1.png", // _orange
         );
         this.formBack.setInteractive();
         this.formBack.setVisible(false);
@@ -281,6 +282,13 @@ export class UIView extends Phaser.GameObjects.Container {
         this.menuHtml.setVisible(false);
         this.menuHtml.setName(UI_CONFIG.FORMS.MENU);
 
+        (
+            this.menuHtml.getChildByName("clear_button") as HTMLButtonElement
+        ).addEventListener("click", (event) => {
+            this.menuHtml.setVisible(false);
+            this.formBack.setVisible(false);
+            event.preventDefault();
+        });
         (this.menuHtml.getChildByID("new-game") as HTMLLIElement).addEventListener(
             "click",
             (event: MouseEvent) => {
@@ -469,7 +477,11 @@ export class UIView extends Phaser.GameObjects.Container {
         (this.menuButton.getChildByName("button") as HTMLButtonElement).addEventListener(
             "click",
             (event: MouseEvent) => {
-                this.menuHtml.setVisible(true);
+                if (!this.menuHtml.visible) this.showForm(UI_CONFIG.FORMS.MENU);
+                else {
+                    this.menuHtml.setVisible(false);
+                    this.formBack.setVisible(false);
+                }
                 event.preventDefault();
             },
         );
