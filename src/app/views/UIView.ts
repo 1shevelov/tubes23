@@ -156,6 +156,7 @@ export class UIView extends Phaser.GameObjects.Container {
                 htmlForm = this.newGameHtmlForm;
                 if (this.endGameHtmlForm.visible)
                     this.closeForm(UI_CONFIG.FORMS.END, EndGameClosedActions.Close);
+                this.hideGameUi();
                 break;
             case UI_CONFIG.FORMS.END:
                 htmlForm = this.endGameHtmlForm;
