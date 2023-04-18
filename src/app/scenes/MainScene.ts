@@ -116,7 +116,7 @@ export default class MainScene extends Phaser.Scene {
         });
 
         this.scale.on("resize", () => {
-            this.uiView.resizeUi();
+            this.uiView.updateUiPosition();
         });
     }
 

@@ -13,11 +13,13 @@ interface XY {
 export class UIView extends Phaser.GameObjects.Container {
     private readonly FORM_ANIMATION_DURATION = 1500;
 
-    // private counter: CounterComponent;
     private counter: Phaser.GameObjects.Text;
+    private COUNTER_REL_POS: XY = { x: 1.08, y: 15 };
+
     private winMessage: Phaser.GameObjects.Text;
     private goalMessage: Phaser.GameObjects.Text;
-    // private buttonRestart: Phaser.GameObjects.Container;
+    private GOAL_REL_POS: XY = { x: 2, y: 1.03 };
+
     private buttonUndo: Phaser.GameObjects.Container;
 
     private newGameHtmlForm: Phaser.GameObjects.DOMElement;
@@ -52,19 +54,27 @@ export class UIView extends Phaser.GameObjects.Container {
         // this.menuButton.setVisible(true);
     }
 
-    public resizeUi(): void {
-        const { width, height } = this.scene.scale.gameSize;
-        this.wi = width;
-        this.he = height;
+    public updateUiPosition(): void {
+        this.refreshCoordinates();
+        this.counter.setPosition(
+            this.wi / this.COUNTER_REL_POS.x,
+            this.he / this.COUNTER_REL_POS.y,
+        );
+        this.goalMessage.setPosition(
+            this.wi / this.GOAL_REL_POS.x,
+            this.he / this.GOAL_REL_POS.y,
+        );
 
         if (this.newGameHtmlForm.visible)
             this.newGameHtmlForm.setPosition(this.wi / 2, this.he / 2);
         if (this.endGameHtmlForm.visible)
             this.endGameHtmlForm.setPosition(this.wi / 2, this.he / 2);
-        // TODO: else update starting position
+        if (this.settingsHtmlForm.visible)
+            this.settingsHtmlForm.setPosition(this.wi / 2, this.he / 2);
     }
 
     public showGameUi(): void {
+        this.updateUiPosition();
         // this.buttonRestart.setVisible(true);
         this.buttonUndo.setVisible(true);
         this.counter.setVisible(true);
@@ -175,6 +185,8 @@ export class UIView extends Phaser.GameObjects.Container {
                 return;
         }
 
+        this.refreshCoordinates();
+        htmlForm.setX(this.wi / 2);
         htmlForm.setVisible(true);
         this.scene.tweens.add({
             targets: htmlForm,
@@ -186,11 +198,14 @@ export class UIView extends Phaser.GameObjects.Container {
     }
 
     private init(): void {
+        this.refreshCoordinates();
+        this.uiEvents = new Phaser.Events.EventEmitter();
+    }
+
+    private refreshCoordinates(): void {
         const { width, height } = this.scene.scale.gameSize;
         this.wi = width;
         this.he = height;
-
-        this.uiEvents = new Phaser.Events.EventEmitter();
     }
 
     private makeFormBack(): void {
@@ -382,8 +397,8 @@ export class UIView extends Phaser.GameObjects.Container {
     private makeCounter(): void {
         this.counter = UIService.createText(
             this.scene,
-            this.wi / 1.08,
-            this.he / 15,
+            this.wi / this.COUNTER_REL_POS.x,
+            this.he / this.COUNTER_REL_POS.y,
             "0",
             UI_CONFIG.uiCounterStyle,
         );
@@ -504,8 +519,8 @@ export class UIView extends Phaser.GameObjects.Container {
     private makeGoalMessage(): void {
         this.goalMessage = UIService.createText(
             this.scene,
-            this.wi / 2,
-            this.he / 1.03,
+            this.wi / this.GOAL_REL_POS.x,
+            this.he / this.GOAL_REL_POS.y,
             "",
             UI_CONFIG.uiGoalMessageStyle,
         );
