@@ -114,10 +114,6 @@ export default class MainScene extends Phaser.Scene {
             if (this.gameState === GameStates.NoGame) return;
             this.saveLevel();
         });
-
-        this.scale.on("resize", () => {
-            this.uiView.updateUiPosition();
-        });
     }
 
     private initForegroundView(): void {
@@ -412,7 +408,7 @@ export default class MainScene extends Phaser.Scene {
         //     isMoveHelperEnabledOption !== this.isMoveHelperEnabled,
         // );
         this.isMoveHelperEnabled = isMoveHelperEnabledOption;
-        // console.log("Tubes labels: " + isTubesLabelsEnabled);
+        console.log("Show tubes' labels is set to: " + isTubesLabelsEnabled);
         this.gameView.switchTubesLabels(isTubesLabelsEnabled);
     }
 

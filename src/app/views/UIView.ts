@@ -54,25 +54,6 @@ export class UIView extends Phaser.GameObjects.Container {
         // this.menuButton.setVisible(true);
     }
 
-    public updateUiPosition(): void {
-        this.refreshCoordinates();
-        this.counter.setPosition(
-            this.wi / this.COUNTER_REL_POS.x,
-            this.he / this.COUNTER_REL_POS.y,
-        );
-        this.goalMessage.setPosition(
-            this.wi / this.GOAL_REL_POS.x,
-            this.he / this.GOAL_REL_POS.y,
-        );
-
-        if (this.newGameHtmlForm.visible)
-            this.newGameHtmlForm.setPosition(this.wi / 2, this.he / 2);
-        if (this.endGameHtmlForm.visible)
-            this.endGameHtmlForm.setPosition(this.wi / 2, this.he / 2);
-        if (this.settingsHtmlForm.visible)
-            this.settingsHtmlForm.setPosition(this.wi / 2, this.he / 2);
-    }
-
     public showGameUi(): void {
         this.updateUiPosition();
         // this.buttonRestart.setVisible(true);
@@ -200,6 +181,10 @@ export class UIView extends Phaser.GameObjects.Container {
     private init(): void {
         this.refreshCoordinates();
         this.uiEvents = new Phaser.Events.EventEmitter();
+
+        this.scene.scale.on("resize", () => {
+            this.updateUiPosition();
+        });
     }
 
     private refreshCoordinates(): void {
@@ -527,5 +512,24 @@ export class UIView extends Phaser.GameObjects.Container {
         this.goalMessage.setOrigin(0.5, 0.5);
         this.goalMessage.setVisible(false);
         this.add(this.goalMessage);
+    }
+
+    private updateUiPosition(): void {
+        this.refreshCoordinates();
+        this.counter.setPosition(
+            this.wi / this.COUNTER_REL_POS.x,
+            this.he / this.COUNTER_REL_POS.y,
+        );
+        this.goalMessage.setPosition(
+            this.wi / this.GOAL_REL_POS.x,
+            this.he / this.GOAL_REL_POS.y,
+        );
+
+        if (this.newGameHtmlForm.visible)
+            this.newGameHtmlForm.setPosition(this.wi / 2, this.he / 2);
+        if (this.endGameHtmlForm.visible)
+            this.endGameHtmlForm.setPosition(this.wi / 2, this.he / 2);
+        if (this.settingsHtmlForm.visible)
+            this.settingsHtmlForm.setPosition(this.wi / 2, this.he / 2);
     }
 }
