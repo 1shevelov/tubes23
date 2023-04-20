@@ -81,6 +81,22 @@ export class TubeView extends Phaser.GameObjects.Container {
         this.tubeSprite.setVisible(true);
     }
 
+    public updatePosition(shiftX: number, shiftY: number): void {
+        this.tubeSprite.setPosition(
+            this.tubeSprite.x + shiftX,
+            this.tubeSprite.y + shiftY,
+        );
+        this.setPortionsPositions(this.tubeSprite.x, this.tubeSprite.y);
+        this.portions.forEach((portion, i) => {
+            portion.changeXPos(this.positions[i][0]);
+            portion.changeYPos(this.positions[i][1]);
+            portion.changeSize(
+                ((this.tubeSprite.height * this.tubeSprite.scaleY) / this.volume) *
+                    this.portionSizeCoeff,
+            );
+        });
+    }
+
     public isEmpty(): boolean {
         return this.portions.length === 0;
     }
@@ -173,63 +189,19 @@ export class TubeView extends Phaser.GameObjects.Container {
     }
 
     public addInteractivity(): void {
-        if (!this.hotkeyLabel) {
-            let label = (this.tubeNumber + 1).toString();
-            switch (label) {
-                case "10":
-                    label = "A";
-                    break;
-                case "11":
-                    label = "B";
-                    break;
-                case "12":
-                    label = "C";
-                    break;
-                case "13":
-                    label = "D";
-                    break;
-                case "14":
-                    label = "E";
-                    break;
-                case "15":
-                    label = "F";
-            }
-            this.hotkeyLabel = UIService.createText(
-                this.scene,
-                0,
-                0,
-                label,
-                UI_CONFIG.TubeLabelStyle,
-            );
-            if (!GAME.DEFAULT_TUBE_HOTKEY_LABEL_SHOW) this.hotkeyLabel.setVisible(false);
-            this.add(this.hotkeyLabel);
-        }
+        if (!this.hotkeyLabel || !this.interactiveLayer) this.createInteractivity();
+
         this.hotkeyLabel.setPosition(
             this.tubeSprite.x,
-            this.tubeSprite.y + (this.tubeSprite.height * this.tubeSprite.scaleY) / 1.6,
+            this.tubeSprite.y + (this.tubeSprite.height * this.tubeSprite.scaleY) / 1.5,
         );
-
-        if (!this.interactiveLayer) {
-            this.interactiveLayer = new Phaser.GameObjects.Sprite(
-                this.scene,
-                this.tubeSprite.x,
-                this.tubeSprite.y,
-                "game-ui",
-                "1x1.png", // "1x1_orange.png" for debug
-            );
-            this.interactiveLayer.on("pointerup", () => {
-                this.gameEvents.emit(ViewEvents.TubeClicked, this.tubeNumber);
-            });
-            this.add(this.interactiveLayer);
-        } else {
-            this.interactiveLayer.setPosition(this.tubeSprite.x, this.tubeSprite.y);
-            this.interactiveLayer.setVisible(true);
-        }
+        this.interactiveLayer.setPosition(this.tubeSprite.x, this.tubeSprite.y);
         this.interactiveLayer.setScale(
             this.tubeSprite.width * this.tubeSprite.scaleX * 1.2,
             this.tubeSprite.height * this.tubeSprite.scaleY * 1.2,
         );
         this.interactiveLayer.setInteractive();
+        this.interactiveLayer.setVisible(true);
     }
 
     public removeFogFromTopPortion(): void {
@@ -275,6 +247,54 @@ export class TubeView extends Phaser.GameObjects.Container {
         this.tubeSprite.setOrigin(0.5, 0.5);
         this.tubeSprite.setVisible(false);
         this.add(this.tubeSprite);
+    }
+
+    private createInteractivity(): void {
+        if (!this.hotkeyLabel) {
+            let label = (this.tubeNumber + 1).toString();
+            switch (label) {
+                case "10":
+                    label = "A";
+                    break;
+                case "11":
+                    label = "B";
+                    break;
+                case "12":
+                    label = "C";
+                    break;
+                case "13":
+                    label = "D";
+                    break;
+                case "14":
+                    label = "E";
+                    break;
+                case "15":
+                    label = "F";
+            }
+            this.hotkeyLabel = UIService.createText(
+                this.scene,
+                0,
+                0,
+                label,
+                UI_CONFIG.TubeLabelStyle,
+            );
+            if (!GAME.DEFAULT_TUBE_HOTKEY_LABEL_SHOW) this.hotkeyLabel.setVisible(false);
+            this.add(this.hotkeyLabel);
+        }
+
+        if (!this.interactiveLayer) {
+            this.interactiveLayer = new Phaser.GameObjects.Sprite(
+                this.scene,
+                this.tubeSprite.x,
+                this.tubeSprite.y,
+                "game-ui",
+                "1x1.png", // "1x1_orange.png" for debug
+            );
+            this.interactiveLayer.on("pointerup", () => {
+                this.gameEvents.emit(ViewEvents.TubeClicked, this.tubeNumber);
+            });
+            this.add(this.interactiveLayer);
+        }
     }
 
     // private draw(x: number, y: number): void {
@@ -374,6 +394,6 @@ export class TubeView extends Phaser.GameObjects.Container {
                 zeroPortionCenterY - (2 * i * portionSize) / 2,
             ]);
         }
-        // console.log(this.positions);
+        // console.log(this.tubeNumber, " / ", this.positions);
     }
 }

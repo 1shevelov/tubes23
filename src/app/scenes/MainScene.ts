@@ -49,6 +49,9 @@ export default class MainScene extends Phaser.Scene {
     private isFogOfWar = false;
 
     private isMoveHelperEnabled = true;
+    private isTubesLabelsEnabled = GAME.DEFAULT_TUBE_HOTKEY_LABEL_SHOW;
+
+    private updateGameViewTimer: number;
 
     public constructor() {
         super({ key: SceneNames.Main });
@@ -80,8 +83,13 @@ export default class MainScene extends Phaser.Scene {
         // this.cameras.main.setRoundPixels(true);
         this.scale.on("resize", () => {
             if (this.gameState === GameStates.Game) {
-                this.gameView.reset();
-                this.gameView.createClassicGame(this.level.getTubes());
+                clearTimeout(this.updateGameViewTimer);
+                this.updateGameViewTimer = window.setTimeout(() => {
+                    this.gameView.reset();
+                    this.gameView.createClassicGame(this.level.getTubes());
+                    this.gameView.switchTubesLabels(this.isTubesLabelsEnabled);
+                    // this.gameView.updateView();
+                }, 200);
             }
         });
         this.gameEvents.on(ViewEvents.MoveAnimationStarted, (duration: number) => {
@@ -396,20 +404,20 @@ export default class MainScene extends Phaser.Scene {
 
     private setSettings(settingsData: FormData): void {
         let isMoveHelperEnabledOption = false;
-        let isTubesLabelsEnabled = false;
+        let isTubesLabelsEnabledOption = false;
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         for (const [key, value] of settingsData) {
             // console.log(`${key}: ${value}`);
             if (key === "move_helper") isMoveHelperEnabledOption = true;
-            if (key === "tubes_labels") isTubesLabelsEnabled = true;
+            if (key === "tubes_labels") isTubesLabelsEnabledOption = true;
         }
         // console.log(
         //     "Move helper changed: ",
         //     isMoveHelperEnabledOption !== this.isMoveHelperEnabled,
         // );
         this.isMoveHelperEnabled = isMoveHelperEnabledOption;
-        console.log("Show tubes' labels is set to: " + isTubesLabelsEnabled);
-        this.gameView.switchTubesLabels(isTubesLabelsEnabled);
+        this.isTubesLabelsEnabled = isTubesLabelsEnabledOption;
+        this.gameView.switchTubesLabels(isTubesLabelsEnabledOption);
     }
 
     private setHotKeyHandlers(): void {

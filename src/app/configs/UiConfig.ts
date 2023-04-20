@@ -16,9 +16,10 @@ export enum MENU {
 }
 
 export const TubeLabelStyle: Phaser.Types.GameObjects.Text.TextStyle = {
-    fontSize: "22px",
+    fontSize: "20px",
     fontStyle: "bold",
     align: "center",
+    color: "#999999",
 };
 export const uiCounterStyle: Phaser.Types.GameObjects.Text.TextStyle = {
     fontSize: "34px",

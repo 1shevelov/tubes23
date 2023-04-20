@@ -153,6 +153,18 @@ export class GameView extends Phaser.GameObjects.Container {
         }, GAME.PORTION_READY_ANIMATION_SPEED);
     }
 
+    // a failed attempt to reposition tubes and portions on window resize
+    // without recreating a whole game view
+    public updateView(): void {
+        const prevWidth = this.wi;
+        const prevHeight = this.he;
+        this.updateWindowSize();
+        const halfShiftX = (this.wi - prevWidth) / 2;
+        const halfShiftY = (this.he - prevHeight) / 2;
+        console.log(halfShiftX, halfShiftY);
+        this.tubes.forEach((tube) => tube.updatePosition(halfShiftX, halfShiftY));
+    }
+
     private setAndPlaceTubes(tubes: object[]): void {
         // deciding how many rows are needed
         let rows = this.tubeRows.length;
