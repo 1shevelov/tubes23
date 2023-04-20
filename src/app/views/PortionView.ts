@@ -18,15 +18,8 @@ export class PortionView extends Phaser.GameObjects.Container {
     // TODO: check why portionSizeCoeff is not used
     private readonly portionSizeCoeff = 0.8;
 
-    public constructor(
-        scene: Phaser.Scene,
-        // centerX: number,
-        // centerY: number,
-        // squareSize: number,
-        // color: number,
-    ) {
+    public constructor(scene: Phaser.Scene) {
         super(scene);
-        // this.portionSprite = this.draw(centerX, centerY, squareSize, color);
         this.portionSprite = this.create();
         this.add(this.portionSprite);
     }
@@ -52,6 +45,14 @@ export class PortionView extends Phaser.GameObjects.Container {
             this.fog.setVisible(false);
             this.fog.destroy();
         }
+    }
+
+    public addSpriteToLayer(layer: Phaser.GameObjects.Layer): void {
+        layer.add(this.portionSprite);
+    }
+
+    public addFogToLayer(layer: Phaser.GameObjects.Layer): void {
+        if (this.fog) layer.add(this.fog);
     }
 
     public hide(): void {

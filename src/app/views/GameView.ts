@@ -23,6 +23,9 @@ export class GameView extends Phaser.GameObjects.Container {
     private tubes: TubeView[] = [];
     private tubeCache: TubeView[] = [];
     private portionCache: PortionView[] = [];
+    private tubesLayer: Phaser.GameObjects.Layer;
+    private portionsLayer: Phaser.GameObjects.Layer;
+    private fogLayer: Phaser.GameObjects.Layer;
 
     private readonly gameEvents: Phaser.Events.EventEmitter;
 
@@ -202,7 +205,10 @@ export class GameView extends Phaser.GameObjects.Container {
             }
             this.tubes[i].fillPortions(portions);
             if (this.isFogOfWar) {
-                for (let p = 0; p < portions.length - 1; p++) portions[p].setFog();
+                for (let p = 0; p < portions.length - 1; p++) {
+                    portions[p].setFog();
+                    portions[p].addFogToLayer(this.fogLayer);
+                }
             }
         }
     }
@@ -213,6 +219,7 @@ export class GameView extends Phaser.GameObjects.Container {
         if (tubeNum > cachedTubesNum) {
             for (let i = 0; i < tubeNum - cachedTubesNum; i++) {
                 tubeView = new TubeView(this.scene, this.gameEvents);
+                tubeView.addToLayer(this.tubesLayer);
                 this.tubeCache.push(tubeView);
             }
         }
@@ -221,32 +228,21 @@ export class GameView extends Phaser.GameObjects.Container {
         if (portionNum > cachedPortionsNum) {
             for (let i = 0; i < portionNum - cachedPortionsNum; i++) {
                 portionView = new PortionView(this.scene);
+                portionView.addSpriteToLayer(this.portionsLayer);
                 this.portionCache.push(portionView);
             }
         }
     }
 
-    // private addProps(): void {
-    //     this.tubes.forEach((tube, index) => {
-    //         tube.setName(index.toString());
-    //         tube.addInteractivity();
-    //     });
-    //     this.scene.input.on(
-    //         "gameobjectup",
-    //         (
-    //             _pointer: Phaser.Input.Pointer,
-    //             gameObject: Phaser.GameObjects.Container,
-    //             _event: any,
-    //         ) => {
-    //             // (gameObject as TubeView).activate();
-    //             this.handleClick(parseInt(gameObject.name));
-    //         },
-    //     );
-    // }
-
     private init(): void {
         this.updateWindowSize();
         this.tubeRows = this.wi > this.he ? this.HOR_ROWS : this.PORT_ROWS;
+
+        this.portionsLayer = this.scene.add.layer();
+        this.portionsLayer.setDepth(1);
+        this.fogLayer = this.scene.add.layer();
+        this.fogLayer.setDepth(2);
+        this.tubesLayer = this.scene.add.layer();
 
         this.scene.scale.on("resize", this.updateWindowSize, this);
 

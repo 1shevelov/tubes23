@@ -141,6 +141,10 @@ export class TubeView extends Phaser.GameObjects.Container {
         );
     }
 
+    public addToLayer(layer: Phaser.GameObjects.Layer): void {
+        layer.add(this.tubeSprite);
+    }
+
     // on game end or level reset
     public reset(): PortionView[] {
         if (this.tubeSprite) this.tubeSprite.setVisible(false);
