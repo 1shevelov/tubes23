@@ -28,6 +28,7 @@ export class GameView extends Phaser.GameObjects.Container {
     private fogLayer: Phaser.GameObjects.Layer;
 
     private readonly gameEvents: Phaser.Events.EventEmitter;
+    private isAnimationInProgress = false;
 
     private sourceTube: number;
     private recipientTube: number;
@@ -93,6 +94,7 @@ export class GameView extends Phaser.GameObjects.Container {
 
     public handleClick(tubeNum: number): void {
         // console.log(`Clicked ${tubeNum}`);
+        if (this.isAnimationInProgress) return;
         if (tubeNum + 1 > this.tubes.length) {
             console.warn(`No tube #${tubeNum + 1}`);
             return;
@@ -259,14 +261,20 @@ export class GameView extends Phaser.GameObjects.Container {
         this.scene.scale.on("resize", this.updateWindowSize, this);
 
         this.gameEvents.on(ViewEvents.TubeClicked, this.handleClick, this);
+        this.gameEvents.on(GameEvents.MoveFailed, this.resetSource, this);
+        this.gameEvents.on(GameEvents.MoveSucceeded, this.move, this);
         this.gameEvents.on(
             ViewEvents.PortionAnimationFinished,
             (portion: PortionView) => {
                 this.finishTransferPortion(portion);
             },
         );
-        this.gameEvents.on(GameEvents.MoveFailed, this.resetSource, this);
-        this.gameEvents.on(GameEvents.MoveSucceeded, this.move, this);
+        this.gameEvents.on(ViewEvents.MoveAnimationStarted, (duration: number) => {
+            this.isAnimationInProgress = true;
+            setTimeout(() => {
+                this.isAnimationInProgress = false;
+            }, duration);
+        });
     }
 
     private resetSource(): void {
@@ -291,11 +299,13 @@ export class GameView extends Phaser.GameObjects.Container {
             console.error(`Was not able to draw a portion from tube#${this.sourceTube}`);
             return;
         }
-        const { x, y } = this.tubes[this.recipientTube].getTopPosition();
+
         this.gameEvents.emit(
             ViewEvents.MoveAnimationStarted,
             GAME.PORTION_MOVE_ANIMATION_SPEED + GAME.PORTION_READY_ANIMATION_SPEED,
         );
+
+        const { x, y } = this.tubes[this.recipientTube].getTopPosition();
         portion.pathAnimateTo(x, y, GAME.PORTION_MOVE_ANIMATION_SPEED, this.gameEvents);
 
         // wait for PortionAnimationFinished signal
