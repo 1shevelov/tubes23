@@ -20,14 +20,13 @@ export class UIView extends Phaser.GameObjects.Container {
     private goalMessage: Phaser.GameObjects.Text;
     private GOAL_REL_POS: XY = { x: 2, y: 1.03 };
 
-    private buttonUndo: Phaser.GameObjects.Container;
-
     private newGameHtmlForm: Phaser.GameObjects.DOMElement;
     private endGameHtmlForm: Phaser.GameObjects.DOMElement;
     private menuHtml: Phaser.GameObjects.DOMElement;
     private settingsHtmlForm: Phaser.GameObjects.DOMElement;
     private formBack: Phaser.GameObjects.Sprite;
     private menuButton: Phaser.GameObjects.DOMElement;
+    private undoButton: Phaser.GameObjects.DOMElement;
 
     private wi: number;
     private he: number;
@@ -57,7 +56,7 @@ export class UIView extends Phaser.GameObjects.Container {
     public showGameUi(): void {
         this.updateUiPosition();
         // this.buttonRestart.setVisible(true);
-        this.buttonUndo.setVisible(true);
+        this.undoButton.setVisible(true);
         this.counter.setVisible(true);
         this.goalMessage.setVisible(true);
         this.menuButton.setVisible(true);
@@ -65,7 +64,7 @@ export class UIView extends Phaser.GameObjects.Container {
 
     public hideGameUi(): void {
         // this.buttonRestart.setVisible(false);
-        this.buttonUndo.setVisible(false);
+        this.undoButton.setVisible(false);
         this.counter.setVisible(false);
         this.goalMessage.setVisible(false);
         if (this.unoMessagePortion) this.unoMessagePortion.hide();
@@ -88,7 +87,7 @@ export class UIView extends Phaser.GameObjects.Container {
             this.unoMessagePortion.changeXPos(this.goalMessage.x - 167);
             this.unoMessagePortion.changeYPos(this.goalMessage.y);
         }
-        this.goalMessage.setText("Gather    this color only in one tube to win");
+        this.goalMessage.setText("Gather    this color only in any one tube to win");
         // this.goalMessage.setTint(winColor);
         this.unoMessagePortion.changeColor(winColor);
         this.unoMessagePortion.show();
@@ -96,7 +95,7 @@ export class UIView extends Phaser.GameObjects.Container {
 
     public setClassicGoalMessage(): void {
         if (this.unoMessagePortion) this.unoMessagePortion.hide();
-        this.goalMessage.setText("Gather all colors in their own tube to win");
+        this.goalMessage.setText("Gather all colors each in a separate tube to win");
         this.goalMessage.setTint(0xffffff);
     }
 
@@ -176,6 +175,48 @@ export class UIView extends Phaser.GameObjects.Container {
             duration: this.FORM_ANIMATION_DURATION,
             ease: "Power3",
         });
+    }
+
+    public setButtonActive(button: UI_CONFIG.BUTTONS): void {
+        let buttonToSetActive: Phaser.GameObjects.DOMElement;
+        let backColor = "";
+        switch (button) {
+            case UI_CONFIG.BUTTONS.UNDO:
+                buttonToSetActive = this.undoButton;
+                backColor = UI_CONFIG.UiButtons.undoActiveButtonColor;
+                break;
+            case UI_CONFIG.BUTTONS.MENU:
+                buttonToSetActive = this.menuButton;
+                backColor = UI_CONFIG.UiButtons.menuActiveButtonColor;
+                break;
+            default:
+                return;
+        }
+        (buttonToSetActive.node as HTMLButtonElement).style.backgroundColor = backColor;
+        (buttonToSetActive.node as HTMLButtonElement).style.color =
+            UI_CONFIG.UiButtons.activeButtonTextColor;
+        (buttonToSetActive.node as HTMLButtonElement).style.cursor =
+            UI_CONFIG.UiButtons.activeButtonCursor;
+    }
+
+    public setButtonDisabled(button: UI_CONFIG.BUTTONS): void {
+        let buttonToDisable: Phaser.GameObjects.DOMElement;
+        switch (button) {
+            case UI_CONFIG.BUTTONS.UNDO:
+                buttonToDisable = this.undoButton;
+                break;
+            case UI_CONFIG.BUTTONS.MENU:
+                buttonToDisable = this.menuButton;
+                break;
+            default:
+                return;
+        }
+        (buttonToDisable.node as HTMLButtonElement).style.backgroundColor =
+            UI_CONFIG.UiButtons.disabledButtonColor;
+        (buttonToDisable.node as HTMLButtonElement).style.color =
+            UI_CONFIG.UiButtons.disabledButtonTextColor;
+        (buttonToDisable.node as HTMLButtonElement).style.cursor =
+            UI_CONFIG.UiButtons.disabledButtonCursor;
     }
 
     private init(): void {
@@ -441,40 +482,25 @@ export class UIView extends Phaser.GameObjects.Container {
     }
 
     private makeButtons(): void {
-        const buttonWidth = 150 > this.wi / 3.7 ? this.wi / 3.7 : 150;
-        const buttonHeight = buttonWidth / 2.4;
+        // const buttonWidth = 150 > this.wi / 3.7 ? this.wi / 3.7 : 150;
+        // const buttonHeight = buttonWidth / 2.4;
 
-        // this.buttonRestart = this.makeButton(
-        //     "(R)estart",
-        //     { x: this.wi * 0.07, y: buttonHeight / 3 },
-        //     { x: buttonWidth, y: buttonHeight },
-        // );
-        // // this.buttonRestart.setVisible(true);
-        // this.buttonRestart.on("pointerup", () =>
-        //     this.uiEvents.emit(UiEvents.ResetCalled),
-        // );
-        // this.buttonRestart.setVisible(false);
-        // this.add(this.buttonRestart);
+        this.createMenuButton();
+        this.createUndoButton();
 
-        // console.log(this.wi / 2, this.he);
-        this.buttonUndo = this.makeButton(
-            "(U)ndo",
-            { x: this.wi * 0.25, y: buttonHeight / 3 },
-            { x: buttonWidth, y: buttonHeight },
-        );
-        this.buttonUndo.setVisible(false);
-        this.buttonUndo.on("pointerup", () =>
-            this.uiEvents.emit(UiEvents.ButtonUndoClicked),
-        );
-        this.add(this.buttonUndo);
+        this.setButtonActive(UI_CONFIG.BUTTONS.MENU);
+        this.setButtonDisabled(UI_CONFIG.BUTTONS.UNDO);
+    }
 
-        this.menuButton = this.scene.add.dom(5, 5).createFromCache("ButtonHtml");
+    private createMenuButton(): void {
+        const menuButtonStyle = UI_CONFIG.UiButtonStyle;
+        this.menuButton = this.scene.add
+            .dom(5, 5)
+            .createElement("button", menuButtonStyle, "Menu");
         this.menuButton.setOrigin(0, 0);
         this.menuButton.setPerspective(800);
         this.menuButton.setVisible(false);
-        (this.menuButton.getChildByName("button") as HTMLButtonElement).innerText =
-            "Menu";
-        (this.menuButton.getChildByName("button") as HTMLButtonElement).addEventListener(
+        (this.menuButton.node as HTMLButtonElement).addEventListener(
             "click",
             (event: MouseEvent) => {
                 if (!this.menuHtml.visible) this.showForm(UI_CONFIG.FORMS.MENU);
@@ -482,6 +508,25 @@ export class UIView extends Phaser.GameObjects.Container {
                     this.menuHtml.setVisible(false);
                     this.formBack.setVisible(false);
                 }
+                event.preventDefault();
+            },
+        );
+    }
+
+    private createUndoButton(): void {
+        const undoButtonStyle = UI_CONFIG.UiButtonStyle;
+        undoButtonStyle["backgroundColor"] =
+            UI_CONFIG.UiButtons["undo-active-button-color"];
+        this.undoButton = this.scene.add
+            .dom(Number.parseInt(undoButtonStyle.width) + 10, 5)
+            .createElement("button", undoButtonStyle, "Undo");
+        this.undoButton.setOrigin(0, 0);
+        this.undoButton.setPerspective(800);
+        this.undoButton.setVisible(false);
+        (this.undoButton.node as HTMLButtonElement).addEventListener(
+            "click",
+            (event: MouseEvent) => {
+                this.uiEvents.emit(UiEvents.ButtonUndoClicked);
                 event.preventDefault();
             },
         );

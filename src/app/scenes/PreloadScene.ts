@@ -37,7 +37,6 @@ export default class PreloadScene extends Phaser.Scene {
         this.load.html("EndGameForm", "assets/html/EndGameForm.html");
         this.load.html("MenuHtml", "assets/html/Menu.html");
         this.load.html("SettingsForm", "assets/html/SettingsForm.html");
-        this.load.html("ButtonHtml", "assets/html/UiButton.html");
     }
 
     private loadAssets(): void {
