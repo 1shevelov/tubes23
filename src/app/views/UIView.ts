@@ -47,9 +47,9 @@ export class UIView extends Phaser.GameObjects.Container {
         this.makeSettingsForm();
         this.makeMenu();
         this.makeGoalMessage();
-        this.showForm(UI_CONFIG.FORMS.START);
+        // this.showForm(UI_CONFIG.FORMS.START);
         // Debug
-        // this.showForm(UI_CONFIG.FORMS.SETTINGS);
+        this.showForm(UI_CONFIG.FORMS.MENU);
         // this.menuButton.setVisible(true);
     }
 
@@ -350,40 +350,56 @@ export class UIView extends Phaser.GameObjects.Container {
             this.formBack.setVisible(false);
             event.preventDefault();
         });
-        (this.menuHtml.getChildByID("new-game") as HTMLLIElement).addEventListener(
-            "click",
-            (event: MouseEvent) => {
-                this.menuHtml.setVisible(false);
-                this.showForm(UI_CONFIG.FORMS.START);
-                event.preventDefault();
-            },
-        );
-        (this.menuHtml.getChildByID("reset") as HTMLLIElement).addEventListener(
-            "click",
-            (event: MouseEvent) => {
-                this.menuHtml.setVisible(false);
-                this.uiEvents.emit(UiEvents.ResetCalled);
-                event.preventDefault();
-            },
-        );
-        (this.menuHtml.getChildByID("export") as HTMLLIElement).addEventListener(
-            "click",
-            (event: MouseEvent) => {
-                this.menuHtml.setVisible(false);
-                // send event to main scene
-                event.preventDefault();
-            },
-        );
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        (this.menuHtml.getChildByID("settings") as HTMLLIElement).addEventListener(
-            "click",
-            (event: MouseEvent) => {
-                this.menuHtml.setVisible(false);
-                this.showForm(UI_CONFIG.FORMS.SETTINGS);
-                event.preventDefault();
-            },
-        );
+
+        this.enableMenuItem(UI_CONFIG.MENU.NEWGAME);
+        (
+            this.menuHtml.getChildByID(UI_CONFIG.MENU.NEWGAME) as HTMLLIElement
+        ).addEventListener("click", (event: MouseEvent) => {
+            this.menuHtml.setVisible(false);
+            this.showForm(UI_CONFIG.FORMS.START);
+            event.preventDefault();
+        });
+
+        this.disableMenuItem(UI_CONFIG.MENU.RESET);
+        (
+            this.menuHtml.getChildByID(UI_CONFIG.MENU.RESET) as HTMLLIElement
+        ).addEventListener("click", (event: MouseEvent) => {
+            this.menuHtml.setVisible(false);
+            this.uiEvents.emit(UiEvents.ResetCalled);
+            event.preventDefault();
+        });
+
+        this.enableMenuItem(UI_CONFIG.MENU.EXPORT);
+        (
+            this.menuHtml.getChildByID(UI_CONFIG.MENU.EXPORT) as HTMLLIElement
+        ).addEventListener("click", (event: MouseEvent) => {
+            this.menuHtml.setVisible(false);
+            // send event to main scene
+            event.preventDefault();
+        });
+
+        this.enableMenuItem(UI_CONFIG.MENU.SETTINGS);
+        (
+            this.menuHtml.getChildByID(UI_CONFIG.MENU.SETTINGS) as HTMLLIElement
+        ).addEventListener("click", (event: MouseEvent) => {
+            this.menuHtml.setVisible(false);
+            this.showForm(UI_CONFIG.FORMS.SETTINGS);
+            event.preventDefault();
+        });
+    }
+
+    private enableMenuItem(item: UI_CONFIG.MENU): void {
+        const itemElement = this.menuHtml.getChildByID(item) as HTMLLIElement;
+        itemElement.style.backgroundColor = UI_CONFIG.MenuItems.normalBackgroundColor;
+        itemElement.style.color = UI_CONFIG.MenuItems.textColor;
+        itemElement.style.cursor = UI_CONFIG.MenuItems.cursor;
+    }
+
+    private disableMenuItem(item: UI_CONFIG.MENU): void {
+        const itemElement = this.menuHtml.getChildByID(item) as HTMLLIElement;
+        itemElement.style.backgroundColor = UI_CONFIG.MenuItems.disabledBackgroundColor;
+        itemElement.style.color = UI_CONFIG.MenuItems.disabledTextColor;
+        itemElement.style.cursor = UI_CONFIG.MenuItems.disabledCursor;
     }
 
     private makeSettingsForm(): void {

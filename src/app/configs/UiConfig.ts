@@ -9,10 +9,10 @@ export enum FORMS {
 }
 
 export enum MENU {
-    NEWGAME,
-    RESET,
-    EXPORT,
-    SETTINGS,
+    NEWGAME = "new-game",
+    RESET = "reset",
+    EXPORT = "export",
+    SETTINGS = "settings",
 }
 
 export enum BUTTONS {
@@ -111,4 +111,14 @@ export const UiButtons = {
     activeButtonTextColor: "#fff",
     activeButtonCursor: "pointer",
     disabledButtonCursor: "not-allowed",
+};
+
+export const MenuItems = {
+    normalBackgroundColor: "#eceeee",
+    hoverBackgroundColor: "#979999",
+    disabledBackgroundColor: "#545555",
+    textColor: "#626466",
+    disabledTextColor: "#aaa",
+    cursor: "pointer",
+    disabledCursor: "not-allowed",
 };
