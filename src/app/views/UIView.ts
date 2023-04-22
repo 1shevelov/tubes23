@@ -184,10 +184,29 @@ export class UIView extends Phaser.GameObjects.Container {
             case UI_CONFIG.BUTTONS.UNDO:
                 buttonToSetActive = this.undoButton;
                 backColor = UI_CONFIG.UiButtons.undoActiveButtonColor;
+                (this.undoButton.node as HTMLButtonElement).addEventListener(
+                    "click",
+                    (event: MouseEvent) => {
+                        this.uiEvents.emit(UiEvents.ButtonUndoClicked);
+                        event.preventDefault();
+                    },
+                );
                 break;
             case UI_CONFIG.BUTTONS.MENU:
                 buttonToSetActive = this.menuButton;
                 backColor = UI_CONFIG.UiButtons.menuActiveButtonColor;
+                (this.menuButton.node as HTMLButtonElement).addEventListener(
+                    "click",
+                    (event: MouseEvent) => {
+                        if (!this.menuHtml.visible) {
+                            this.showForm(UI_CONFIG.FORMS.MENU);
+                        } else {
+                            this.menuHtml.setVisible(false);
+                            this.formBack.setVisible(false);
+                        }
+                        event.preventDefault();
+                    },
+                );
                 break;
             default:
                 return;
@@ -211,6 +230,7 @@ export class UIView extends Phaser.GameObjects.Container {
             default:
                 return;
         }
+        // (buttonToDisable.node as HTMLButtonElement).removeEventListener("click");
         (buttonToDisable.node as HTMLButtonElement).style.backgroundColor =
             UI_CONFIG.UiButtons.disabledButtonColor;
         (buttonToDisable.node as HTMLButtonElement).style.color =
@@ -500,17 +520,6 @@ export class UIView extends Phaser.GameObjects.Container {
         this.menuButton.setOrigin(0, 0);
         this.menuButton.setPerspective(800);
         this.menuButton.setVisible(false);
-        (this.menuButton.node as HTMLButtonElement).addEventListener(
-            "click",
-            (event: MouseEvent) => {
-                if (!this.menuHtml.visible) this.showForm(UI_CONFIG.FORMS.MENU);
-                else {
-                    this.menuHtml.setVisible(false);
-                    this.formBack.setVisible(false);
-                }
-                event.preventDefault();
-            },
-        );
     }
 
     private createUndoButton(): void {
@@ -523,13 +532,6 @@ export class UIView extends Phaser.GameObjects.Container {
         this.undoButton.setOrigin(0, 0);
         this.undoButton.setPerspective(800);
         this.undoButton.setVisible(false);
-        (this.undoButton.node as HTMLButtonElement).addEventListener(
-            "click",
-            (event: MouseEvent) => {
-                this.uiEvents.emit(UiEvents.ButtonUndoClicked);
-                event.preventDefault();
-            },
-        );
     }
 
     private makeWinMessage(): void {

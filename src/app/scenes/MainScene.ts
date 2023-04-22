@@ -15,7 +15,7 @@ import {
     UiEvents,
     ViewEvents,
 } from "../configs/Events";
-import { AoccPalette, FORMS } from "../configs/UiConfig";
+import { AoccPalette, FORMS, BUTTONS } from "../configs/UiConfig";
 
 enum GameStates {
     NoGame,
@@ -339,6 +339,7 @@ export default class MainScene extends Phaser.Scene {
     private countSuccessfulMove(): void {
         this.moveCounter++;
         this.uiView.setCounter(this.moveCounter);
+        if (this.moveCounter === 1) this.uiView.setButtonActive(BUTTONS.UNDO);
         if (this.isWinningColor === GAME.ErrorValues.InvalidColorIndex) {
             if (this.level.isWonClassic() && !this.gameView.areFoggedPortionsPresent())
                 this.endGame();
@@ -397,9 +398,9 @@ export default class MainScene extends Phaser.Scene {
         const lastMove = this.level.undoMove();
         this.gameView.undoMove(lastMove);
         this.moveCounter--;
+        if (this.moveCounter === 0) this.uiView.setButtonDisabled(BUTTONS.UNDO);
         this.uiView.setCounter(this.moveCounter);
         this.uiView.hideWin();
-        this.gameState = GameStates.Game;
     }
 
     private setSettings(settingsData: FormData): void {
