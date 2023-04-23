@@ -242,7 +242,7 @@ export class TubeView extends Phaser.GameObjects.Container {
             0,
             0,
             "game-ui",
-            "tube.png",
+            "tube_empty.png",
         );
         this.tubeSprite.setOrigin(0.5, 0.5);
         this.tubeSprite.setVisible(false);

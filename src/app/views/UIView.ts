@@ -47,9 +47,9 @@ export class UIView extends Phaser.GameObjects.Container {
         this.makeSettingsForm();
         this.makeMenu();
         this.makeGoalMessage();
-        // this.showForm(UI_CONFIG.FORMS.START);
+        this.showForm(UI_CONFIG.FORMS.START);
         // Debug
-        this.showForm(UI_CONFIG.FORMS.MENU);
+        // this.showForm(UI_CONFIG.FORMS.MENU);
         // this.menuButton.setVisible(true);
     }
 
@@ -239,6 +239,20 @@ export class UIView extends Phaser.GameObjects.Container {
             UI_CONFIG.UiButtons.disabledButtonCursor;
     }
 
+    public enableMenuItem(item: UI_CONFIG.MENU): void {
+        const itemElement = this.menuHtml.getChildByID(item) as HTMLLIElement;
+        itemElement.style.backgroundColor = UI_CONFIG.MenuItems.normalBackgroundColor;
+        itemElement.style.color = UI_CONFIG.MenuItems.textColor;
+        itemElement.style.cursor = UI_CONFIG.MenuItems.cursor;
+    }
+
+    public disableMenuItem(item: UI_CONFIG.MENU): void {
+        const itemElement = this.menuHtml.getChildByID(item) as HTMLLIElement;
+        itemElement.style.backgroundColor = UI_CONFIG.MenuItems.disabledBackgroundColor;
+        itemElement.style.color = UI_CONFIG.MenuItems.disabledTextColor;
+        itemElement.style.cursor = UI_CONFIG.MenuItems.disabledCursor;
+    }
+
     private init(): void {
         this.refreshCoordinates();
         this.uiEvents = new Phaser.Events.EventEmitter();
@@ -386,20 +400,6 @@ export class UIView extends Phaser.GameObjects.Container {
             this.showForm(UI_CONFIG.FORMS.SETTINGS);
             event.preventDefault();
         });
-    }
-
-    private enableMenuItem(item: UI_CONFIG.MENU): void {
-        const itemElement = this.menuHtml.getChildByID(item) as HTMLLIElement;
-        itemElement.style.backgroundColor = UI_CONFIG.MenuItems.normalBackgroundColor;
-        itemElement.style.color = UI_CONFIG.MenuItems.textColor;
-        itemElement.style.cursor = UI_CONFIG.MenuItems.cursor;
-    }
-
-    private disableMenuItem(item: UI_CONFIG.MENU): void {
-        const itemElement = this.menuHtml.getChildByID(item) as HTMLLIElement;
-        itemElement.style.backgroundColor = UI_CONFIG.MenuItems.disabledBackgroundColor;
-        itemElement.style.color = UI_CONFIG.MenuItems.disabledTextColor;
-        itemElement.style.cursor = UI_CONFIG.MenuItems.disabledCursor;
     }
 
     private makeSettingsForm(): void {

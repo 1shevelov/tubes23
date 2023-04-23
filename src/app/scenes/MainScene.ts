@@ -15,7 +15,7 @@ import {
     UiEvents,
     ViewEvents,
 } from "../configs/Events";
-import { AoccPalette, FORMS, BUTTONS } from "../configs/UiConfig";
+import { AoccPalette, FORMS, BUTTONS, MENU } from "../configs/UiConfig";
 
 enum GameStates {
     NoGame,
@@ -299,7 +299,10 @@ export default class MainScene extends Phaser.Scene {
         this.moveCounter = 0;
         this.uiView.setCounter(this.moveCounter);
         this.uiView.hideWin();
+        this.uiView.setButtonDisabled(BUTTONS.UNDO);
+        this.uiView.disableMenuItem(MENU.RESET);
         this.uiView.showGameUi();
+        this.gameView.switchTubesLabels(this.isTubesLabelsEnabled);
         this.gameState = GameStates.Game;
     }
 
@@ -339,7 +342,10 @@ export default class MainScene extends Phaser.Scene {
     private countSuccessfulMove(): void {
         this.moveCounter++;
         this.uiView.setCounter(this.moveCounter);
-        if (this.moveCounter === 1) this.uiView.setButtonActive(BUTTONS.UNDO);
+        if (this.moveCounter === 1) {
+            this.uiView.setButtonActive(BUTTONS.UNDO);
+            this.uiView.enableMenuItem(MENU.RESET);
+        }
         if (this.isWinningColor === GAME.ErrorValues.InvalidColorIndex) {
             if (this.level.isWonClassic() && !this.gameView.areFoggedPortionsPresent())
                 this.endGame();
@@ -398,7 +404,10 @@ export default class MainScene extends Phaser.Scene {
         const lastMove = this.level.undoMove();
         this.gameView.undoMove(lastMove);
         this.moveCounter--;
-        if (this.moveCounter === 0) this.uiView.setButtonDisabled(BUTTONS.UNDO);
+        if (this.moveCounter === 0) {
+            this.uiView.setButtonDisabled(BUTTONS.UNDO);
+            this.uiView.disableMenuItem(MENU.RESET);
+        }
         this.uiView.setCounter(this.moveCounter);
         this.uiView.hideWin();
     }
@@ -436,6 +445,10 @@ export default class MainScene extends Phaser.Scene {
                     break;
                 case Phaser.Input.Keyboard.KeyCodes.U: // undo
                     if (this.gameState === GameStates.Game) this.undoMove();
+                    break;
+                case Phaser.Input.Keyboard.KeyCodes.M: // menu
+                    if (this.gameState === GameStates.Game)
+                        this.uiView.showForm(FORMS.MENU);
                     break;
                 case Phaser.Input.Keyboard.KeyCodes.N: // new game
                 case Phaser.Input.Keyboard.KeyCodes.L: // load

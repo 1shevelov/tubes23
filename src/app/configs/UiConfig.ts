@@ -115,7 +115,7 @@ export const UiButtons = {
 
 export const MenuItems = {
     normalBackgroundColor: "#eceeee",
-    hoverBackgroundColor: "#979999",
+    // hoverBackgroundColor: "#979999",
     disabledBackgroundColor: "#545555",
     textColor: "#626466",
     disabledTextColor: "#aaa",
