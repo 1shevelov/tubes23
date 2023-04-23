@@ -71,6 +71,17 @@ export class Level {
         return true;
     }
 
+    public areEmptyTubes(): boolean {
+        for (let i = 0; i < this.tubes.length; i++) {
+            if (this.tubes[i].content.length === 0) return true;
+        }
+        return false;
+    }
+
+    public areMaxTubes(): boolean {
+        return this.tubes.length === GAME.MAX_TUBES;
+    }
+
     public setClassicTubes(tubes: number[][], tubeVol: number, drains: number): boolean {
         if (tubes.length < GAME.MIN_TUBES || tubes.length > GAME.MAX_TUBES) {
             console.error("Invalid number of tubes: ", tubes.length);

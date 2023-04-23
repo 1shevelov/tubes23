@@ -334,6 +334,8 @@ export default class MainScene extends Phaser.Scene {
         this.gameView.reset();
         this.gameView.createClassicGame(this.level.getTubes());
         this.gameView.switchTubesLabels(this.isTubesLabelsEnabled);
+        if (this.level.areMaxTubes()) this.uiView.disableMenuItem(MENU.ADDTUBE);
+        if (this.level.areEmptyTubes()) this.uiView.enableMenuItem(MENU.REMOVETUBE);
     }
 
     private removeEmptyTube(): void {
@@ -344,6 +346,8 @@ export default class MainScene extends Phaser.Scene {
         this.gameView.reset();
         this.gameView.createClassicGame(this.level.getTubes());
         this.gameView.switchTubesLabels(this.isTubesLabelsEnabled);
+        if (!this.level.areEmptyTubes()) this.uiView.disableMenuItem(MENU.REMOVETUBE);
+        if (!this.level.areMaxTubes()) this.uiView.enableMenuItem(MENU.ADDTUBE);
     }
 
     private countSuccessfulMove(): void {
