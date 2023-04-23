@@ -13,6 +13,8 @@ export enum MENU {
     RESET = "reset",
     EXPORT = "export",
     SETTINGS = "settings",
+    ADDTUBE = "add-tube",
+    REMOVETUBE = "remove-tube",
 }
 
 export enum BUTTONS {

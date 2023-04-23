@@ -5,6 +5,8 @@ export enum UiEvents {
     NewGameSettingsSubmitted = "NewGameSettingsSubmitted", // sending new game data
     SettingsSubmitted = "SettingsSubmitted", // sending settings data
     EndGameClosed = "EndGameClosed", // sending one of EndGameClosedActions
+    AddTubeCalled = "AddTubeCalled",
+    RemoveTubeCalled = "RemoveTubeCalled",
 }
 
 export enum EndGameClosedActions {

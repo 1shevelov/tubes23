@@ -388,7 +388,7 @@ export class UIView extends Phaser.GameObjects.Container {
             this.menuHtml.getChildByID(UI_CONFIG.MENU.EXPORT) as HTMLLIElement
         ).addEventListener("click", (event: MouseEvent) => {
             this.menuHtml.setVisible(false);
-            // send event to main scene
+            this.uiEvents.emit(UiEvents.ExportCalled);
             event.preventDefault();
         });
 
@@ -398,6 +398,24 @@ export class UIView extends Phaser.GameObjects.Container {
         ).addEventListener("click", (event: MouseEvent) => {
             this.menuHtml.setVisible(false);
             this.showForm(UI_CONFIG.FORMS.SETTINGS);
+            event.preventDefault();
+        });
+
+        this.enableMenuItem(UI_CONFIG.MENU.ADDTUBE);
+        (
+            this.menuHtml.getChildByID(UI_CONFIG.MENU.ADDTUBE) as HTMLLIElement
+        ).addEventListener("click", (event: MouseEvent) => {
+            this.menuHtml.setVisible(false);
+            this.uiEvents.emit(UiEvents.AddTubeCalled);
+            event.preventDefault();
+        });
+
+        this.enableMenuItem(UI_CONFIG.MENU.REMOVETUBE);
+        (
+            this.menuHtml.getChildByID(UI_CONFIG.MENU.REMOVETUBE) as HTMLLIElement
+        ).addEventListener("click", (event: MouseEvent) => {
+            this.menuHtml.setVisible(false);
+            this.uiEvents.emit(UiEvents.RemoveTubeCalled);
             event.preventDefault();
         });
     }

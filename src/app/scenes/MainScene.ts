@@ -119,8 +119,13 @@ export default class MainScene extends Phaser.Scene {
         });
         uiEvents.on(UiEvents.SettingsSubmitted, this.setSettings, this);
         uiEvents.on(UiEvents.ExportCalled, () => {
-            if (this.gameState === GameStates.NoGame) return;
-            this.saveLevel();
+            if (this.gameState !== GameStates.NoGame) this.saveLevel();
+        });
+        uiEvents.on(UiEvents.AddTubeCalled, () => {
+            if (this.gameState === GameStates.Game) this.addEmptyTube();
+        });
+        uiEvents.on(UiEvents.RemoveTubeCalled, () => {
+            if (this.gameState === GameStates.Game) this.removeEmptyTube();
         });
     }
 
@@ -328,6 +333,7 @@ export default class MainScene extends Phaser.Scene {
         }
         this.gameView.reset();
         this.gameView.createClassicGame(this.level.getTubes());
+        this.gameView.switchTubesLabels(this.isTubesLabelsEnabled);
     }
 
     private removeEmptyTube(): void {
@@ -337,6 +343,7 @@ export default class MainScene extends Phaser.Scene {
         }
         this.gameView.reset();
         this.gameView.createClassicGame(this.level.getTubes());
+        this.gameView.switchTubesLabels(this.isTubesLabelsEnabled);
     }
 
     private countSuccessfulMove(): void {
