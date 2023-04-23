@@ -1,0 +1,50 @@
+<style>
+    .settings-form {
+        height: 240px;
+        width: 280px;
+    }
+</style>
+
+<form name="settings">
+    <div class="settings-form whole-form">
+        <!-- <button name="close_button" class="close-button">X</button> -->
+        <h1>Settings:</h1>
+
+        <fieldset class="form-element">
+            <p class="tooltip">
+                <input
+                  type="checkbox"
+                  id="move-helper"
+                  name="move_helper"
+                  value="true"
+                  checked
+                />
+                <label for="move-helper">
+                    Enable Move helper
+                    <span class="tooltip-text tooltip-right">
+                        Move helper chooses best destination<br />
+                        for chosen tube's top portion.</span>
+                </label>
+            </p>
+
+            <p class="tooltip">
+                <input
+                  type="checkbox"
+                  id="tubes-labels"
+                  name="tubes_labels"
+                  value="true"
+                  checked
+                />
+                <label for="tubes-labels">
+                    Show tubes' labels
+                    <span class="tooltip-text tooltip-right">
+                        Tubes' hotkey labels.</span>
+                </label>
+            </p>
+        </fieldset>
+
+        <p>
+            <input type="submit" value="Save & close" name="close_button" />
+        </p>
+    </div>
+</form>
