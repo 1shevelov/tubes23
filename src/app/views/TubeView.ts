@@ -27,7 +27,7 @@ export class TubeView extends Phaser.GameObjects.Container {
     private interactiveLayer: Phaser.GameObjects.Sprite;
     private hotkeyLabel: Phaser.GameObjects.Text;
 
-    private tubeNumber = -1;
+    private tubeNumber = GAME.ErrorValues.InvalidTubeIndex;
 
     private volume: number;
     private readonly portionSizeCoeff = 0.8;
@@ -164,7 +164,11 @@ export class TubeView extends Phaser.GameObjects.Container {
     // on game end or level reset
     public reset(): PortionView[] {
         if (this.tubeSprite) this.tubeSprite.setVisible(false);
-        if (this.hotkeyLabel) this.hotkeyLabel.setVisible(false);
+        if (this.hotkeyLabel) {
+            this.hotkeyLabel.setVisible(false);
+            // this.hotkeyLabel.destroy();
+            this.tubeNumber = GAME.ErrorValues.InvalidTubeIndex;
+        }
         if (this.interactiveLayer) {
             this.interactiveLayer.disableInteractive();
             this.interactiveLayer.setVisible(false);
@@ -191,6 +195,7 @@ export class TubeView extends Phaser.GameObjects.Container {
     public addInteractivity(): void {
         if (!this.hotkeyLabel || !this.interactiveLayer) this.createInteractivity();
 
+        this.hotkeyLabel.setText(this.getHotkeyLabel());
         this.hotkeyLabel.setPosition(
             this.tubeSprite.x,
             this.tubeSprite.y + (this.tubeSprite.height * this.tubeSprite.scaleY) / 1.5,
@@ -249,33 +254,50 @@ export class TubeView extends Phaser.GameObjects.Container {
         this.add(this.tubeSprite);
     }
 
+    private getHotkeyLabel(): string {
+        if (this.tubeNumber === GAME.ErrorValues.InvalidTubeIndex) {
+            console.error("Invalid tube number");
+            return "";
+        }
+        let label = (this.tubeNumber + 1).toString();
+        switch (label) {
+            case "10":
+                label = "A";
+                break;
+            case "11":
+                label = "B";
+                break;
+            case "12":
+                label = "C";
+                break;
+            case "13":
+                label = "D";
+                break;
+            case "14":
+                label = "E";
+                break;
+            case "15":
+                label = "F";
+                break;
+            case "16":
+                label = "G";
+                break;
+            // default:
+            //     console.error(
+            //         `Tube number \"${this.tubeNumber}\" is too big for hotkey label`,
+            //     );
+            //     return;
+        }
+        return label;
+    }
+
     private createInteractivity(): void {
         if (!this.hotkeyLabel) {
-            let label = (this.tubeNumber + 1).toString();
-            switch (label) {
-                case "10":
-                    label = "A";
-                    break;
-                case "11":
-                    label = "B";
-                    break;
-                case "12":
-                    label = "C";
-                    break;
-                case "13":
-                    label = "D";
-                    break;
-                case "14":
-                    label = "E";
-                    break;
-                case "15":
-                    label = "F";
-            }
             this.hotkeyLabel = UIService.createText(
                 this.scene,
                 0,
                 0,
-                label,
+                "",
                 UI_CONFIG.TubeLabelStyle,
             );
             if (!GAME.DEFAULT_TUBE_HOTKEY_LABEL_SHOW) this.hotkeyLabel.setVisible(false);
