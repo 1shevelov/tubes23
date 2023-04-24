@@ -241,7 +241,7 @@ export class GameView extends Phaser.GameObjects.Container {
         const cachedPortionsNum = this.portionCache.length;
         if (portionNum > cachedPortionsNum) {
             for (let i = 0; i < portionNum - cachedPortionsNum; i++) {
-                portionView = new PortionView(this.scene);
+                portionView = new PortionView(this.scene, GAME.DEFAULT_PORTION_TEXTURE);
                 portionView.addSpriteToLayer(this.portionsLayer);
                 this.portionCache.push(portionView);
             }

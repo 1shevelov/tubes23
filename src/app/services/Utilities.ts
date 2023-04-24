@@ -29,7 +29,7 @@ export function getRandomSeed(): string {
     return Math.floor(Date.now() * Math.random()).toString();
 }
 
-export function getRandomPositiveInt(
+export function getRandomSeededPositiveInt(
     min: number,
     max: number,
     rng: () => number,

@@ -7,7 +7,11 @@ import { GameView } from "../views/GameView";
 import { UIView } from "../views/UIView";
 import { Level } from "../components/Level";
 import * as GAME from "../configs/GameConfig";
-import { fixValue, getRandomPositiveInt, getRandomSeed } from "../services/Utilities";
+import {
+    fixValue,
+    getRandomSeededPositiveInt,
+    getRandomSeed,
+} from "../services/Utilities";
 import * as FILES from "../services/Files";
 import {
     EndGameClosedActions,
@@ -222,9 +226,9 @@ export default class MainScene extends Phaser.Scene {
             // starting new game
 
             // Random (8-12)
-            if (tubesNum === 0) tubesNum = getRandomPositiveInt(8, 12, this.rng);
+            if (tubesNum === 0) tubesNum = getRandomSeededPositiveInt(8, 12, this.rng);
             // Random (3-5)
-            if (tubesVol === 0) tubesVol = getRandomPositiveInt(3, 5, this.rng);
+            if (tubesVol === 0) tubesVol = getRandomSeededPositiveInt(3, 5, this.rng);
 
             this.randomClassicLevelTubeNum = fixValue(
                 tubesNum,

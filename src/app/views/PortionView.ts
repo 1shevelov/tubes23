@@ -18,9 +18,9 @@ export class PortionView extends Phaser.GameObjects.Container {
     // TODO: check why portionSizeCoeff is not used
     private readonly portionSizeCoeff = 0.8;
 
-    public constructor(scene: Phaser.Scene) {
+    public constructor(scene: Phaser.Scene, textureName: string) {
         super(scene);
-        this.portionSprite = this.create();
+        this.portionSprite = this.create(textureName);
         this.add(this.portionSprite);
     }
 
@@ -159,23 +159,24 @@ export class PortionView extends Phaser.GameObjects.Container {
     //     this.draw(x, y, size, color);
     // }
 
-    private create(): Phaser.GameObjects.Sprite {
-        return this.createGolfBall();
+    private create(textureName: string): Phaser.GameObjects.Sprite {
+        return this.createBall(textureName);
     }
 
-    private createGolfBall(): Phaser.GameObjects.Sprite {
-        const golfBall = new Phaser.GameObjects.Sprite(
+    private createBall(textureName: string): Phaser.GameObjects.Sprite {
+        const ball = new Phaser.GameObjects.Sprite(
             this.scene,
             0,
             0,
             "game-ui",
             // "ball-golf-150.png",
-            "bubble-150.png",
+            // "bubble-150.png",
             // "foot-ball2-150.png",
+            textureName,
         );
-        golfBall.setOrigin(0.5, 0.5);
-        golfBall.setVisible(false);
-        return golfBall;
+        ball.setOrigin(0.5, 0.5);
+        ball.setVisible(false);
+        return ball;
     }
 
     // private draw(
