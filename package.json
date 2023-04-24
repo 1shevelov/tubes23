@@ -7,7 +7,7 @@
         "generateAssets": "node nodeScripts/GenerateAssets.js",
         "start": "webpack serve --config webpack/webpack.dev.js",
         "build": "webpack --config webpack/webpack.prod.js",
-        "dist": "webpack --config webpack/webpack.prod.js && echo 'gitdir: /Users/andreishevelev/Projects/tubes23/.git/worktrees/dist' > ./dist/.git",
+        "dist": "webpack --config webpack/webpack.prod.js && echo gitdir: C:/Users/agraf/Documents/projects/Tubes/tubes23/.git/worktrees/dist > ./dist/.git/",
         "test": "echo \"Error: no test specified\" && exit 1",
         "lint": "eslint . --ext .ts",
         "format": "prettier --check src/app/**",
