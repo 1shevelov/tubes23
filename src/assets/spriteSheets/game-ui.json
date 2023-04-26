@@ -5,7 +5,7 @@
 			"format": "RGBA8888",
 			"size": {
 				"w": 480,
-				"h": 466
+				"h": 412
 			},
 			"scale": 1,
 			"frames": [
@@ -73,7 +73,7 @@
 					}
 				},
 				{
-					"filename": "bubble2-150.png",
+					"filename": "glass-ball2-150.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -94,28 +94,28 @@
 					}
 				},
 				{
-					"filename": "glass-ball2-150.png",
+					"filename": "ball-golf-150.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
 						"w": 150,
-						"h": 151
+						"h": 150
 					},
 					"spriteSourceSize": {
 						"x": 0,
 						"y": 0,
 						"w": 150,
-						"h": 151
+						"h": 150
 					},
 					"frame": {
 						"x": 171,
 						"y": 160,
 						"w": 150,
-						"h": 151
+						"h": 150
 					}
 				},
 				{
-					"filename": "ball-golf-150.png",
+					"filename": "bubble-150.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -136,27 +136,6 @@
 					}
 				},
 				{
-					"filename": "bubble-150.png",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 150,
-						"h": 150
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 150,
-						"h": 150
-					},
-					"frame": {
-						"x": 327,
-						"y": 3,
-						"w": 150,
-						"h": 150
-					}
-				},
-				{
 					"filename": "foot-ball-150.png",
 					"rotated": false,
 					"trimmed": true,
@@ -172,7 +151,7 @@
 					},
 					"frame": {
 						"x": 327,
-						"y": 159,
+						"y": 3,
 						"w": 150,
 						"h": 148
 					}
@@ -193,7 +172,7 @@
 					},
 					"frame": {
 						"x": 327,
-						"y": 313,
+						"y": 157,
 						"w": 150,
 						"h": 150
 					}

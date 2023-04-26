@@ -27,6 +27,8 @@ export class GameView extends Phaser.GameObjects.Container {
     private portionsLayer: Phaser.GameObjects.Layer;
     private fogLayer: Phaser.GameObjects.Layer;
 
+    private useTexture = ""; // random textures for portions, if not set in MS
+
     private readonly gameEvents: Phaser.Events.EventEmitter;
     private isAnimationInProgress = false;
 
@@ -62,13 +64,25 @@ export class GameView extends Phaser.GameObjects.Container {
             if (tubes[i]["volume"] > maxVolume) maxVolume = tubes[i]["volume"];
         const portionNum = (tubes.length - 2) * maxVolume;
         this.createResources(tubeNum, portionNum);
+        const colorTexturePairs = this.setRandomClassicColorsAndTextures(tubes);
         this.setAndPlaceTubes(tubes);
-        this.fillTubes(tubes);
+        this.fillTubes(tubes, colorTexturePairs);
     }
 
     public switchTubesLabels(show: boolean): void {
         if (show) this.tubes.forEach((tube) => tube.showLabel());
         else this.tubes.forEach((tube) => tube.hideLabel());
+    }
+
+    public setPortionsTexture(texture: string): void {
+        // check if texture exists
+        for (let i = 0; i < GAME.PORTIONS_TEXTURES.length; i++) {
+            if (GAME.PORTIONS_TEXTURES[i] === texture) {
+                this.useTexture = texture;
+                return;
+            }
+        }
+        console.error(`Texture ${texture} not found`);
     }
 
     public areFoggedPortionsPresent(): boolean {
@@ -207,13 +221,19 @@ export class GameView extends Phaser.GameObjects.Container {
         });
     }
 
-    private fillTubes(tubes: object[]): void {
+    private fillTubes(tubes: object[], colorTexturePairs: object[]): void {
         for (let i = 0; i < tubes.length; i++) {
             const portions: PortionView[] = [];
             for (let j = 0; j < tubes[i]["content"].length; j++) {
                 const aPortion = this.portionCache.pop();
                 if (aPortion !== undefined) {
                     aPortion.changeColor(CurrentPalette[tubes[i]["content"][j]]);
+                    for (let k = 0; k < colorTexturePairs.length; k++) {
+                        if (colorTexturePairs[k]["color"] === tubes[i]["content"][j]) {
+                            aPortion.updateBallTexture(colorTexturePairs[k]["texture"]);
+                            break;
+                        }
+                    }
                     portions.push(aPortion);
                 }
             }
@@ -241,11 +261,41 @@ export class GameView extends Phaser.GameObjects.Container {
         const cachedPortionsNum = this.portionCache.length;
         if (portionNum > cachedPortionsNum) {
             for (let i = 0; i < portionNum - cachedPortionsNum; i++) {
-                portionView = new PortionView(this.scene, GAME.DEFAULT_PORTION_TEXTURE);
+                portionView = new PortionView(this.scene, GAME.DEFAULT_PORTIONS_TEXTURE);
                 portionView.addSpriteToLayer(this.portionsLayer);
                 this.portionCache.push(portionView);
             }
         }
+    }
+
+    private setRandomClassicColorsAndTextures(tubes: object[]): object[] {
+        const uniqueColors: number[] = [];
+        let isNewColor = true;
+        for (let i = 0; i < tubes.length; i++) {
+            for (let j = 0; j < tubes[i]["content"].length; j++) {
+                for (let k = 0; k < uniqueColors.length; k++) {
+                    if (uniqueColors[k] === tubes[i]["content"][j]) {
+                        isNewColor = false;
+                    }
+                }
+                if (isNewColor) uniqueColors.push(tubes[i]["content"][j]);
+                isNewColor = true;
+            }
+        }
+        const colorTexturePairs: object[] = [];
+        for (let i = 0; i < uniqueColors.length; i++) {
+            colorTexturePairs.push({
+                color: uniqueColors[i],
+                texture:
+                    this.useTexture === ""
+                        ? GAME.PORTIONS_TEXTURES[
+                              Math.floor(Math.random() * GAME.PORTIONS_TEXTURES.length)
+                          ]
+                        : this.useTexture,
+            });
+        }
+        // console.log(colorTexturePairs);
+        return colorTexturePairs;
     }
 
     private init(): void {

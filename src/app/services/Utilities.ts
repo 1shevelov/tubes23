@@ -40,6 +40,11 @@ export function getRandomSeededPositiveInt(
     }
     if (min < 0) min = 0;
     if (max < 0) max = 0;
+    if (min > max) {
+        const exchange = min;
+        min = max;
+        max = exchange;
+    }
     min = Math.round(min);
     max = Math.round(max);
     return Math.floor(rng() * (max - min + 1)) + min;

@@ -1,7 +1,7 @@
 // import { CounterComponent } from "../components/CounterComponent";
 import { UIService } from "../services/UIService";
 import * as UI_CONFIG from "../configs/UiConfig";
-import { BUILD_VER, DEFAULT_PORTION_TEXTURE } from "../configs/GameConfig";
+import { BUILD_VER, DEFAULT_PORTIONS_TEXTURE } from "../configs/GameConfig";
 import { UiEvents, EndGameClosedActions } from "../configs/Events";
 import { PortionView } from "./PortionView";
 
@@ -79,7 +79,10 @@ export class UIView extends Phaser.GameObjects.Container {
     // for game mode Uno
     public setUnoGoalMessage(winColor: number): void {
         if (!this.unoMessagePortion) {
-            this.unoMessagePortion = new PortionView(this.scene, DEFAULT_PORTION_TEXTURE);
+            this.unoMessagePortion = new PortionView(
+                this.scene,
+                DEFAULT_PORTIONS_TEXTURE,
+            );
             this.add(this.unoMessagePortion);
             this.unoMessagePortion.changeSize(
                 this.he > this.wi ? this.wi / 25 : this.he / 25,

@@ -102,6 +102,8 @@ export default class MainScene extends Phaser.Scene {
                 this.gameState = GameStates.Game;
             }, duration);
         });
+        this.gameView.setPortionsTexture(GAME.DEFAULT_PORTIONS_TEXTURE);
+        // this.gameView.setPortionsTexture(GAME.PORTIONS_TEXTURES[4]);
     }
 
     private initUIView(): void {

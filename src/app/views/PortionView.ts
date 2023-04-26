@@ -159,6 +159,10 @@ export class PortionView extends Phaser.GameObjects.Container {
     //     this.draw(x, y, size, color);
     // }
 
+    public updateBallTexture(textureName: string): void {
+        this.portionSprite.setTexture("game-ui", textureName);
+    }
+
     private create(textureName: string): Phaser.GameObjects.Sprite {
         return this.createBall(textureName);
     }

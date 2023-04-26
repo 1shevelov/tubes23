@@ -24,12 +24,11 @@ export const PORTION_READY_ANIMATION_SPEED = 80; // to&from top position in tube
 
 export const BUILD_VER = "0424.01";
 
-export const PORTION_TEXTURES = [
+export const PORTIONS_TEXTURES = [
     "ball-golf-150.png",
     "bubble-150.png",
-    "bubble2-150.png",
     "foot-ball-150.png",
     "foot-ball2-150.png",
     "glass-ball2-150.png",
 ];
-export const DEFAULT_PORTION_TEXTURE = PORTION_TEXTURES[1];
+export const DEFAULT_PORTIONS_TEXTURE = PORTIONS_TEXTURES[4];
