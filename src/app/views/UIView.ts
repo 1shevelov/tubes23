@@ -3,7 +3,7 @@ import { UIService } from "../services/UIService";
 import * as UI_CONFIG from "../configs/UiConfig";
 import {
     BUILD_VER,
-    PORTIONS_TEXTURES,
+    // PORTIONS_TEXTURES,
     DEFAULT_PORTIONS_TEXTURE,
 } from "../configs/GameConfig";
 import { UiEvents, EndGameClosedActions } from "../configs/Events";
@@ -437,10 +437,11 @@ export class UIView extends Phaser.GameObjects.Container {
 
         const form = this.settingsHtmlForm.getChildByName("settings");
         const texturesList = this.settingsHtmlForm.getChildByName("textures_list");
-        PORTIONS_TEXTURES.forEach((texture) => {
+        const textureNames = Object.values(UI_CONFIG.PortionsTexturesNames);
+        textureNames.forEach((name) => {
             const option = document.createElement("option");
-            option.value = texture;
-            option.text = texture;
+            option.value = name;
+            option.text = name;
             texturesList.appendChild(option);
         });
         // TODO: add "random texture" item

@@ -22,6 +22,14 @@ export enum BUTTONS {
     MENU = "menu",
 }
 
+export enum PortionsTexturesNames {
+    GOLF = "Golf ball",
+    BUBBLE = "Bubble",
+    FOOTBALL = "Football",
+    FOOTBALL2 = "Football 2",
+    GLASS = "Glass ball",
+}
+
 export const TubeLabelStyle: Phaser.Types.GameObjects.Text.TextStyle = {
     fontSize: "20px",
     fontStyle: "bold",
