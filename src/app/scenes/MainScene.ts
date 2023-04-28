@@ -438,10 +438,7 @@ export default class MainScene extends Phaser.Scene {
             if (key === "move_helper") isMoveHelperEnabledOption = true;
             if (key === "tubes_labels") isTubesLabelsEnabledOption = true;
         }
-        // console.log(
-        //     "Move helper changed: ",
-        //     isMoveHelperEnabledOption !== this.isMoveHelperEnabled,
-        // );
+        // TODO: handle texture change
         this.isMoveHelperEnabled = isMoveHelperEnabledOption;
         this.isTubesLabelsEnabled = isTubesLabelsEnabledOption;
         this.gameView.switchTubesLabels(isTubesLabelsEnabledOption);

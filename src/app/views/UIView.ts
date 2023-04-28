@@ -1,7 +1,11 @@
 // import { CounterComponent } from "../components/CounterComponent";
 import { UIService } from "../services/UIService";
 import * as UI_CONFIG from "../configs/UiConfig";
-import { BUILD_VER, DEFAULT_PORTIONS_TEXTURE } from "../configs/GameConfig";
+import {
+    BUILD_VER,
+    PORTIONS_TEXTURES,
+    DEFAULT_PORTIONS_TEXTURE,
+} from "../configs/GameConfig";
 import { UiEvents, EndGameClosedActions } from "../configs/Events";
 import { PortionView } from "./PortionView";
 
@@ -47,9 +51,9 @@ export class UIView extends Phaser.GameObjects.Container {
         this.makeSettingsForm();
         this.makeMenu();
         this.makeGoalMessage();
-        this.showForm(UI_CONFIG.FORMS.START);
+        // this.showForm(UI_CONFIG.FORMS.START);
         // Debug
-        // this.showForm(UI_CONFIG.FORMS.MENU);
+        this.showForm(UI_CONFIG.FORMS.SETTINGS);
         // this.menuButton.setVisible(true);
     }
 
@@ -432,13 +436,16 @@ export class UIView extends Phaser.GameObjects.Container {
         this.settingsHtmlForm.setName(UI_CONFIG.FORMS.SETTINGS);
 
         const form = this.settingsHtmlForm.getChildByName("settings");
-        // (
-        //     this.settingsHtmlForm.getChildByName("close_button") as HTMLButtonElement
-        // ).addEventListener("click", (event) => {
-        //     this.settingsHtmlForm.setVisible(false);
-        //     this.formBack.setVisible(false);
-        //     event.preventDefault();
-        // });
+        const texturesList = this.settingsHtmlForm.getChildByName("textures_list");
+        PORTIONS_TEXTURES.forEach((texture) => {
+            const option = document.createElement("option");
+            option.value = texture;
+            option.text = texture;
+            texturesList.appendChild(option);
+        });
+        // TODO: add "random texture" item
+        // TODO: add "random multiple textures" item
+
         (form as HTMLFormElement).addEventListener("submit", (event) => {
             const data = new FormData(form as HTMLFormElement);
             this.closeForm(UI_CONFIG.FORMS.SETTINGS, data);
