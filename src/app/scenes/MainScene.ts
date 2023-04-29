@@ -432,16 +432,23 @@ export default class MainScene extends Phaser.Scene {
     private setSettings(settingsData: FormData): void {
         let isMoveHelperEnabledOption = false;
         let isTubesLabelsEnabledOption = false;
+        let textureIndex = -1;
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         for (const [key, value] of settingsData) {
             // console.log(`${key}: ${value}`);
             if (key === "move_helper") isMoveHelperEnabledOption = true;
             if (key === "tubes_labels") isTubesLabelsEnabledOption = true;
+            if (key === "textures_list") textureIndex = Number(value);
         }
-        // TODO: handle texture change
+        // console.log(textureIndex);
+        if (textureIndex === 5) this.gameView.setPortionsTexture(""); // random textures
+        else this.gameView.setPortionsTexture(GAME.PORTIONS_TEXTURES[textureIndex]);
         this.isMoveHelperEnabled = isMoveHelperEnabledOption;
         this.isTubesLabelsEnabled = isTubesLabelsEnabledOption;
         this.gameView.switchTubesLabels(isTubesLabelsEnabledOption);
+        // this.gameView.reset();
+        // this.gameView.createClassicGame(this.level.getTubes());
+        this.startGame();
     }
 
     private setHotKeyHandlers(): void {

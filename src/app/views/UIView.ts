@@ -51,9 +51,9 @@ export class UIView extends Phaser.GameObjects.Container {
         this.makeSettingsForm();
         this.makeMenu();
         this.makeGoalMessage();
-        // this.showForm(UI_CONFIG.FORMS.START);
+        this.showForm(UI_CONFIG.FORMS.START);
         // Debug
-        this.showForm(UI_CONFIG.FORMS.SETTINGS);
+        // this.showForm(UI_CONFIG.FORMS.SETTINGS);
         // this.menuButton.setVisible(true);
     }
 
@@ -438,14 +438,23 @@ export class UIView extends Phaser.GameObjects.Container {
         const form = this.settingsHtmlForm.getChildByName("settings");
         const texturesList = this.settingsHtmlForm.getChildByName("textures_list");
         const textureNames = Object.values(UI_CONFIG.PortionsTexturesNames);
-        textureNames.forEach((name) => {
+        textureNames.forEach((name, index) => {
             const option = document.createElement("option");
-            option.value = name;
+            option.value = index.toString();
             option.text = name;
+            const key = Object.keys(UI_CONFIG.PortionsTexturesNames).find(
+                (key) => UI_CONFIG.PortionsTexturesNames[key] === name,
+            );
+            // TODO: remake GAME.DEFAULT_PORTIONS_TEXTURE to be usable here
+            if (key === "GLASS") option.selected = true;
             texturesList.appendChild(option);
         });
-        // TODO: add "random texture" item
-        // TODO: add "random multiple textures" item
+        // TODO: add "random texture" item?
+        // "random multiple textures" item
+        const option = document.createElement("option");
+        option.value = textureNames.length.toString();
+        option.text = "* Random";
+        texturesList.appendChild(option);
 
         (form as HTMLFormElement).addEventListener("submit", (event) => {
             const data = new FormData(form as HTMLFormElement);

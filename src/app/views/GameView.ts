@@ -75,7 +75,10 @@ export class GameView extends Phaser.GameObjects.Container {
     }
 
     public setPortionsTexture(texture: string): void {
-        // check if texture exists
+        if (texture === "") {
+            this.useTexture = "";
+            return;
+        }
         for (let i = 0; i < GAME.PORTIONS_TEXTURES.length; i++) {
             if (GAME.PORTIONS_TEXTURES[i] === texture) {
                 this.useTexture = texture;
