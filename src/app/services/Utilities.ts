@@ -1,3 +1,10 @@
+import platform from "platform";
+
+export function isMobile(): boolean {
+    // console.log("platform.os.family: ", platform.os.family);
+    return platform.os.family === "iOS" || platform.os.family === "Android";
+}
+
 export function fixValue(val: number, MIN: number, MAX: number): number {
     if (!Number.isFinite(val) || val < MIN) {
         console.warn(`Invalid value: \"${val}\". Setting to MIN: ${MIN}`);
