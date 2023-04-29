@@ -16,6 +16,7 @@ interface XY {
 
 export class UIView extends Phaser.GameObjects.Container {
     private readonly FORM_ANIMATION_DURATION = 1500;
+    private readonly GOAL_MESSAGE_BREAK_POINT = 610; // px
 
     private counter: Phaser.GameObjects.Text;
     private COUNTER_REL_POS: XY = { x: 1.08, y: 15 };
@@ -89,12 +90,11 @@ export class UIView extends Phaser.GameObjects.Container {
             );
             this.add(this.unoMessagePortion);
             this.unoMessagePortion.changeSize(
-                this.he > this.wi ? this.wi / 25 : this.he / 25,
+                this.he > this.wi ? this.wi / 22 : this.he / 25,
             );
-            this.unoMessagePortion.changeXPos(this.goalMessage.x - 167);
-            this.unoMessagePortion.changeYPos(this.goalMessage.y);
+            this.updateUnoMessagePortionPosition();
         }
-        this.goalMessage.setText("Gather    this color only in any one tube to win");
+        this.setGoalMessageText("uno");
         // this.goalMessage.setTint(winColor);
         this.unoMessagePortion.changeColor(winColor);
         this.unoMessagePortion.show();
@@ -102,8 +102,8 @@ export class UIView extends Phaser.GameObjects.Container {
 
     public setClassicGoalMessage(): void {
         if (this.unoMessagePortion) this.unoMessagePortion.hide();
-        this.goalMessage.setText("Gather all colors each in a separate tube to win");
-        this.goalMessage.setTint(0xffffff);
+        this.setGoalMessageText("classic");
+        // this.goalMessage.setTint(0xffffff);
     }
 
     public showWin(): void {
@@ -622,12 +622,39 @@ export class UIView extends Phaser.GameObjects.Container {
         this.add(this.goalMessage);
     }
 
+    private updateUnoMessagePortionPosition(): void {
+        const portionXShift = this.wi > this.GOAL_MESSAGE_BREAK_POINT ? 203 : 60;
+        const portionYShift = this.wi > this.GOAL_MESSAGE_BREAK_POINT ? 0 : 10;
+        this.unoMessagePortion.changeXPos(this.goalMessage.x - portionXShift);
+        this.unoMessagePortion.changeYPos(this.goalMessage.y - portionYShift);
+    }
+
+    private setGoalMessageText(mode: string): void {
+        let messageText = "";
+        if (mode === "uno") {
+            messageText =
+                this.wi > this.GOAL_MESSAGE_BREAK_POINT
+                    ? "Gather    this color only, in any one tube, to win"
+                    : "Gather    this color only,\nin any one tube, to win";
+        } else if (mode === "classic") {
+            messageText =
+                this.wi > this.GOAL_MESSAGE_BREAK_POINT
+                    ? "Gather all colors, each in a separate tube, to win"
+                    : "Gather all colors,\neach in a separate tube, to win";
+        } else console.error("Unknown game mode: ", mode);
+        this.goalMessage.setText(messageText);
+    }
+
     private updateUiPosition(): void {
         this.refreshCoordinates();
         this.counter.setPosition(
             this.wi / this.COUNTER_REL_POS.x,
             this.he / this.COUNTER_REL_POS.y,
         );
+        if (this.unoMessagePortion && this.unoMessagePortion.visible) {
+            this.setGoalMessageText("uno");
+            this.updateUnoMessagePortionPosition();
+        } else this.setGoalMessageText("classic");
         this.goalMessage.setPosition(
             this.wi / this.GOAL_REL_POS.x,
             this.he / this.GOAL_REL_POS.y,
