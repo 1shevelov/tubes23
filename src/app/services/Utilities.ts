@@ -1,5 +1,17 @@
 import platform from "platform";
 
+const SETTINGS_KEY = "settings";
+export function saveSettings(settings: object): void {
+    localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+}
+export function loadSettings(): object {
+    const settings = localStorage.getItem(SETTINGS_KEY);
+    if (settings) {
+        return JSON.parse(settings);
+    }
+    return {};
+}
+
 export function isMobile(): boolean {
     // console.log("platform.os.family: ", platform.os.family);
     return platform.os.family === "iOS" || platform.os.family === "Android";
