@@ -7,12 +7,8 @@ import { GameView } from "../views/GameView";
 import { UIView } from "../views/UIView";
 import { Level } from "../components/Level";
 import * as GAME from "../configs/GameConfig";
-import {
-    fixValue,
-    getRandomSeededPositiveInt,
-    getRandomSeed,
-    isMobile,
-} from "../services/Utilities";
+import * as UTIL from "../services/Utilities";
+import * as SETTINGS from "../services/Settings";
 import * as FILES from "../services/Files";
 import {
     EndGameClosedActions,
@@ -62,15 +58,23 @@ export default class MainScene extends Phaser.Scene {
         super({ key: SceneNames.Main });
     }
 
+    private loadAndSetSettings(): void {
+        const settingsObj = SETTINGS.loadSettings();
+        this.isMoveHelperEnabled = settingsObj.MoveHelperEnabled;
+        this.isTubesLabelsEnabled = settingsObj.TubesLabelsShown;
+        if (this.gameView) this.gameView.setPortionsTexture(settingsObj.Texture);
+        if (this.uiView) this.uiView.makeSettingsForm(settingsObj);
+    }
+
     //noinspection unused,JSUnusedLocalSymbols
     private init(): void {
         this.gameEvents = new Phaser.Events.EventEmitter();
         // this.initServices();
-        if (isMobile()) this.isTubesLabelsEnabled = false;
+        if (UTIL.isMobile()) this.isTubesLabelsEnabled = false;
         this.initGameView();
         this.initUIView();
-        this.initForegroundView();
-
+        // this.initForegroundView();
+        this.loadAndSetSettings();
         // if (process.env.NODE_ENV !== "production") {
         //     this.initStatJS();
         // }
@@ -79,7 +83,7 @@ export default class MainScene extends Phaser.Scene {
 
         this.setHotKeyHandlers();
 
-        this.randomLevelSeed = getRandomSeed();
+        this.randomLevelSeed = UTIL.getRandomSeed();
         this.rng = this.SEEDED_RANDOM_LIB(this.randomLevelSeed);
     }
 
@@ -104,8 +108,7 @@ export default class MainScene extends Phaser.Scene {
                 this.gameState = GameStates.Game;
             }, duration);
         });
-        this.gameView.setPortionsTexture(GAME.DEFAULT_PORTIONS_TEXTURE);
-        // this.gameView.setPortionsTexture(GAME.PORTIONS_TEXTURES[4]);
+        this.gameView.setPortionsTexture(SETTINGS.DEFAULT_PORTIONS_TEXTURE.UiName);
     }
 
     private initUIView(): void {
@@ -137,12 +140,12 @@ export default class MainScene extends Phaser.Scene {
         });
     }
 
-    private initForegroundView(): void {
-        this.foregroundView = new ForegroundView(this);
-        this.add.existing(this.foregroundView);
+    // private initForegroundView(): void {
+    //     this.foregroundView = new ForegroundView(this);
+    //     this.add.existing(this.foregroundView);
 
-        // this.popupService.view = this.foregroundView;
-    }
+    //     // this.popupService.view = this.foregroundView;
+    // }
 
     // private initServices(): void {
     //     this.popupService = IocContext.DefaultInstance.get(PopupService);
@@ -228,18 +231,17 @@ export default class MainScene extends Phaser.Scene {
             };
         } else {
             // starting new game
+            if (tubesNum === 0)
+                tubesNum = UTIL.getRandomSeededPositiveInt(8, 12, this.rng);
+            if (tubesVol === 0)
+                tubesVol = UTIL.getRandomSeededPositiveInt(3, 5, this.rng);
 
-            // Random (8-12)
-            if (tubesNum === 0) tubesNum = getRandomSeededPositiveInt(8, 12, this.rng);
-            // Random (3-5)
-            if (tubesVol === 0) tubesVol = getRandomSeededPositiveInt(3, 5, this.rng);
-
-            this.randomClassicLevelTubeNum = fixValue(
+            this.randomClassicLevelTubeNum = UTIL.fixValue(
                 tubesNum,
                 GAME.MIN_TUBES,
                 GAME.MAX_TUBES,
             );
-            this.randomClassicLevelTubeVol = fixValue(
+            this.randomClassicLevelTubeVol = UTIL.fixValue(
                 tubesVol,
                 GAME.MIN_VOLUME,
                 GAME.MAX_VOLUME,
@@ -282,7 +284,6 @@ export default class MainScene extends Phaser.Scene {
             0, // enum Drains
             this.rng,
         );
-        // TODO: load and set isFogOfWar
 
         this.gameMode = gameObj[FILES.SaveFile.Mode];
         if (gameObj[FILES.SaveFile.Fog]) this.isFogOfWar = true;
@@ -434,22 +435,27 @@ export default class MainScene extends Phaser.Scene {
     private setSettings(settingsData: FormData): void {
         let isMoveHelperEnabledOption = false;
         let isTubesLabelsEnabledOption = false;
-        let textureIndex = -1;
+        let textureUiName = "";
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         for (const [key, value] of settingsData) {
             // console.log(`${key}: ${value}`);
             if (key === "move_helper") isMoveHelperEnabledOption = true;
             if (key === "tubes_labels") isTubesLabelsEnabledOption = true;
-            if (key === "textures_list") textureIndex = Number(value);
+            if (key === "textures_list") textureUiName = value.toString();
         }
-        // console.log(textureIndex);
-        if (textureIndex === 5) this.gameView.setPortionsTexture(""); // random textures
-        else this.gameView.setPortionsTexture(GAME.PORTIONS_TEXTURES[textureIndex]);
+        // console.log(textureUiName);
+        this.gameView.setPortionsTexture(textureUiName);
         this.isMoveHelperEnabled = isMoveHelperEnabledOption;
         this.isTubesLabelsEnabled = isTubesLabelsEnabledOption;
         this.gameView.switchTubesLabels(isTubesLabelsEnabledOption);
         // this.gameView.reset();
         // this.gameView.createClassicGame(this.level.getTubes());
+        const newSettings: SETTINGS.ISettings = {
+            MoveHelperEnabled: isMoveHelperEnabledOption,
+            TubesLabelsShown: isTubesLabelsEnabledOption,
+            Texture: textureUiName,
+        };
+        SETTINGS.saveSettings(newSettings);
         this.startGame();
     }
 

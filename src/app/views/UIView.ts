@@ -1,13 +1,10 @@
 // import { CounterComponent } from "../components/CounterComponent";
 import { UIService } from "../services/UIService";
 import * as UI_CONFIG from "../configs/UiConfig";
-import {
-    BUILD_VER,
-    // PORTIONS_TEXTURES,
-    DEFAULT_PORTIONS_TEXTURE,
-} from "../configs/GameConfig";
+import { BUILD_VER } from "../configs/GameConfig";
 import { UiEvents, EndGameClosedActions } from "../configs/Events";
 import { PortionView } from "./PortionView";
+import * as SETTINGS from "../services/Settings";
 
 interface XY {
     x: number;
@@ -49,7 +46,7 @@ export class UIView extends Phaser.GameObjects.Container {
         this.makeFormBack();
         this.makeNewGameForm();
         this.makeEndGameForm();
-        this.makeSettingsForm();
+        // this.makeSettingsForm();
         this.makeMenu();
         this.makeGoalMessage();
         this.showForm(UI_CONFIG.FORMS.START);
@@ -86,7 +83,7 @@ export class UIView extends Phaser.GameObjects.Container {
         if (!this.unoMessagePortion) {
             this.unoMessagePortion = new PortionView(
                 this.scene,
-                DEFAULT_PORTIONS_TEXTURE,
+                SETTINGS.DEFAULT_PORTIONS_TEXTURE.TextureName,
             );
             this.add(this.unoMessagePortion);
             this.unoMessagePortion.changeSize(
@@ -260,6 +257,44 @@ export class UIView extends Phaser.GameObjects.Container {
         itemElement.style.cursor = UI_CONFIG.MenuItems.disabledCursor;
     }
 
+    public makeSettingsForm(settings: SETTINGS.ISettings): void {
+        // console.log("makeSettingsForm: ", settings);
+        this.settingsHtmlForm = this.scene.add
+            .dom(this.wi / 2, this.he)
+            .createFromCache("SettingsForm");
+        this.settingsHtmlForm.setPerspective(800);
+        this.settingsHtmlForm.setVisible(false);
+        this.settingsHtmlForm.setName(UI_CONFIG.FORMS.SETTINGS);
+
+        const form = this.settingsHtmlForm.getChildByName("settings");
+        const moveHelperInput = this.settingsHtmlForm.getChildByName("move_helper");
+        if (settings.MoveHelperEnabled)
+            (moveHelperInput as HTMLInputElement).checked = true;
+        else (moveHelperInput as HTMLInputElement).checked = false;
+        const tubesLabelsInput = this.settingsHtmlForm.getChildByName("tubes_labels");
+        if (settings.TubesLabelsShown)
+            (tubesLabelsInput as HTMLInputElement).checked = true;
+        else (tubesLabelsInput as HTMLInputElement).checked = false;
+
+        const texturesList = this.settingsHtmlForm.getChildByName("textures_list");
+        // textureNames.forEach((name, index) => {
+        for (let i = 0; i < SETTINGS.PORTIONS_TEXTURES.length; i++) {
+            const option = document.createElement("option");
+            option.value = SETTINGS.PORTIONS_TEXTURES[i].UiName;
+            option.text = SETTINGS.PORTIONS_TEXTURES[i].UiName;
+            if (settings.Texture === SETTINGS.PORTIONS_TEXTURES[i].UiName)
+                option.selected = true;
+            texturesList.appendChild(option);
+        }
+        // TODO: add "random texture" item?
+
+        (form as HTMLFormElement).addEventListener("submit", (event) => {
+            const data = new FormData(form as HTMLFormElement);
+            this.closeForm(UI_CONFIG.FORMS.SETTINGS, data);
+            event.preventDefault();
+        });
+    }
+
     private init(): void {
         this.refreshCoordinates();
         this.uiEvents = new Phaser.Events.EventEmitter();
@@ -423,42 +458,6 @@ export class UIView extends Phaser.GameObjects.Container {
         ).addEventListener("click", (event: MouseEvent) => {
             this.menuHtml.setVisible(false);
             this.uiEvents.emit(UiEvents.RemoveTubeCalled);
-            event.preventDefault();
-        });
-    }
-
-    private makeSettingsForm(): void {
-        this.settingsHtmlForm = this.scene.add
-            .dom(this.wi / 2, this.he)
-            .createFromCache("SettingsForm");
-        this.settingsHtmlForm.setPerspective(800);
-        this.settingsHtmlForm.setVisible(false);
-        this.settingsHtmlForm.setName(UI_CONFIG.FORMS.SETTINGS);
-
-        const form = this.settingsHtmlForm.getChildByName("settings");
-        const texturesList = this.settingsHtmlForm.getChildByName("textures_list");
-        const textureNames = Object.values(UI_CONFIG.PortionsTexturesNames);
-        textureNames.forEach((name, index) => {
-            const option = document.createElement("option");
-            option.value = index.toString();
-            option.text = name;
-            const key = Object.keys(UI_CONFIG.PortionsTexturesNames).find(
-                (key) => UI_CONFIG.PortionsTexturesNames[key] === name,
-            );
-            // TODO: remake GAME.DEFAULT_PORTIONS_TEXTURE to be usable here
-            if (key === "GLASS") option.selected = true;
-            texturesList.appendChild(option);
-        });
-        // TODO: add "random texture" item?
-        // "random multiple textures" item
-        const option = document.createElement("option");
-        option.value = textureNames.length.toString();
-        option.text = "* Random";
-        texturesList.appendChild(option);
-
-        (form as HTMLFormElement).addEventListener("submit", (event) => {
-            const data = new FormData(form as HTMLFormElement);
-            this.closeForm(UI_CONFIG.FORMS.SETTINGS, data);
             event.preventDefault();
         });
     }

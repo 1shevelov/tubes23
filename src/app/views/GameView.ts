@@ -4,6 +4,7 @@ import { PortionView } from "./PortionView";
 import { CurrentPalette } from "../configs/UiConfig";
 import { checkIfFaulty } from "../services/Utilities";
 import { GameEvents, ViewEvents } from "../configs/Events";
+import { PORTIONS_TEXTURES, DEFAULT_PORTIONS_TEXTURE } from "../services/Settings";
 
 export class GameView extends Phaser.GameObjects.Container {
     // TODO check if it needs to be public
@@ -74,18 +75,14 @@ export class GameView extends Phaser.GameObjects.Container {
         else this.tubes.forEach((tube) => tube.hideLabel());
     }
 
-    public setPortionsTexture(texture: string): void {
-        if (texture === "") {
-            this.useTexture = "";
-            return;
-        }
-        for (let i = 0; i < GAME.PORTIONS_TEXTURES.length; i++) {
-            if (GAME.PORTIONS_TEXTURES[i] === texture) {
-                this.useTexture = texture;
+    public setPortionsTexture(textureUiName: string): void {
+        for (let i = 0; i < PORTIONS_TEXTURES.length; i++) {
+            if (PORTIONS_TEXTURES[i].UiName === textureUiName) {
+                this.useTexture = PORTIONS_TEXTURES[i].TextureName;
                 return;
             }
         }
-        console.error(`Texture ${texture} not found`);
+        console.error(`Texture \"${textureUiName}\" not found`);
     }
 
     public areFoggedPortionsPresent(): boolean {
@@ -264,7 +261,10 @@ export class GameView extends Phaser.GameObjects.Container {
         const cachedPortionsNum = this.portionCache.length;
         if (portionNum > cachedPortionsNum) {
             for (let i = 0; i < portionNum - cachedPortionsNum; i++) {
-                portionView = new PortionView(this.scene, GAME.DEFAULT_PORTIONS_TEXTURE);
+                portionView = new PortionView(
+                    this.scene,
+                    DEFAULT_PORTIONS_TEXTURE.TextureName,
+                );
                 portionView.addSpriteToLayer(this.portionsLayer);
                 this.portionCache.push(portionView);
             }
@@ -291,9 +291,9 @@ export class GameView extends Phaser.GameObjects.Container {
                 color: uniqueColors[i],
                 texture:
                     this.useTexture === ""
-                        ? GAME.PORTIONS_TEXTURES[
-                              Math.floor(Math.random() * GAME.PORTIONS_TEXTURES.length)
-                          ]
+                        ? PORTIONS_TEXTURES[
+                              Math.floor(Math.random() * (PORTIONS_TEXTURES.length - 1))
+                          ].TextureName
                         : this.useTexture,
             });
         }
