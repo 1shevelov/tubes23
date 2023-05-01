@@ -408,7 +408,7 @@ export default class MainScene extends Phaser.Scene {
 
     private resetGame(): void {
         if (this.moveCounter === 0) return;
-        console.log("Level reset");
+        // console.log("Level reset");
         this.level.reset();
         this.uiView.closeForms();
         this.startGame();

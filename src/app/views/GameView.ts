@@ -82,7 +82,8 @@ export class GameView extends Phaser.GameObjects.Container {
                 return;
             }
         }
-        console.error(`Texture \"${textureUiName}\" not found`);
+        console.error(`Texture \"${textureUiName}\" not found. Using default`);
+        this.useTexture = DEFAULT_PORTIONS_TEXTURE.TextureName;
     }
 
     public areFoggedPortionsPresent(): boolean {

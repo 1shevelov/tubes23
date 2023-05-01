@@ -6,14 +6,13 @@ interface ITextureInfo {
 }
 
 export const PORTIONS_TEXTURES: ITextureInfo[] = [
-    { UiName: "Golf ball", TextureName: "ball-golf-150.png" },
+    { UiName: "Glass ball", TextureName: "glass-ball-150.png" },
+    { UiName: "Golf ball", TextureName: "golf-ball-150.png" },
     { UiName: "Bubble", TextureName: "bubble-150.png" },
-    { UiName: "Football", TextureName: "foot-ball-150.png" },
-    { UiName: "Football 2", TextureName: "foot-ball2-150.png" },
-    { UiName: "Glass ball", TextureName: "glass-ball2-150.png" },
+    { UiName: "Football", TextureName: "football-150.png" },
     { UiName: "* Random", TextureName: "" },
 ];
-export const DEFAULT_PORTIONS_TEXTURE: ITextureInfo = PORTIONS_TEXTURES[4];
+export const DEFAULT_PORTIONS_TEXTURE: ITextureInfo = PORTIONS_TEXTURES[0];
 
 export interface ISettings {
     MoveHelperEnabled: boolean;
