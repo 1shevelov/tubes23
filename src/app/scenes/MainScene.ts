@@ -216,6 +216,8 @@ export default class MainScene extends Phaser.Scene {
                     console.error(
                         "Error loading saved game JSON. LOAD another save or START a new game",
                     );
+                    // TODO: show error message
+                    // TODO: clear file input
                     this.showNewGameForm();
                     // throw new Error(
                     //     "Error loading saved game JSON. LOAD another save or START a new game",
@@ -232,10 +234,13 @@ export default class MainScene extends Phaser.Scene {
         } else {
             // starting new game
             if (tubesNum === 0)
-                tubesNum = UTIL.getRandomSeededPositiveInt(8, 12, this.rng);
+                // random from 8 to 12
+                tubesNum = Math.round(Math.random() * (12 - 8)) + 8;
             if (tubesVol === 0)
-                tubesVol = UTIL.getRandomSeededPositiveInt(3, 5, this.rng);
+                // random from 3 to 5
+                tubesVol = Math.round(Math.random() * (5 - 3)) + 3;
 
+            // do I need to check these values?
             this.randomClassicLevelTubeNum = UTIL.fixValue(
                 tubesNum,
                 GAME.MIN_TUBES,

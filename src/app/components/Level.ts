@@ -143,7 +143,24 @@ export class Level {
         for (let i = 0; i < tubeNum - colors; i++) {
             randTubes.push([]);
         }
-        // console.log(JSON.stringify(randTubes));
+        console.log(JSON.stringify(randTubes));
+        const oneColorTubes = this.findOneColorTubes(randTubes);
+        if (oneColorTubes.length > 0) {
+            console.log(`one color tubes: ${oneColorTubes}`);
+        }
+        // if (oneColorTubes.length > 0 && !GAME.ALLOW_ONE_COLOR_TUBES_IN_RANDOM_LEVEL) {
+        //     // remake level
+        //     // require new seed for RNG?
+        //     console.warn(
+        //         `Error: one color tubes found: ${JSON.stringify(oneColorTubes)}`,
+        //     );
+        //     oneColorTubes.forEach((tubeIndex) =>
+        //         console.warn(JSON.stringify(randTubes[tubeIndex])),
+        //     );
+        //     this.destroy();
+        //     this.setRandomClassicLevel(tubeNum, tubeVol, drains, rng);
+        //     return;
+        // }
         this.setClassicTubes(randTubes, tubeVol, drains);
     }
 
@@ -326,5 +343,24 @@ export class Level {
 
     private init(): void {
         // this.gameEvents.on(GAME.EventTubesClicked, this.tryToMove, this);
+    }
+
+    // returns array of tubes witch filled with portions of only one color
+    // used after level generation to avoid one-color tubes
+    private findOneColorTubes(tubes: number[][]): number[] {
+        const oneColorTubes: number[] = [];
+        let prevColor: number;
+        let isOneColor: boolean;
+        for (let i = 0; i < tubes.length; i++) {
+            if (tubes[i].length === 0) continue;
+            prevColor = GAME.ErrorValues.InvalidColorIndex;
+            isOneColor = true;
+            tubes[i].forEach((color) => {
+                if (prevColor === GAME.ErrorValues.InvalidColorIndex) prevColor = color;
+                else if (prevColor !== color) isOneColor = false;
+            });
+            if (isOneColor) oneColorTubes.push(i);
+        }
+        return oneColorTubes;
     }
 }
