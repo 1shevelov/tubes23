@@ -32,6 +32,15 @@
     margin-left: -135px; /* half of the width, to center the tooltip */
 }
 
+.tooltip .tooltip-up {
+    position: absolute;
+    z-index: 1;
+    width: 270px;
+    bottom: 100%;
+    left: 50%;
+    margin-left: -135px;
+}
+
 .tooltip:hover .tooltip-text {
     visibility: visible;
 }
