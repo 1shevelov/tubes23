@@ -1,3 +1,5 @@
+import { isMobile } from "./Utilities";
+
 const SETTINGS_KEY = "settings";
 
 interface ITextureInfo {
@@ -20,9 +22,15 @@ export interface ISettings {
     Texture: string;
 }
 
-const DEFAULT_SETTINGS: ISettings = {
+const DEFAULT_DESKTOP_SETTINGS: ISettings = {
     MoveHelperEnabled: true,
     TubesLabelsShown: true,
+    Texture: DEFAULT_PORTIONS_TEXTURE.UiName,
+};
+
+const DEFAULT_MOBILE_SETTINGS: ISettings = {
+    MoveHelperEnabled: true,
+    TubesLabelsShown: false,
     Texture: DEFAULT_PORTIONS_TEXTURE.UiName,
 };
 
@@ -36,7 +44,7 @@ export function loadSettings(): ISettings {
     if (rawSettings) {
         const parsedSettings = JSON.parse(rawSettings);
         // validate if loaded settings object has all the required properties for ISettings
-        if (Object.keys(parsedSettings).every((key) => key in DEFAULT_SETTINGS)) {
+        if (Object.keys(parsedSettings).every((key) => key in DEFAULT_DESKTOP_SETTINGS)) {
             return parsedSettings;
         } else {
             console.error(
@@ -44,5 +52,5 @@ export function loadSettings(): ISettings {
             );
         }
     }
-    return DEFAULT_SETTINGS;
+    return isMobile() ? DEFAULT_MOBILE_SETTINGS : DEFAULT_DESKTOP_SETTINGS;
 }

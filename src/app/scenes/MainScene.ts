@@ -70,7 +70,6 @@ export default class MainScene extends Phaser.Scene {
     private init(): void {
         this.gameEvents = new Phaser.Events.EventEmitter();
         // this.initServices();
-        if (UTIL.isMobile()) this.isTubesLabelsEnabled = false;
         this.initGameView();
         this.initUIView();
         // this.initForegroundView();

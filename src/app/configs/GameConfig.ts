@@ -24,4 +24,4 @@ export const ALLOW_ONE_COLOR_TUBES_IN_RANDOM_LEVEL = false;
 export const PORTION_MOVE_ANIMATION_SPEED = 250; // between tubes
 export const PORTION_READY_ANIMATION_SPEED = 80; // to&from top position in tube
 
-export const BUILD_VER = "0424.01";
+export const BUILD_VER = "0503.06";
