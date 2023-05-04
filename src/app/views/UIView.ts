@@ -420,8 +420,9 @@ export class UIView extends Phaser.GameObjects.Container {
         (
             this.menuHtml.getChildByID(UI_CONFIG.MENU.RESET) as HTMLLIElement
         ).addEventListener("click", (event: MouseEvent) => {
-            this.menuHtml.setVisible(false);
             this.uiEvents.emit(UiEvents.ResetCalled);
+            this.menuHtml.setVisible(false);
+            this.formBack.setVisible(false);
             event.preventDefault();
         });
 
@@ -429,8 +430,9 @@ export class UIView extends Phaser.GameObjects.Container {
         (
             this.menuHtml.getChildByID(UI_CONFIG.MENU.EXPORT) as HTMLLIElement
         ).addEventListener("click", (event: MouseEvent) => {
-            this.menuHtml.setVisible(false);
             this.uiEvents.emit(UiEvents.ExportCalled);
+            this.menuHtml.setVisible(false);
+            this.formBack.setVisible(false);
             event.preventDefault();
         });
 
@@ -447,8 +449,9 @@ export class UIView extends Phaser.GameObjects.Container {
         (
             this.menuHtml.getChildByID(UI_CONFIG.MENU.ADDTUBE) as HTMLLIElement
         ).addEventListener("click", (event: MouseEvent) => {
-            this.menuHtml.setVisible(false);
             this.uiEvents.emit(UiEvents.AddTubeCalled);
+            this.menuHtml.setVisible(false);
+            this.formBack.setVisible(false);
             event.preventDefault();
         });
 
@@ -456,8 +459,9 @@ export class UIView extends Phaser.GameObjects.Container {
         (
             this.menuHtml.getChildByID(UI_CONFIG.MENU.REMOVETUBE) as HTMLLIElement
         ).addEventListener("click", (event: MouseEvent) => {
-            this.menuHtml.setVisible(false);
             this.uiEvents.emit(UiEvents.RemoveTubeCalled);
+            this.menuHtml.setVisible(false);
+            this.formBack.setVisible(false);
             event.preventDefault();
         });
     }

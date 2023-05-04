@@ -143,7 +143,7 @@ export class Level {
         for (let i = 0; i < tubeNum - colors; i++) {
             randTubes.push([]);
         }
-        console.log(JSON.stringify(randTubes));
+        // console.log(JSON.stringify(randTubes));
         const oneColorTubes = this.findOneColorTubes(randTubes);
         if (oneColorTubes.length > 0) {
             console.log(`one color tubes: ${oneColorTubes}`);
