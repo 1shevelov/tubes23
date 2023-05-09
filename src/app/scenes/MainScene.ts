@@ -81,9 +81,6 @@ export default class MainScene extends Phaser.Scene {
         this.gameEvents.on(GameEvents.SourceTubeChoosen, this.helperMove, this);
 
         this.setHotKeyHandlers();
-
-        this.randomLevelSeed = UTIL.getRandomSeed();
-        this.rng = this.SEEDED_RANDOM_LIB(this.randomLevelSeed);
     }
 
     private initGameView(): void {
@@ -263,6 +260,9 @@ export default class MainScene extends Phaser.Scene {
 
             if (this.level) this.level.destroy();
             else this.level = new Level(this.gameEvents);
+
+            this.randomLevelSeed = UTIL.getRandomSeed();
+            this.rng = this.SEEDED_RANDOM_LIB(this.randomLevelSeed);
             this.level.setRandomClassicLevel(
                 this.randomClassicLevelTubeNum,
                 this.randomClassicLevelTubeVol,
